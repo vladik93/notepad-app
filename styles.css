@@ -1,0 +1,193 @@
+/* GENERAL */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  background-color: #ffe5e5;
+  color: #333;
+}
+
+ul {
+  list-style: none;
+}
+
+/* HEADER */
+
+.header {
+  padding: 0.4rem 1.6rem;
+  background: #756ab6;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  gap: 2.4rem;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1.6rem;
+}
+
+.header button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+}
+
+.header i {
+  color: #fff;
+}
+
+.header-category {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* SIDENAV */
+
+.sidenav {
+  background-color: #ffe5e5;
+  position: absolute;
+  width: 75%;
+  z-index: 50;
+  transform: translateX(-100%);
+  top: 0;
+  left: 0;
+  height: 100%;
+  transition: transform 0.3s ease-in;
+  pointer-events: none;
+}
+
+.sidenav.show {
+  transform: translateX(0%);
+  pointer-events: all;
+}
+
+.sidenav-header {
+  background-color: #756ab6;
+  padding: 0.8rem;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.sidenav-actions {
+  padding: 0.8rem 0;
+}
+
+.sidenav-action-group {
+  border-bottom: 1px solid #756ab6;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav-action-group:last-child {
+  border: none;
+}
+
+.sidenav-action button {
+  width: 100%;
+  padding: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 3.2rem;
+  background: none;
+  border: none;
+}
+
+.sidenav-action {
+  position: relative;
+}
+
+.sidenav-action::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+}
+
+.sidenav-title {
+  font-size: 1.2rem;
+  padding: 0.8rem 1.6rem;
+  color: #666666;
+}
+
+/* OVERLAY */
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease-in;
+}
+
+.overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* MAIN PANEL */
+
+/* ADD BUTTON */
+
+.add-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 1.6rem;
+  padding: 2rem;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: #fff;
+  background-color: #756ab6;
+  box-shadow: 3px 5px 10px rgba(51, 51, 51, 0.4);
+}
+
+.add-button i {
+  font-size: 1.8rem;
+}
+
+/* NOTES  */
+
+.notes-wrapper {
+  padding: 0.4rem;
+}
+
+.note {
+  border: 1px solid #333;
+  padding: 0.8rem;
+  padding-bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  border-top-right-radius: 10cpx;
+  background-image: linear-gradient(to top, #ac87c5, #ffe5e5);
+}
+
+.note-date {
+  text-align: right;
+  font-size: 1.2rem;
+}
