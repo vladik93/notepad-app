@@ -1,10 +1,7 @@
 const addBtn = document.querySelector("#add-button");
-const toggleBtn = document.querySelector("#toggle-button");
-const overlayEl = document.querySelector("#overlay");
-const sidenavEl = document.querySelector("#sidenav");
-const searchBtn = document.querySelector("#search-button");
+
 const headerEl = document.querySelector("#header");
-const headerBackBtn = document.querySelector("#header-back-button");
+const sidenavEl = document.querySelector("#sidenav");
 
 let isSearching = false;
 
@@ -43,6 +40,14 @@ const renderHeader = () => {
     `;
   }
 };
+
+renderHeader();
+
+const toggleBtn = document.querySelector("#toggle-button");
+const overlayEl = document.querySelector("#overlay");
+const searchBtn = document.querySelector("#search-button");
+
+const headerBackBtn = document.querySelector("#header-back-button");
 
 toggleBtn.addEventListener("click", () => {
   overlayEl.classList.add("show");
