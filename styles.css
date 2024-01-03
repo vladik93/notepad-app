@@ -23,6 +23,10 @@ ul {
   list-style: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 /* HEADER */
 
 .header {
@@ -57,6 +61,28 @@ ul {
 .header-category {
   font-size: 1.2rem;
   font-weight: 500;
+}
+
+.header-search {
+  position: relative;
+  display: flex;
+  flex: 1;
+}
+
+.header-search input {
+  padding: 1.6rem 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+}
+
+.header-search i {
+  position: absolute;
+  top: 50%;
+  left: 0.8rem;
+  transform: translateY(-50%);
+  color: #333;
 }
 
 /* SIDENAV */
@@ -135,15 +161,16 @@ ul {
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   opacity: 0;
-  z-index: -1;
-  transition: opacity 0.3s ease-in;
+  visibility: hidden;
+  z-index: 10;
+  transition: all 0.3s ease-in;
 }
 
 .overlay.show {
-  opacity: 1;
   visibility: visible;
+  opacity: 1;
 }
 
 /* MAIN PANEL */
@@ -174,17 +201,20 @@ ul {
 
 .notes-wrapper {
   padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .note {
-  border: 1px solid #333;
+  border: 0.1px solid #999999;
   padding: 0.8rem;
   padding-bottom: 0.4rem;
   display: flex;
   flex-direction: column;
   border-radius: 5px;
   border-top-right-radius: 10px;
-  background-image: linear-gradient(to top, #ac87c5, #ffe5e5);
+  background-image: linear-gradient(to top, #ffe5e5, #fff2f2);
 }
 
 .note-date {

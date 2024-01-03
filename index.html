@@ -18,22 +18,35 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="overlay"></div>
-    <header class="header">
+    <div class="overlay" id="overlay"></div>
+    <header class="header" id="header">
+      <!-- <div class="header-back">
+        <button><i class="fa-solid fa-arrow-left"></i></button>
+      </div>
+      <div class="header-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" />
+      </div>
+      <div class="header-search-actions">
+        <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div> -->
+
       <div class="header-toggler">
-        <button><i class="fa-solid fa-bars"></i></button>
+        <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
       </div>
       <div class="header-text">
         <h3>Notepad Free</h3>
         <p class="header-category">Category</p>
       </div>
       <div class="header-actions">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button id="search-button">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
         <button>SORT</button>
         <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div>
     </header>
-    <nav class="sidenav">
+    <nav class="sidenav" id="sidenav">
       <div class="sidenav-header">
         <p>Notepad Free</p>
       </div>
@@ -108,9 +121,15 @@
         <p class="note-title">Title</p>
         <p class="note-date">Last edit: 02/01/2024, 23:25</p>
       </div>
+      <div class="note">
+        <p class="note-title">Title</p>
+        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+      </div>
     </div>
 
-    <button class="add-button"><i class="fa-solid fa-plus"></i></button>
+    <button class="add-button" id="add-button">
+      <i class="fa-solid fa-plus"></i>
+    </button>
 
     <script src="./script.js"></script>
   </body>
