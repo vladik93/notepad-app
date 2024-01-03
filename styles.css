@@ -183,7 +183,7 @@ ul {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  border-top-right-radius: 10cpx;
+  border-top-right-radius: 10px;
   background-image: linear-gradient(to top, #ac87c5, #ffe5e5);
 }
 
