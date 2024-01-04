@@ -6,15 +6,19 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 html {
   font-size: 62.5%;
 }
 
 body {
-  font-size: 1.6rem;
   min-height: 100vh;
+  font-size: 1.6rem;
   font-family: "Poppins", sans-serif;
-  position: relative;
   background-color: #ffe5e5;
   color: #333;
 }
@@ -26,6 +30,8 @@ ul {
 button {
   cursor: pointer;
 }
+
+/* CONTAINER */
 
 /* HEADER */
 
@@ -223,4 +229,36 @@ button {
 .note-date {
   text-align: right;
   font-size: 1.2rem;
+}
+
+/* PAGES */
+
+.container {
+  position: relative;
+  display: flex;
+  transform: translateX(0%);
+  transition: transform 0.3s ease-in;
+  height: 100%;
+  overflow: hidden;
+}
+
+.container.show {
+  transform: translateX(-100%);
+}
+
+.page {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.page-one {
+  background: red;
+  top: 0;
+  left: 0;
+}
+
+.page-two {
+  top: 0;
+  left: 100%;
 }

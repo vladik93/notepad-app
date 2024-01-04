@@ -19,7 +19,6 @@
   </head>
   <body>
     <div class="overlay" id="overlay"></div>
-    <header class="header" id="header"></header>
     <nav class="sidenav" id="sidenav">
       <div class="sidenav-header">
         <p>Notepad Free</p>
@@ -90,20 +89,30 @@
         </div>
       </div>
     </nav>
-    <div class="notes-wrapper">
-      <div class="note">
-        <p class="note-title">Title</p>
-        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+
+    <div class="container">
+      <div class="page page-one" id="page-one">
+        <header class="header" id="header"></header>
+
+        <div class="notes-wrapper">
+          <div class="note">
+            <p class="note-title">Title</p>
+            <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+          </div>
+          <div class="note">
+            <p class="note-title">Title</p>
+            <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+          </div>
+        </div>
+
+        <button class="add-button" id="add-button">
+          <i class="fa-solid fa-plus"></i>
+        </button>
       </div>
-      <div class="note">
-        <p class="note-title">Title</p>
-        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+      <div class="page page-two" id="page-two">
+        <h2>HELLO WORLD</h2>
       </div>
     </div>
-
-    <button class="add-button" id="add-button">
-      <i class="fa-solid fa-plus"></i>
-    </button>
 
     <script src="./script.js"></script>
   </body>
