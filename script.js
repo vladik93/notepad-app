@@ -1,7 +1,6 @@
 const addBtn = document.querySelector("#add-button");
 
 const headerEl = document.querySelector("#header");
-const sidenavEl = document.querySelector("#sidenav");
 
 let isSearching = false;
 
@@ -13,14 +12,46 @@ const renderHeader = () => {
       <div class="header-back">
         <button id="header-back-button"><i class="fa-solid fa-arrow-left"></i></button>
       </div>
-      <div class="header-search">
+      <div class="header-search" id="header-search">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" />
+        <input type="text" id="header-search-input"/>
       </div>
       <div class="header-search-actions">
         <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div> 
     `;
+
+    const headerBackBtn = document.querySelector("#header-back-button");
+
+    const headerSearchInp = document.querySelector("#header-search-input");
+
+    headerSearchInp.focus();
+
+    headerBackBtn.addEventListener("click", () => {
+      isSearching = false;
+      renderHeader();
+    });
+
+    headerSearchInp.addEventListener("input", (e) => {
+      let inputValue = e.target.value;
+
+      const searchIcon = document.querySelector(".fa-magnifying-glass");
+
+      if (inputValue.length > 0) {
+        searchIcon.style.display = "none";
+        const headerSearchEl = document.querySelector("#header-search");
+        // const resetSearchBtn = document.createElement("button");
+        // resetSearchBtn.classList.add("reset-search-button");
+        // resetSearchBtn.setAttribute("id", "reset-search-button");
+        // resetSearchBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+
+        // headerSearchEl.insertAdjacentElement("beforeend", resetSearchBtn);
+      } else {
+        searchIcon.style.display = "block";
+        const resetSearchBtn = document.querySelector("#reset-search-button");
+        resetSearchBtn.style.display = "none";
+      }
+    });
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -38,6 +69,13 @@ const renderHeader = () => {
         <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div>    
     `;
+
+    const searchBtn = document.querySelector("#search-button");
+
+    searchBtn.addEventListener("click", () => {
+      isSearching = true;
+      renderHeader();
+    });
   }
 };
 
@@ -46,6 +84,7 @@ renderHeader();
 const toggleBtn = document.querySelector("#toggle-button");
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
+const sidenavEl = document.querySelector("#sidenav");
 
 const headerBackBtn = document.querySelector("#header-back-button");
 
@@ -59,12 +98,12 @@ overlayEl.addEventListener("click", () => {
   sidenavEl.classList.remove("show");
 });
 
-searchBtn.addEventListener("click", () => {
-  isSearching = true;
-  renderHeader();
-});
+// searchBtn.addEventListener("click", () => {
+//   isSearching = true;
+//   renderHeader();
+// });
 
-headerBackBtn.addEventListener("click", () => {
-  isSearching = false;
-  renderHeader();
-});
+// headerBackBtn.addEventListener("click", () => {
+//   isSearching = false;
+//   renderHeader();
+// });
