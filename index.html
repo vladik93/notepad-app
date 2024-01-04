@@ -18,92 +18,100 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="overlay" id="overlay"></div>
-    <header class="header" id="header"></header>
-    <nav class="sidenav" id="sidenav">
-      <div class="sidenav-header">
-        <p>Notepad Free</p>
+    <div class="container">
+      <nav class="sidenav" id="sidenav">
+        <div class="sidenav-header">
+          <p>Notepad Free</p>
+        </div>
+        <div class="sidenav-actions">
+          <div class="sidenav-action-group">
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Notes</span>
+              </button>
+            </div>
+          </div>
+          <div class="sidenav-action-group">
+            <span class="sidenav-title">Catergories</span>
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Uncategorized</span>
+              </button>
+            </div>
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Edit categories</span>
+              </button>
+            </div>
+          </div>
+          <div class="sidenav-action-group">
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Backup</span>
+              </button>
+            </div>
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Trash</span>
+              </button>
+            </div>
+          </div>
+          <div class="sidenav-action-group">
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Settings</span>
+              </button>
+            </div>
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Rate the app</span>
+              </button>
+            </div>
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Help</span>
+              </button>
+            </div>
+            <div class="sidenav-action">
+              <button>
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Privacy Policy</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="page-one">
+        <div class="overlay" id="overlay"></div>
+        <header class="header" id="header"></header>
+        <div class="notes-wrapper">
+          <div class="note">
+            <p class="note-title">Title</p>
+            <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+          </div>
+          <div class="note">
+            <p class="note-title">Title</p>
+            <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+          </div>
+        </div>
+
+        <button class="add-button" id="add-button">
+          <i class="fa-solid fa-plus"></i>
+        </button>
       </div>
-      <div class="sidenav-actions">
-        <div class="sidenav-action-group">
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Notes</span>
-            </button>
-          </div>
-        </div>
-        <div class="sidenav-action-group">
-          <span class="sidenav-title">Catergories</span>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Uncategorized</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Edit categories</span>
-            </button>
-          </div>
-        </div>
-        <div class="sidenav-action-group">
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Backup</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Trash</span>
-            </button>
-          </div>
-        </div>
-        <div class="sidenav-action-group">
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Settings</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Rate the app</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Help</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Privacy Policy</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <div class="notes-wrapper">
-      <div class="note">
-        <p class="note-title">Title</p>
-        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
-      </div>
-      <div class="note">
-        <p class="note-title">Title</p>
-        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
+
+      <div class="page-two">
+        <h1>HELLO</h1>
       </div>
     </div>
-
-    <button class="add-button" id="add-button">
-      <i class="fa-solid fa-plus"></i>
-    </button>
 
     <script src="./script.js"></script>
   </body>
