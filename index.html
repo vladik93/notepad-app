@@ -19,7 +19,25 @@
   </head>
   <body>
     <div class="overlay" id="overlay"></div>
-    <header class="header" id="header"></header>
+    <header class="header" id="header">
+      <div class="header-toggler">
+        <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="header-text">
+        <h3>Notepad Free</h3>
+        <p class="header-category">Category</p>
+      </div>
+      <div class="header-actions">
+        <button id="search-button">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button id="sort-button">SORT</button>
+
+        <button id="actions-button">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </header>
     <nav class="sidenav" id="sidenav">
       <div class="sidenav-header">
         <p>Notepad Free</p>
@@ -90,6 +108,59 @@
         </div>
       </div>
     </nav>
+    <div class="sort-modal" id="sort-modal">
+      <h3 class="sort-title">Sort by</h3>
+      <div class="sort-option-wrapper">
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-1" />
+          </div>
+          <label for="sort-option-1">edit date: from newest</label>
+        </div>
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-2" />
+          </div>
+          <label for="sort-option-2">edit date: from oldest</label>
+        </div>
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-3" />
+          </div>
+          <label for="sort-option-3">title: A to Z</label>
+        </div>
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-4" />
+          </div>
+          <label for="sort-option-4">title: Z to A</label>
+        </div>
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-5" />
+          </div>
+          <label for="sort-option-5">creation date: from newest</label>
+        </div>
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-6" />
+          </div>
+          <label for="sort-option-6">edit date: from oldest</label>
+        </div>
+        <div class="sort-option">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" class="checkbox" id="sort-option-7" />
+          </div>
+          <label for="sort-option-7"
+            >color: in order as shown on color palette</label
+          >
+        </div>
+      </div>
+      <div class="sort-button-wrapper">
+        <button id="sort-cancel-button">CANCEL</button>
+        <button>SORT</button>
+      </div>
+    </div>
     <div class="notes-wrapper">
       <div class="note">
         <p class="note-title">Title</p>

@@ -1,6 +1,8 @@
 const addBtn = document.querySelector("#add-button");
-
 const headerEl = document.querySelector("#header");
+
+const sortModalEl = document.querySelector("#sort-modal");
+const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
 let isSearching = false;
 
@@ -65,21 +67,28 @@ const renderHeader = () => {
         <button id="search-button">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
-        <button>SORT</button>
-        <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        <button id="sort-button">SORT</button>
+        
+        <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div>    
     `;
 
     const searchBtn = document.querySelector("#search-button");
+    const sortBtn = document.querySelector("#sort-button");
 
     searchBtn.addEventListener("click", () => {
       isSearching = true;
       renderHeader();
     });
+
+    sortBtn.addEventListener("click", () => {
+      overlayEl.classList.add("show");
+      sortModalEl.classList.add("show");
+    });
   }
 };
 
-renderHeader();
+// renderHeader();
 
 const toggleBtn = document.querySelector("#toggle-button");
 const overlayEl = document.querySelector("#overlay");
@@ -94,16 +103,12 @@ toggleBtn.addEventListener("click", () => {
 });
 
 overlayEl.addEventListener("click", () => {
-  overlayEl.classList.remove("show");
-  sidenavEl.classList.remove("show");
+  document.querySelectorAll(".show").forEach((item) => {
+    item.classList.remove("show");
+  });
 });
 
-// searchBtn.addEventListener("click", () => {
-//   isSearching = true;
-//   renderHeader();
-// });
-
-// headerBackBtn.addEventListener("click", () => {
-//   isSearching = false;
-//   renderHeader();
-// });
+sortCancelBtn.addEventListener("click", () => {
+  overlayEl.classList.remove("show");
+  sortModalEl.classList.remove("show");
+});
