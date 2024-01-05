@@ -18,163 +18,143 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="overlay" id="overlay"></div>
-    <header class="header" id="header">
-      <!-- <div class="header-toggler">
-        <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
-      </div>
-      <div class="header-text">
-        <h3>Notepad Free</h3>
-        <p class="header-category">Category</p>
-      </div>
-      <div class="header-actions">
-        <button id="search-button">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <button id="sort-button">SORT</button>
+    <div class="page-wrapper" id="page-wrapper">
+      <div class="page" id="page-one">
+        <div class="overlay" id="overlay"></div>
+        <header class="header" id="header"></header>
+        <nav class="sidenav" id="sidenav">
+          <div class="sidenav-header">
+            <p>Notepad Free</p>
+          </div>
+          <div class="sidenav-actions">
+            <div class="sidenav-action-group">
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Notes</span>
+                </button>
+              </div>
+            </div>
+            <div class="sidenav-action-group">
+              <span class="sidenav-title">Catergories</span>
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Uncategorized</span>
+                </button>
+              </div>
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Edit categories</span>
+                </button>
+              </div>
+            </div>
+            <div class="sidenav-action-group">
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Backup</span>
+                </button>
+              </div>
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Trash</span>
+                </button>
+              </div>
+            </div>
+            <div class="sidenav-action-group">
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Settings</span>
+                </button>
+              </div>
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Rate the app</span>
+                </button>
+              </div>
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Help</span>
+                </button>
+              </div>
+              <div class="sidenav-action">
+                <button>
+                  <i class="fa-solid fa-note-sticky"></i>
+                  <span>Privacy Policy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div class="sort-modal" id="sort-modal">
+          <h3 class="sort-title">Sort by</h3>
+          <div class="sort-option-wrapper">
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-1" />
+              </div>
+              <label for="sort-option-1">edit date: from newest</label>
+            </div>
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-2" />
+              </div>
+              <label for="sort-option-2">edit date: from oldest</label>
+            </div>
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-3" />
+              </div>
+              <label for="sort-option-3">title: A to Z</label>
+            </div>
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-4" />
+              </div>
+              <label for="sort-option-4">title: Z to A</label>
+            </div>
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-5" />
+              </div>
+              <label for="sort-option-5">creation date: from newest</label>
+            </div>
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-6" />
+              </div>
+              <label for="sort-option-6">edit date: from oldest</label>
+            </div>
+            <div class="sort-option">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" class="checkbox" id="sort-option-7" />
+              </div>
+              <label for="sort-option-7"
+                >color: in order as shown on color palette</label
+              >
+            </div>
+          </div>
+          <div class="sort-button-wrapper">
+            <button id="sort-cancel-button">CANCEL</button>
+            <button>SORT</button>
+          </div>
+        </div>
+        <div class="notes-wrapper" id="notes-wrapper"></div>
 
-        <button id="actions-button">
-          <i class="fa-solid fa-ellipsis-vertical"></i>
+        <button class="add-button" id="add-button">
+          <i class="fa-solid fa-plus"></i>
         </button>
-      </div> -->
-    </header>
-    <nav class="sidenav" id="sidenav">
-      <div class="sidenav-header">
-        <p>Notepad Free</p>
       </div>
-      <div class="sidenav-actions">
-        <div class="sidenav-action-group">
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Notes</span>
-            </button>
-          </div>
-        </div>
-        <div class="sidenav-action-group">
-          <span class="sidenav-title">Catergories</span>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Uncategorized</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Edit categories</span>
-            </button>
-          </div>
-        </div>
-        <div class="sidenav-action-group">
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Backup</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Trash</span>
-            </button>
-          </div>
-        </div>
-        <div class="sidenav-action-group">
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Settings</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Rate the app</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Help</span>
-            </button>
-          </div>
-          <div class="sidenav-action">
-            <button>
-              <i class="fa-solid fa-note-sticky"></i>
-              <span>Privacy Policy</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <div class="sort-modal" id="sort-modal">
-      <h3 class="sort-title">Sort by</h3>
-      <div class="sort-option-wrapper">
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-1" />
-          </div>
-          <label for="sort-option-1">edit date: from newest</label>
-        </div>
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-2" />
-          </div>
-          <label for="sort-option-2">edit date: from oldest</label>
-        </div>
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-3" />
-          </div>
-          <label for="sort-option-3">title: A to Z</label>
-        </div>
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-4" />
-          </div>
-          <label for="sort-option-4">title: Z to A</label>
-        </div>
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-5" />
-          </div>
-          <label for="sort-option-5">creation date: from newest</label>
-        </div>
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-6" />
-          </div>
-          <label for="sort-option-6">edit date: from oldest</label>
-        </div>
-        <div class="sort-option">
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox" id="sort-option-7" />
-          </div>
-          <label for="sort-option-7"
-            >color: in order as shown on color palette</label
-          >
-        </div>
-      </div>
-      <div class="sort-button-wrapper">
-        <button id="sort-cancel-button">CANCEL</button>
-        <button>SORT</button>
+      <div class="page" id="page-two">
+        <h2>PAGE 2</h2>
       </div>
     </div>
-    <div class="notes-wrapper" id="notes-wrapper">
-      <!-- <div class="note">
-        <p class="note-title">Title</p>
-        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
-      </div>
-      <div class="note">
-        <p class="note-title">Title</p>
-        <p class="note-date">Last edit: 02/01/2024, 23:25</p>
-      </div> -->
-    </div>
-
-    <button class="add-button" id="add-button">
-      <i class="fa-solid fa-plus"></i>
-    </button>
 
     <script src="./script.js"></script>
   </body>

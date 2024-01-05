@@ -6,17 +6,22 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow: hidden;
+}
+
 html {
   font-size: 62.5%;
 }
 
 body {
   font-size: 1.6rem;
-  min-height: 100vh;
   font-family: "Poppins", sans-serif;
   position: relative;
   background-color: #ffe5e5;
   color: #333;
+  display: flex;
 }
 
 ul {
@@ -275,6 +280,30 @@ button {
   border: none;
   color: #756ab6;
   font-weight: 700;
+}
+
+/* PAGES */
+
+.page-wrapper {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  transform: translateX(0%);
+  transition: transform 0.3s ease-in;
+}
+
+.page-wrapper.slide {
+  transform: translateX(-100%);
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#page-two {
+  left: 100%;
 }
 
 /* NOTES  */

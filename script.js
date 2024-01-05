@@ -1,11 +1,14 @@
 const addBtn = document.querySelector("#add-button");
 const headerEl = document.querySelector("#header");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
+const pageWrapperEl = document.querySelector("#page-wrapper");
 
 const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
 let isSearching = false;
+
+let pageNum = 1;
 
 // STORAGE
 
@@ -149,3 +152,13 @@ const renderNotes = () => {
 };
 
 renderNotes();
+
+addBtn.addEventListener("click", () => {
+  if (pageNum === 1) {
+    pageWrapperEl.classList.add("slide");
+    pageNum = 2;
+  } else {
+    pageWrapperEl.classList.remove("slide");
+    pageNum = 1;
+  }
+});
