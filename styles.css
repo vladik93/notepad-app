@@ -61,6 +61,7 @@ button {
   align-items: center;
   color: #fff;
   gap: 2.4rem;
+  position: relative;
 }
 
 .header-text {
@@ -300,4 +301,19 @@ button {
 .note-date {
   text-align: right;
   font-size: 1.2rem;
+}
+
+/* HEADER SELECT */
+.header-actions-select {
+  position: relative;
+  display: flex;
+}
+
+.header-actions-option {
+  position: absolute;
+  background: red;
+  width: 180px;
+  height: 300px;
+  top: 0;
+  right: 0;
 }
