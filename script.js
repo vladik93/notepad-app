@@ -88,7 +88,7 @@ const renderHeader = () => {
   }
 };
 
-// renderHeader();
+renderHeader();
 
 const toggleBtn = document.querySelector("#toggle-button");
 const overlayEl = document.querySelector("#overlay");
@@ -98,6 +98,7 @@ const sidenavEl = document.querySelector("#sidenav");
 const headerBackBtn = document.querySelector("#header-back-button");
 
 toggleBtn.addEventListener("click", () => {
+  console.log("toggleBTN ->");
   overlayEl.classList.add("show");
   sidenavEl.classList.add("show");
 });
