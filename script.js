@@ -73,8 +73,15 @@ const renderHeader = () => {
       </div>    
     `;
 
+    const toggleBtn = document.querySelector("#toggle-button");
     const searchBtn = document.querySelector("#search-button");
     const sortBtn = document.querySelector("#sort-button");
+
+    toggleBtn.addEventListener("click", () => {
+      console.log("toggleBTN ->");
+      overlayEl.classList.add("show");
+      sidenavEl.classList.add("show");
+    });
 
     searchBtn.addEventListener("click", () => {
       isSearching = true;
@@ -90,18 +97,11 @@ const renderHeader = () => {
 
 renderHeader();
 
-const toggleBtn = document.querySelector("#toggle-button");
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
 const sidenavEl = document.querySelector("#sidenav");
 
 const headerBackBtn = document.querySelector("#header-back-button");
-
-toggleBtn.addEventListener("click", () => {
-  console.log("toggleBTN ->");
-  overlayEl.classList.add("show");
-  sidenavEl.classList.add("show");
-});
 
 overlayEl.addEventListener("click", () => {
   document.querySelectorAll(".show").forEach((item) => {
