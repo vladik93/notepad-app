@@ -1,10 +1,32 @@
 const addBtn = document.querySelector("#add-button");
 const headerEl = document.querySelector("#header");
+const notesWrapperEl = document.querySelector("#notes-wrapper");
 
 const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
 let isSearching = false;
+
+// STORAGE
+
+const NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
+
+const addNote = (title, text) => {
+  let newNote = {
+    id: new Date().getTime(),
+    title,
+    text,
+    lastEditDate: new Date().toJSON(),
+    dateCreated: new Date().toJSON(),
+  };
+
+  NOTES.push(newNote);
+  localStorage.setItem("NOTES", JSON.stringify(NOTES));
+};
+
+// addNote("first note", "this is the first note");
+// addNote("second note", "this is the second note");
+// addNote("third note", "this is the third note");
 
 const renderHeader = () => {
   headerEl.innerHTML = "";
@@ -42,12 +64,6 @@ const renderHeader = () => {
       if (inputValue.length > 0) {
         searchIcon.style.display = "none";
         const headerSearchEl = document.querySelector("#header-search");
-        // const resetSearchBtn = document.createElement("button");
-        // resetSearchBtn.classList.add("reset-search-button");
-        // resetSearchBtn.setAttribute("id", "reset-search-button");
-        // resetSearchBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-
-        // headerSearchEl.insertAdjacentElement("beforeend", resetSearchBtn);
       } else {
         searchIcon.style.display = "block";
         const resetSearchBtn = document.querySelector("#reset-search-button");
@@ -113,3 +129,23 @@ sortCancelBtn.addEventListener("click", () => {
   overlayEl.classList.remove("show");
   sortModalEl.classList.remove("show");
 });
+
+const renderNotes = () => {
+  if (NOTES && NOTES.length) {
+    NOTES.map((item) => {
+      const noteEl = document.createElement("div");
+      noteEl.classList.add("note");
+
+      noteEl.innerHTML = `
+      <p class="note-title">${item.title}</p>
+      <p class="note-date">Last edit: ${new Date(
+        item.lastEditDate
+      ).toLocaleString()}</p>      
+      `;
+
+      notesWrapperEl.appendChild(noteEl);
+    });
+  }
+};
+
+renderNotes();
