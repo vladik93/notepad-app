@@ -1,5 +1,6 @@
 const addBtn = document.querySelector("#add-button");
 const headerEl = document.querySelector("#header");
+const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
 
@@ -8,11 +9,12 @@ const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
 let isSearching = false;
 
-let pageNum = 1;
-
 // STORAGE
 
 const NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
+let PAGE_NUM =
+  JSON.parse(sessionStorage.getItem("PAGE_NUM")) ||
+  sessionStorage.setItem("PAGE_NUM", 1);
 
 const addNote = (title, text) => {
   let newNote = {
@@ -31,8 +33,8 @@ const addNote = (title, text) => {
 // addNote("second note", "this is the second note");
 // addNote("third note", "this is the third note");
 
-const renderHeader = () => {
-  headerEl.innerHTML = "";
+const renderHeader = (headerContainerEl) => {
+  headerContainerEl.innerHTML = "";
 
   if (isSearching) {
     headerEl.innerHTML = `
@@ -56,7 +58,7 @@ const renderHeader = () => {
 
     headerBackBtn.addEventListener("click", () => {
       isSearching = false;
-      renderHeader();
+      renderHeader(headerEl);
     });
 
     headerSearchInp.addEventListener("input", (e) => {
@@ -74,7 +76,7 @@ const renderHeader = () => {
       }
     });
   } else {
-    headerEl.innerHTML = `
+    headerContainerEl.innerHTML = `
       <div class="header-toggler">
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
       </div>
@@ -104,7 +106,7 @@ const renderHeader = () => {
 
     searchBtn.addEventListener("click", () => {
       isSearching = true;
-      renderHeader();
+      renderHeader(headerEl);
     });
 
     sortBtn.addEventListener("click", () => {
@@ -114,7 +116,7 @@ const renderHeader = () => {
   }
 };
 
-renderHeader();
+renderHeader(headerEl);
 
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
@@ -153,12 +155,26 @@ const renderNotes = () => {
 
 renderNotes();
 
-addBtn.addEventListener("click", () => {
-  if (pageNum === 1) {
+const renderPage = () => {
+  if (PAGE_NUM === 2) {
     pageWrapperEl.classList.add("slide");
-    pageNum = 2;
-  } else {
+  } else if (PAGE_NUM === 1) {
     pageWrapperEl.classList.remove("slide");
-    pageNum = 1;
   }
-});
+};
+
+renderPage();
+
+renderHeader(headerPageTwoEl);
+
+const switchPage = () => {
+  if (PAGE_NUM === 1) {
+    pageWrapperEl.classList.add("slide");
+    sessionStorage.setItem("PAGE_NUM", 2);
+  } else if (PAGE_NUM === 2) {
+    pageWrapperEl.classList.remove("slide");
+    sessionStorage.setItem("PAGE_NUM", 1);
+  }
+};
+
+addBtn.addEventListener("click", switchPage);
