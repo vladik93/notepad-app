@@ -152,15 +152,34 @@
         </button>
       </div>
       <div class="page" id="page-two">
-        <header class="header" id="header-page-two"></header>
+        <header class="header" id="header-add-edit">
+          <!-- <div> -->
+          <button id="header2-back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <!-- </div> -->
+          <div class="header-text">
+            <h3>Notepad Free</h3>
+          </div>
+          <div class="header-actions">
+            <button id="save-button">SAVE</button>
+            <button id="undo-button">UNDO</button>
+            <button id="actions-button">
+              <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+          </div>
+        </header>
 
         <form class="add-edit-form">
+          <input type="hidden" id="add-edit-id" />
           <input
             class="add-edit-input"
+            id="add-edit-input"
             type="text"
             placeholder="Enter title..."
           />
           <textarea
+            id="add-edit-textarea"
             class="add-edit-textarea"
             placeholder="Enter text..."
           ></textarea>

@@ -1,8 +1,21 @@
 const addBtn = document.querySelector("#add-button");
+
 const headerEl = document.querySelector("#header");
 const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
+
+const header2backBtn = document.querySelector("#header2-back-button");
+
+const addEditIdInput = document.querySelector("#add-edit-id");
+const addEditInput = document.querySelector("#add-edit-input");
+const addEditTextarea = document.querySelector("#add-edit-textarea");
+
+let addEditInputValue = "";
+let addEditTextareaValue = "";
+
+const saveBtn = document.querySelector("#save-button");
+const undoBtn = document.querySelector("#undo-button");
 
 const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
@@ -11,7 +24,7 @@ let isSearching = false;
 
 // STORAGE
 
-const NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
+let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 let PAGE_NUM =
   JSON.parse(sessionStorage.getItem("PAGE_NUM")) ||
   sessionStorage.setItem("PAGE_NUM", 1);
@@ -33,8 +46,8 @@ const addNote = (title, text) => {
 // addNote("second note", "this is the second note");
 // addNote("third note", "this is the third note");
 
-const renderHeader = (headerContainerEl) => {
-  headerContainerEl.innerHTML = "";
+const renderHeader = () => {
+  headerEl.innerHTML = "";
 
   if (isSearching) {
     headerEl.innerHTML = `
@@ -76,7 +89,7 @@ const renderHeader = (headerContainerEl) => {
       }
     });
   } else {
-    headerContainerEl.innerHTML = `
+    headerEl.innerHTML = `
       <div class="header-toggler">
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
       </div>
@@ -116,7 +129,7 @@ const renderHeader = (headerContainerEl) => {
   }
 };
 
-renderHeader(headerEl);
+renderHeader();
 
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
@@ -135,25 +148,18 @@ sortCancelBtn.addEventListener("click", () => {
   sortModalEl.classList.remove("show");
 });
 
-const renderNotes = () => {
-  if (NOTES && NOTES.length) {
-    NOTES.map((item) => {
-      const noteEl = document.createElement("div");
-      noteEl.classList.add("note");
-
-      noteEl.innerHTML = `
-      <p class="note-title">${item.title}</p>
-      <p class="note-date">Last edit: ${new Date(
-        item.lastEditDate
-      ).toLocaleString()}</p>      
-      `;
-
-      notesWrapperEl.appendChild(noteEl);
-    });
+const switchPage = () => {
+  console.log("switchPage ->");
+  if (PAGE_NUM === 1) {
+    pageWrapperEl.classList.add("slide");
+    PAGE_NUM = 2;
+    sessionStorage.setItem("PAGE_NUM", 2);
+  } else if (PAGE_NUM === 2) {
+    pageWrapperEl.classList.remove("slide");
+    PAGE_NUM = 1;
+    sessionStorage.setItem("PAGE_NUM", 1);
   }
 };
-
-renderNotes();
 
 const renderPage = () => {
   if (PAGE_NUM === 2) {
@@ -163,18 +169,117 @@ const renderPage = () => {
   }
 };
 
-renderPage();
+const renderNotes = () => {
+  notesWrapperEl.innerHTML = "";
+  if (NOTES && NOTES.length) {
+    NOTES.map((item) => {
+      const noteEl = document.createElement("div");
+      noteEl.classList.add("note");
+      noteEl.setAttribute("id", item.id);
 
-renderHeader(headerPageTwoEl);
+      noteEl.innerHTML = `
+      <p class="note-title">${item.title}</p>
+      <p class="note-date">Last edit: ${new Date(
+        item.lastEditDate
+      ).toLocaleString()}</p>      
+      `;
 
-const switchPage = () => {
-  if (PAGE_NUM === 1) {
-    pageWrapperEl.classList.add("slide");
-    sessionStorage.setItem("PAGE_NUM", 2);
-  } else if (PAGE_NUM === 2) {
-    pageWrapperEl.classList.remove("slide");
-    sessionStorage.setItem("PAGE_NUM", 1);
+      notesWrapperEl.appendChild(noteEl);
+
+      noteEl.addEventListener("click", () => {
+        let currentNote = NOTES.find((note) => note.id === parseInt(noteEl.id));
+
+        localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
+
+        const CURRENT_NOTE =
+          JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
+
+        addEditIdInput.value = CURRENT_NOTE.id;
+        addEditInput.value = CURRENT_NOTE.title;
+        addEditTextarea.value = CURRENT_NOTE.text;
+
+        switchPage();
+      });
+    });
   }
 };
 
+renderNotes();
+
+renderPage();
+
 addBtn.addEventListener("click", switchPage);
+
+// PAGE 2
+
+if (localStorage.getItem("CURRENT_NOTE") !== null) {
+  const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
+
+  addEditIdInput.value = CURRENT_NOTE.id;
+  addEditInput.value = CURRENT_NOTE.title;
+  addEditTextarea.value = CURRENT_NOTE.text;
+}
+
+const addEditNote = () => {
+  if (localStorage.getItem("CURRENT_NOTE") !== null) {
+    const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
+
+    let notesArray = [...NOTES];
+
+    const noteIndex = notesArray.findIndex((val) => val.id === CURRENT_NOTE.id);
+
+    notesArray.splice(noteIndex, 1, {
+      ...CURRENT_NOTE,
+      title: addEditInput.value,
+      text: addEditTextarea.value,
+      lastEditDate: new Date().toJSON(),
+    });
+
+    localStorage.setItem("NOTES", JSON.stringify(notesArray));
+    NOTES = notesArray;
+    renderNotes();
+  } else {
+    let newNote = {
+      id: new Date().getTime(),
+      title: addEditInput.value,
+      text: addEditTextarea.value,
+      lastEditDate: new Date().toJSON(),
+      dateCreated: new Date().toJSON(),
+    };
+
+    NOTES.push(newNote);
+    localStorage.setItem("NOTES", JSON.stringify(NOTES));
+    renderNotes();
+  }
+};
+
+addEditInput.addEventListener("input", (e) => {
+  addEditInput.value = e.target.value;
+});
+
+addEditTextarea.addEventListener("input", (e) => {
+  addEditTextarea.value = e.target.value;
+  console.log(addEditTextarea.value);
+});
+
+header2backBtn.addEventListener("click", () => {
+  if (addEditInput.value || addEditTextarea.value) {
+    addEditNote();
+  } else {
+    addEditInput.value = "Untitled";
+    addEditNote();
+  }
+
+  addEditInput.value = "";
+  addEditTextarea.value = "";
+
+  if (localStorage.getItem("CURRENT_NOTE") !== null) {
+    localStorage.removeItem("CURRENT_NOTE");
+  }
+
+  switchPage();
+});
+
+saveBtn.addEventListener("click", () => {
+  addEditNote();
+});
