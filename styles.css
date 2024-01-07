@@ -8,7 +8,7 @@
 
 html,
 body {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 html {
@@ -286,6 +286,7 @@ button {
 /* PAGES */
 
 .page-wrapper {
+  position: relative;
   display: flex;
   width: 100vw;
   height: 100vh;
@@ -371,4 +372,25 @@ button {
 
 .add-edit-textarea {
   height: 100%;
+}
+
+/* ALERT */
+
+.alert {
+  position: absolute;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  /* width: 30px; */
+  height: 30px;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 2.4rem 1.6rem;
+  border-radius: 10px;
 }

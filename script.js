@@ -29,22 +29,24 @@ let PAGE_NUM =
   JSON.parse(sessionStorage.getItem("PAGE_NUM")) ||
   sessionStorage.setItem("PAGE_NUM", 1);
 
-const addNote = (title, text) => {
-  let newNote = {
-    id: new Date().getTime(),
-    title,
-    text,
-    lastEditDate: new Date().toJSON(),
-    dateCreated: new Date().toJSON(),
-  };
+const addAlert = (text, containerEl) => {
+  const alertEl = document.createElement("div");
+  alertEl.classList.add("alert");
 
-  NOTES.push(newNote);
-  localStorage.setItem("NOTES", JSON.stringify(NOTES));
+  const alertTextEl = document.createElement("span");
+  alertTextEl.innerText = text;
+  alertEl.appendChild(alertTextEl);
+
+  const alertIcon = document.createElement("i");
+  alertIcon.classList.add("fa-solid", "fa-note-sticky");
+  alertEl.insertAdjacentElement("afterbegin", alertIcon);
+
+  containerEl.insertAdjacentElement("beforeend", alertEl);
+
+  setTimeout(() => {
+    alertEl.remove();
+  }, 2000);
 };
-
-// addNote("first note", "this is the first note");
-// addNote("second note", "this is the second note");
-// addNote("third note", "this is the third note");
 
 const renderHeader = () => {
   headerEl.innerHTML = "";
@@ -250,6 +252,7 @@ const addEditNote = () => {
     NOTES.push(newNote);
     localStorage.setItem("NOTES", JSON.stringify(NOTES));
     renderNotes();
+    addAlert("Saved", document.body);
   }
 };
 
