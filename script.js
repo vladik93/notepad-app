@@ -136,10 +136,9 @@ const renderHeader = () => {
   }
 
   if (IS_NOTE_EDIT_MODE) {
-    headerEl.innerHTML = `
-      <p>HEADER EDITED</p>
-    
-    `;
+    let selectedNoteEls = document.querySelectorAll(".note.selected");
+    console.log("length ->", selectedNoteEls.length);
+    headerEl.innerHTML = selectedNoteEls.length;
   }
 };
 
