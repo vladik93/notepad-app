@@ -286,3 +286,18 @@ header2backBtn.addEventListener("click", () => {
 saveBtn.addEventListener("click", () => {
   addEditNote();
 });
+
+let isMouseHold = false;
+
+pageWrapperEl.addEventListener("mousedown", () => {
+  isMouseHold = true;
+  setTimeout(() => {
+    if (isMouseHold) {
+      console.log("is held!");
+    }
+  }, 1500);
+});
+
+pageWrapperEl.addEventListener("mouseup", () => {
+  isMouseHold = false;
+});
