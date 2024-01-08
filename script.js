@@ -32,6 +32,8 @@ let PAGE_NUM =
   JSON.parse(sessionStorage.getItem("PAGE_NUM")) ||
   sessionStorage.setItem("PAGE_NUM", 1);
 
+let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
+
 const addAlert = (text, containerEl) => {
   const alertEl = document.createElement("div");
   alertEl.classList.add("alert");
@@ -132,6 +134,13 @@ const renderHeader = () => {
       sortModalEl.classList.add("show");
     });
   }
+
+  if (IS_NOTE_EDIT_MODE) {
+    headerEl.innerHTML = `
+      <p>HEADER EDITED</p>
+    
+    `;
+  }
 };
 
 renderHeader();
@@ -192,24 +201,34 @@ const renderNotes = () => {
       notesWrapperEl.appendChild(noteEl);
 
       noteEl.addEventListener("click", () => {
-        let currentNote = NOTES.find((note) => note.id === parseInt(noteEl.id));
+        if (IS_NOTE_EDIT_MODE) {
+          noteEl.classList.add("selected");
+        } else {
+          let currentNote = NOTES.find(
+            (note) => note.id === parseInt(noteEl.id)
+          );
 
-        localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
+          localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
 
-        const CURRENT_NOTE =
-          JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
+          const CURRENT_NOTE =
+            JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
 
-        addEditIdInput.value = CURRENT_NOTE.id;
-        addEditInput.value = CURRENT_NOTE.title;
-        addEditTextarea.value = CURRENT_NOTE.text;
+          addEditIdInput.value = CURRENT_NOTE.id;
+          addEditInput.value = CURRENT_NOTE.title;
+          addEditTextarea.value = CURRENT_NOTE.text;
 
-        switchPage();
+          switchPage();
+        }
       });
 
       noteEl.addEventListener("pointerdown", () => {
         isNoteHeld = true;
         timeoutId = setTimeout(() => {
+          IS_NOTE_EDIT_MODE = true;
+          sessionStorage.setItem("IS_NOTE_EDIT_MODE", true);
           noteEl.classList.add("selected");
+
+          renderHeader();
         }, 2000);
       });
 
