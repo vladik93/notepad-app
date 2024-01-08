@@ -22,6 +22,9 @@ const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
 let isSearching = false;
 
+let timeoutId;
+let isNoteHeld = false;
+
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
@@ -202,6 +205,18 @@ const renderNotes = () => {
 
         switchPage();
       });
+
+      noteEl.addEventListener("pointerdown", () => {
+        isNoteHeld = true;
+        timeoutId = setTimeout(() => {
+          noteEl.classList.add("selected");
+        }, 2000);
+      });
+
+      noteEl.addEventListener("pointerup", () => {
+        isNoteHeld = false;
+        clearTimeout(timeoutId);
+      });
     });
   }
 };
@@ -287,17 +302,17 @@ saveBtn.addEventListener("click", () => {
   addEditNote();
 });
 
-let isMouseHold = false;
+// let isMouseHold = false;
 
-pageWrapperEl.addEventListener("mousedown", () => {
-  isMouseHold = true;
-  setTimeout(() => {
-    if (isMouseHold) {
-      console.log("is held!");
-    }
-  }, 1500);
-});
+// pageWrapperEl.addEventListener("pointerdown", () => {
+//   isMouseHold = true;
+//   setTimeout(() => {
+//     if (isMouseHold) {
+//       console.log("is held!");
+//     }
+//   }, 3000);
+// });
 
-pageWrapperEl.addEventListener("mouseup", () => {
-  isMouseHold = false;
-});
+// pageWrapperEl.addEventListener("pointerup", () => {
+//   isMouseHold = false;
+// });
