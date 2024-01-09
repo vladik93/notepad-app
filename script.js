@@ -202,6 +202,7 @@ const renderNotes = () => {
       noteEl.addEventListener("click", () => {
         if (IS_NOTE_EDIT_MODE) {
           noteEl.classList.add("selected");
+          renderHeader();
         } else {
           let currentNote = NOTES.find(
             (note) => note.id === parseInt(noteEl.id)
@@ -258,6 +259,8 @@ if (localStorage.getItem("CURRENT_NOTE") !== null) {
 const addEditNote = () => {
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
     const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
+
+    const { title, text } = CURRENT_NOTE;
 
     let notesArray = [...NOTES];
 
