@@ -276,6 +276,7 @@ const addEditNote = () => {
     localStorage.setItem("NOTES", JSON.stringify(notesArray));
     NOTES = notesArray;
     renderNotes();
+    addAlert("Saved", document.body);
   } else {
     let newNote = {
       id: new Date().getTime(),
@@ -302,6 +303,24 @@ addEditTextarea.addEventListener("input", (e) => {
 });
 
 header2backBtn.addEventListener("click", () => {
+  if (
+    NOTES.some(
+      (note) =>
+        note.title === addEditInput.value && note.text === addEditTextarea.value
+    )
+  ) {
+    console.log("same values found");
+    addEditInput.value = "";
+    addEditTextarea.value = "";
+
+    if (localStorage.getItem("CURRENT_NOTE") !== null) {
+      localStorage.removeItem("CURRENT_NOTE");
+    }
+
+    switchPage();
+    return;
+  }
+
   if (addEditInput.value || addEditTextarea.value) {
     addEditNote();
   } else {
