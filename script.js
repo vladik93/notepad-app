@@ -25,6 +25,8 @@ let isSearching = false;
 let timeoutId;
 let isNoteHeld = false;
 
+let noteIsSaved = false;
+
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
@@ -200,6 +202,7 @@ const renderNotes = () => {
       notesWrapperEl.appendChild(noteEl);
 
       noteEl.addEventListener("click", () => {
+        noteIsSaved = false;
         if (IS_NOTE_EDIT_MODE) {
           noteEl.classList.add("selected");
           renderHeader();
@@ -244,7 +247,10 @@ renderNotes();
 
 renderPage();
 
-addBtn.addEventListener("click", switchPage);
+addBtn.addEventListener("click", () => {
+  noteIsSaved = false;
+  switchPage();
+});
 
 // PAGE 2
 
@@ -257,69 +263,77 @@ if (localStorage.getItem("CURRENT_NOTE") !== null) {
 }
 
 const addEditNote = () => {
-  if (localStorage.getItem("CURRENT_NOTE") !== null) {
-    const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
+  if (!noteIsSaved) {
+    if (localStorage.getItem("CURRENT_NOTE") !== null) {
+      const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
 
-    const { title, text } = CURRENT_NOTE;
+      const { title, text } = CURRENT_NOTE;
 
-    let notesArray = [...NOTES];
+      let notesArray = [...NOTES];
 
-    const noteIndex = notesArray.findIndex((val) => val.id === CURRENT_NOTE.id);
+      const noteIndex = notesArray.findIndex(
+        (val) => val.id === CURRENT_NOTE.id
+      );
 
-    notesArray.splice(noteIndex, 1, {
-      ...CURRENT_NOTE,
-      title: addEditInput.value,
-      text: addEditTextarea.value,
-      lastEditDate: new Date().toJSON(),
-    });
+      notesArray.splice(noteIndex, 1, {
+        ...CURRENT_NOTE,
+        title: addEditInput.value,
+        text: addEditTextarea.value,
+        lastEditDate: new Date().toJSON(),
+      });
 
-    localStorage.setItem("NOTES", JSON.stringify(notesArray));
-    NOTES = notesArray;
-    renderNotes();
-    addAlert("Saved", document.body);
-  } else {
-    let newNote = {
-      id: new Date().getTime(),
-      title: addEditInput.value,
-      text: addEditTextarea.value,
-      lastEditDate: new Date().toJSON(),
-      dateCreated: new Date().toJSON(),
-    };
+      localStorage.setItem("NOTES", JSON.stringify(notesArray));
+      NOTES = notesArray;
+      renderNotes();
+      addAlert("Saved", document.body);
+    } else {
+      let newNote = {
+        id: new Date().getTime(),
+        title: addEditInput.value ? addEditInput.value : "Untitled",
+        text: addEditTextarea.value,
+        lastEditDate: new Date().toJSON(),
+        dateCreated: new Date().toJSON(),
+      };
 
-    NOTES.push(newNote);
-    localStorage.setItem("NOTES", JSON.stringify(NOTES));
-    renderNotes();
-    addAlert("Saved", document.body);
+      NOTES.push(newNote);
+      localStorage.setItem("NOTES", JSON.stringify(NOTES));
+      renderNotes();
+      addAlert("Saved", document.body);
+      noteIsSaved = true;
+      console.log("addEditNote is saved ->", noteIsSaved);
+    }
   }
 };
 
 addEditInput.addEventListener("input", (e) => {
   addEditInput.value = e.target.value;
+  noteIsSaved = false;
+  console.log("addEditInput changed note is saved ->", noteIsSaved);
 });
 
 addEditTextarea.addEventListener("input", (e) => {
   addEditTextarea.value = e.target.value;
-  console.log(addEditTextarea.value);
+  noteIsSaved = false;
 });
 
 header2backBtn.addEventListener("click", () => {
-  if (
-    NOTES.some(
-      (note) =>
-        note.title === addEditInput.value && note.text === addEditTextarea.value
-    )
-  ) {
-    console.log("same values found");
-    addEditInput.value = "";
-    addEditTextarea.value = "";
+  // if (
+  //   NOTES.some(
+  //     (note) =>
+  //       note.title === addEditInput.value && note.text === addEditTextarea.value
+  //   )
+  // ) {
+  //   console.log("same values found");
+  //   addEditInput.value = "";
+  //   addEditTextarea.value = "";
 
-    if (localStorage.getItem("CURRENT_NOTE") !== null) {
-      localStorage.removeItem("CURRENT_NOTE");
-    }
+  //   if (localStorage.getItem("CURRENT_NOTE") !== null) {
+  //     localStorage.removeItem("CURRENT_NOTE");
+  //   }
 
-    switchPage();
-    return;
-  }
+  //   switchPage();
+  //   return;
+  // }
 
   if (addEditInput.value || addEditTextarea.value) {
     addEditNote();
@@ -339,6 +353,8 @@ header2backBtn.addEventListener("click", () => {
 });
 
 saveBtn.addEventListener("click", () => {
+  // CURRENT NOTE AND NOTES ARENT IN SYNC WHEN EDIT HAPPENS A SECOND TIME
+  // MAKE SURE TO RE-SET CURRENT NOTE IN LOCALSTORAGE
   addEditNote();
 });
 
