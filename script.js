@@ -25,6 +25,8 @@ let isSearching = false;
 let timeoutId;
 let isNoteHeld = false;
 
+let isSaved = false;
+
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
@@ -244,7 +246,16 @@ renderNotes();
 
 renderPage();
 
-addBtn.addEventListener("click", switchPage);
+addBtn.addEventListener("click", () => {
+  localStorage.removeItem("CURRENT_NOTE");
+
+  addEditIdInput.value = null;
+  addEditInput.value = "";
+  addEditTextarea.value = "";
+
+  isSaved = false;
+  switchPage();
+});
 
 // PAGE 2
 
@@ -268,7 +279,7 @@ const addEditNote = () => {
 
     notesArray.splice(noteIndex, 1, {
       ...CURRENT_NOTE,
-      title: addEditInput.value,
+      title: addEditInput.value ? addEditInput.value : "Untitle",
       text: addEditTextarea.value,
       lastEditDate: new Date().toJSON(),
     });
@@ -279,7 +290,7 @@ const addEditNote = () => {
   } else {
     let newNote = {
       id: new Date().getTime(),
-      title: addEditInput.value,
+      title: addEditInput.value ? addEditInput.value : "Untitled",
       text: addEditTextarea.value,
       lastEditDate: new Date().toJSON(),
       dateCreated: new Date().toJSON(),
@@ -288,8 +299,9 @@ const addEditNote = () => {
     NOTES.push(newNote);
     localStorage.setItem("NOTES", JSON.stringify(NOTES));
     renderNotes();
-    addAlert("Saved", document.body);
   }
+  addAlert("Saved", document.body);
+  isSaved = true;
 };
 
 addEditInput.addEventListener("input", (e) => {
@@ -302,25 +314,29 @@ addEditTextarea.addEventListener("input", (e) => {
 });
 
 header2backBtn.addEventListener("click", () => {
-  if (addEditInput.value || addEditTextarea.value) {
+  if (!isSaved) {
     addEditNote();
-  } else {
-    addEditInput.value = "Untitled";
-    addEditNote();
-  }
 
-  addEditInput.value = "";
-  addEditTextarea.value = "";
+    addEditInput.value = "";
+    addEditTextarea.value = "";
+
+    switchPage();
+  } else {
+    switchPage();
+  }
 
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
     localStorage.removeItem("CURRENT_NOTE");
   }
-
-  switchPage();
+  isSaved = false;
 });
 
 saveBtn.addEventListener("click", () => {
-  addEditNote();
+  if (!isSaved) {
+    addEditNote();
+  } else {
+    console.log("saved may not save");
+  }
 });
 
 // let isMouseHold = false;
