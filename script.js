@@ -25,6 +25,8 @@ let isSearching = false;
 let timeoutId;
 let isNoteHeld = false;
 
+let isNoteSaved = false;
+
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
@@ -268,7 +270,7 @@ const addEditNote = () => {
 
     notesArray.splice(noteIndex, 1, {
       ...CURRENT_NOTE,
-      title: addEditInput.value,
+      title: addEditInput.value ? addEditInput.value : "Untitled",
       text: addEditTextarea.value,
       lastEditDate: new Date().toJSON(),
     });
@@ -279,7 +281,7 @@ const addEditNote = () => {
   } else {
     let newNote = {
       id: new Date().getTime(),
-      title: addEditInput.value,
+      title: addEditInput.value ? addEditInput.value : "Untitled",
       text: addEditTextarea.value,
       lastEditDate: new Date().toJSON(),
       dateCreated: new Date().toJSON(),
@@ -288,8 +290,10 @@ const addEditNote = () => {
     NOTES.push(newNote);
     localStorage.setItem("NOTES", JSON.stringify(NOTES));
     renderNotes();
-    addAlert("Saved", document.body);
   }
+
+  addAlert("Saved", document.body);
+  isNoteSaved = true;
 };
 
 addEditInput.addEventListener("input", (e) => {
@@ -302,25 +306,35 @@ addEditTextarea.addEventListener("input", (e) => {
 });
 
 header2backBtn.addEventListener("click", () => {
-  if (addEditInput.value || addEditTextarea.value) {
+  if (!isNoteSaved) {
     addEditNote();
-  } else {
-    addEditInput.value = "Untitled";
-    addEditNote();
-  }
 
+    addEditInput.value = "";
+    addEditTextarea.value = "";
+
+    if (localStorage.getItem("CURRENT_NOTE") !== null) {
+      localStorage.removeItem("CURRENT_NOTE");
+    }
+
+    switchPage();
+  } else {
+    if (localStorage.getItem("CURRENT_NOTE") !== null) {
+      localStorage.removeItem("CURRENT_NOTE");
+    }
+
+    switchPage();
+  }
+  isNoteSaved = false;
+  addEditIdInput.value = null;
   addEditInput.value = "";
   addEditTextarea.value = "";
-
-  if (localStorage.getItem("CURRENT_NOTE") !== null) {
-    localStorage.removeItem("CURRENT_NOTE");
-  }
-
-  switchPage();
 });
 
 saveBtn.addEventListener("click", () => {
-  addEditNote();
+  if (!isNoteSaved) {
+    console.log("!isNoteSaved");
+    addEditNote();
+  }
 });
 
 // let isMouseHold = false;
