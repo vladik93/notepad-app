@@ -142,6 +142,7 @@ const renderHeader = () => {
   if (IS_NOTE_EDIT_MODE) {
     let selectedNoteEls = document.querySelectorAll(".note.selected");
     let selectedNoteCount = selectedNoteEls.length;
+    console.log("selected notes", selectedNoteEls);
     console.log("length ->", selectedNoteEls.length);
     headerEl.innerHTML = `
       <div class="header-back">
@@ -150,7 +151,7 @@ const renderHeader = () => {
       <span id="note-counter" class="note-counter">${selectedNoteCount}</span>
       
       <div class="header-actions">
-        <button><i class="fa-solid fa-expand"></i></button>
+        <button id="all-selected"><i class="fa-solid fa-expand"></i></button>
         <button id="delete-selected"><i class="fa-solid fa-trash"></i></button>
         <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div> 
@@ -159,26 +160,30 @@ const renderHeader = () => {
     const deleteSelectedBtn = document.querySelector("#delete-selected");
     const backSelectedBtn = document.querySelector("#back-selected");
     const noteCounterEl = document.querySelector("#note-counter");
+    const allSelectedBtn = document.querySelector("#all-selected");
 
     deleteSelectedBtn.addEventListener("click", () => {
-      let selectedNoteEls = document.querySelectorAll(".note.selected");
-      selectedNoteEls.forEach((noteEl) => {
-        let newNotesArray = NOTES.filter(
-          (note) => note.id !== parseInt(noteEl.id)
-        );
+      const deleteConfirm = confirm("Delete selcted noted?");
 
-        console.log(noteEl.id);
-        console.log(newNotesArray);
-        NOTES = newNotesArray;
-        localStorage.setItem("NOTES", JSON.stringify(NOTES));
-        console.log("NOTES ->", NOTES);
-        console.log(selectedNoteCount);
-        selectedNoteCount = 0;
-        noteCounterEl.innerText = selectedNoteCount;
+      if (deleteConfirm) {
+        let selectedNoteEls = document.querySelectorAll(".note.selected");
+        selectedNoteEls.forEach((noteEl) => {
+          let newNotesArray = NOTES.filter(
+            (note) => note.id !== parseInt(noteEl.id)
+          );
 
-        renderHeader();
-        renderNotes();
-      });
+          noteEl.classList.remove("selected");
+
+          NOTES = newNotesArray;
+          localStorage.setItem("NOTES", JSON.stringify(NOTES));
+
+          selectedNoteCount = 0;
+          noteCounterEl.innerText = selectedNoteCount;
+
+          renderHeader();
+          renderNotes();
+        });
+      }
     });
 
     backSelectedBtn.addEventListener("click", () => {
@@ -187,6 +192,22 @@ const renderHeader = () => {
       IS_NOTE_EDIT_MODE = false;
       renderHeader();
       renderNotes();
+    });
+
+    allSelectedBtn.addEventListener("click", () => {
+      let noteEls = document.querySelectorAll(".note");
+
+      noteEls.forEach((noteEl) => {
+        if (!noteEl.classList.contains("selected")) {
+          noteEl.classList.add("selected");
+        }
+
+        if (noteEls.length === selectedNoteEls.length) {
+          noteEl.classList.remove("selected");
+        }
+
+        renderHeader();
+      });
     });
   }
 };
