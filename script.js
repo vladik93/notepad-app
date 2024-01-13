@@ -30,9 +30,11 @@ let isNoteSaved = false;
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
-let PAGE_NUM =
-  JSON.parse(sessionStorage.getItem("PAGE_NUM")) ||
-  sessionStorage.setItem("PAGE_NUM", 1);
+let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
+
+console.log("PAGE_NUM", PAGE_NUM);
+
+sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
@@ -139,8 +141,53 @@ const renderHeader = () => {
 
   if (IS_NOTE_EDIT_MODE) {
     let selectedNoteEls = document.querySelectorAll(".note.selected");
+    let selectedNoteCount = selectedNoteEls.length;
     console.log("length ->", selectedNoteEls.length);
-    headerEl.innerHTML = selectedNoteEls.length;
+    headerEl.innerHTML = `
+      <div class="header-back">
+        <button id="back-selected"><i class="fa-solid fa-arrow-left"></i></button>
+      </div>
+      <span id="note-counter" class="note-counter">${selectedNoteCount}</span>
+      
+      <div class="header-actions">
+        <button><i class="fa-solid fa-expand"></i></button>
+        <button id="delete-selected"><i class="fa-solid fa-trash"></i></button>
+        <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div> 
+  `;
+
+    const deleteSelectedBtn = document.querySelector("#delete-selected");
+    const backSelectedBtn = document.querySelector("#back-selected");
+    const noteCounterEl = document.querySelector("#note-counter");
+
+    deleteSelectedBtn.addEventListener("click", () => {
+      let selectedNoteEls = document.querySelectorAll(".note.selected");
+      selectedNoteEls.forEach((noteEl) => {
+        let newNotesArray = NOTES.filter(
+          (note) => note.id !== parseInt(noteEl.id)
+        );
+
+        console.log(noteEl.id);
+        console.log(newNotesArray);
+        NOTES = newNotesArray;
+        localStorage.setItem("NOTES", JSON.stringify(NOTES));
+        console.log("NOTES ->", NOTES);
+        console.log(selectedNoteCount);
+        selectedNoteCount = 0;
+        noteCounterEl.innerText = selectedNoteCount;
+
+        renderHeader();
+        renderNotes();
+      });
+    });
+
+    backSelectedBtn.addEventListener("click", () => {
+      console.log("back button pressed");
+      sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
+      IS_NOTE_EDIT_MODE = false;
+      renderHeader();
+      renderNotes();
+    });
   }
 };
 
@@ -166,6 +213,7 @@ sortCancelBtn.addEventListener("click", () => {
 const switchPage = () => {
   console.log("switchPage ->");
   if (PAGE_NUM === 1) {
+    console.log("pageWrapperEl ", pageWrapperEl);
     pageWrapperEl.classList.add("slide");
     PAGE_NUM = 2;
     sessionStorage.setItem("PAGE_NUM", 2);
@@ -175,6 +223,8 @@ const switchPage = () => {
     sessionStorage.setItem("PAGE_NUM", 1);
   }
 };
+
+console.log("PAGE_NUM", PAGE_NUM);
 
 const renderPage = () => {
   if (PAGE_NUM === 2) {
@@ -203,7 +253,7 @@ const renderNotes = () => {
 
       noteEl.addEventListener("click", () => {
         if (IS_NOTE_EDIT_MODE) {
-          noteEl.classList.add("selected");
+          noteEl.classList.toggle("selected");
           renderHeader();
         } else {
           let currentNote = NOTES.find(
@@ -231,7 +281,7 @@ const renderNotes = () => {
           noteEl.classList.add("selected");
 
           renderHeader();
-        }, 2000);
+        }, 500);
       });
 
       noteEl.addEventListener("pointerup", () => {
