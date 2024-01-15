@@ -331,6 +331,7 @@ button {
   flex-direction: column;
   border-radius: 5px;
   border-top-right-radius: 10px;
+  background-image: linear-gradient(to top, #ffe5e5, #fff2f2);
 }
 
 .note.selected {
@@ -400,4 +401,128 @@ button {
   gap: 0.8rem;
   padding: 2.4rem 1.6rem;
   border-radius: 10px;
+}
+
+/* */
+
+.more-options {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 200px;
+  height: auto;
+  top: 0;
+  right: 0;
+  margin: 0.4rem;
+  background: #fff;
+  color: #333;
+  border-radius: 3px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease-in, visibility 0.15s ease-in;
+}
+
+.more-options.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.more-option {
+  padding: 0.8rem 1.6rem;
+  position: relative;
+}
+
+.more-option::after {
+  content: "";
+  background-image: linear-gradient(
+    to right,
+    rgba(51, 51, 51, 0.2),
+    rgba(255, 242, 242, 0.4)
+  );
+  width: 0%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.15s ease-in;
+  z-index: 0;
+}
+
+.more-option:hover::after {
+  width: 100%;
+}
+
+/* COLOR MODAL */
+
+.color-modal {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  width: 90%;
+  align-items: center;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  left: 50%;
+  background: #fff;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  transition: opacity 0.1s ease-in, visibility 0.1s ease-in;
+  text-align: center;
+  padding-top: 0.8rem;
+}
+
+.color-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.color-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  width: 100%;
+}
+
+.modal-color {
+  /* background: red; */
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-color.active::after {
+  content: "\2b";
+  font-family: "Font Awesome 5 Free"; 
+  font-weight: 300; 
+  font-size: 3.2rem;
+  
+
+}
+
+
+.color-modal button {
+  padding: 0.8rem 1.6rem;
+  display: flex;
+  font-size: 1.2rem;
+  gap: 0.8rem;
+  font-weight: 700;
+  border: none;
+}
+
+.color-modal-actions {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 0.8rem;
+}
+
+.color-modal-actions button {
+  background: none;
+  color: #756ab6;
+}
+
+.color-modal p {
+  justify-self: flex-end;
 }

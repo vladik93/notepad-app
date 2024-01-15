@@ -5,6 +5,9 @@ const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
 
+const colorModalEl = document.querySelector("#color-modal");
+const colorModalGridEl = document.querySelector("#color-modal-grid");
+
 const header2backBtn = document.querySelector("#header2-back-button");
 
 const addEditIdInput = document.querySelector("#add-edit-id");
@@ -27,6 +30,11 @@ let isNoteHeld = false;
 
 let isNoteSaved = false;
 
+let colorArray = [
+  "#ce8d8d", "#ceb38d", "#cec88d", "#b6ce8d", "#8dceb1", "#8daece", 
+  "#908dce", "#c28dce",
+];
+
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
@@ -34,9 +42,9 @@ let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
 
 console.log("PAGE_NUM", PAGE_NUM);
 
-sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
+// sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
-let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
+let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || true;
 
 const addAlert = (text, containerEl) => {
   const alertEl = document.createElement("div");
@@ -153,14 +161,25 @@ const renderHeader = () => {
       <div class="header-actions">
         <button id="all-selected"><i class="fa-solid fa-expand"></i></button>
         <button id="delete-selected"><i class="fa-solid fa-trash"></i></button>
-        <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
-      </div> 
-  `;
+        <div class="more-options-wrapper">
+          <button id="more-options-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+          <div class="more-options" id="more-options">
+            <div class="more-option">Export notes to text files</div>
+            <div class="more-option">Categorize</div>
+            <div class="more-option" id="more-option-colorize">Colorize</div>
+          </div>
+        </div>`;
 
     const deleteSelectedBtn = document.querySelector("#delete-selected");
     const backSelectedBtn = document.querySelector("#back-selected");
     const noteCounterEl = document.querySelector("#note-counter");
     const allSelectedBtn = document.querySelector("#all-selected");
+    const moreOptionsBtn = document.querySelector("#more-options-button");
+    const moreOptionsEl = document.querySelector("#more-options");
+    // document.querySelectorAll("body > div:not(.first)");
+    const moreOptionColorize = document.querySelector("#more-option-colorize");
+    const colorRemoveBtn = document.querySelector("#color-remove");
+    const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
 
     deleteSelectedBtn.addEventListener("click", () => {
       const deleteConfirm = confirm("Delete selcted noted?");
@@ -209,6 +228,72 @@ const renderHeader = () => {
         renderHeader();
       });
     });
+
+    moreOptionsBtn.addEventListener("click", () => {
+      const moreOptionsEl = document.querySelector("#more-options");
+      moreOptionsEl.classList.add("show");
+    });
+
+    moreOptionColorize.addEventListener("click", () => {
+      moreOptionsEl.classList.remove("show");
+      overlayEl.classList.add("show");
+
+      colorArray.map((color) => {
+        const modalColorEl = document.createElement("div");
+        modalColorEl.classList.add("modal-color");
+        modalColorEl.setAttribute("id", color);
+        modalColorEl.style = `background: ${color}`;
+    
+        colorModalGridEl.appendChild(modalColorEl);
+
+        modalColorEl.addEventListener('click', (e) =>{
+          const colorId = modalColorEl.id;
+          const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
+          const modalColorTitleEl = document.querySelector("#color-modal-title");
+
+          modalColorActiveEls.forEach(elm => {
+            elm.classList.remove('active');
+          });
+
+          modalColorEl.classList.add('active');
+          modalColorTitleEl.style.backgroundColor = colorId;
+        })
+
+      });
+
+      colorModalEl.classList.add("show");
+    });
+
+    colorRemoveBtn.addEventListener('click', () => {
+      const modalColorActiveEl = document.querySelector('.modal-color.active');
+      const modalColorTitleEl = document.querySelector("#color-modal-title");
+
+
+      if(modalColorActiveEl) {
+        modalColorActiveEl.classList.remove("active");
+        modalColorTitleEl.style.backgroundColor = "";
+      }
+    })
+
+    colorModalConfirmBtn.addEventListener('click', () => {
+      console.log('confirm button clicked');
+      const modalColorActiveEl = document.querySelector('.modal-color.active');
+      const colorId = modalColorActiveEl.id;
+
+      let newNotesArray = NOTES.map((note => {
+        selectedNoteEls.forEach(selectedNoteEl => {
+          if(selectedNoteEl.id === note.id) {
+            console.log(selectedNoteEl, note)
+          }
+        })
+      
+      }));
+
+
+   
+      
+
+    })
   }
 };
 
@@ -313,6 +398,11 @@ const renderNotes = () => {
   }
 };
 
+const renderModalColor = () => {
+  
+};
+
+
 renderNotes();
 
 renderPage();
@@ -354,6 +444,7 @@ const addEditNote = () => {
       id: new Date().getTime(),
       title: addEditInput.value ? addEditInput.value : "Untitled",
       text: addEditTextarea.value,
+      color: "#ffe5e5",
       lastEditDate: new Date().toJSON(),
       dateCreated: new Date().toJSON(),
     };
