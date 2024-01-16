@@ -7,6 +7,8 @@ const pageWrapperEl = document.querySelector("#page-wrapper");
 
 const colorModalEl = document.querySelector("#color-modal");
 const colorModalGridEl = document.querySelector("#color-modal-grid");
+const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
+
 
 const header2backBtn = document.querySelector("#header2-back-button");
 
@@ -42,9 +44,9 @@ let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
 
 console.log("PAGE_NUM", PAGE_NUM);
 
-// sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
+sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
-let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || true;
+let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 const addAlert = (text, containerEl) => {
   const alertEl = document.createElement("div");
@@ -178,8 +180,9 @@ const renderHeader = () => {
     const moreOptionsEl = document.querySelector("#more-options");
     // document.querySelectorAll("body > div:not(.first)");
     const moreOptionColorize = document.querySelector("#more-option-colorize");
+
     const colorRemoveBtn = document.querySelector("#color-remove");
-    const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
+   
 
     deleteSelectedBtn.addEventListener("click", () => {
       const deleteConfirm = confirm("Delete selcted noted?");
@@ -274,28 +277,50 @@ const renderHeader = () => {
         modalColorTitleEl.style.backgroundColor = "";
       }
     })
-
-    colorModalConfirmBtn.addEventListener('click', () => {
-      console.log('confirm button clicked');
-      const modalColorActiveEl = document.querySelector('.modal-color.active');
-      const colorId = modalColorActiveEl.id;
-
-      let newNotesArray = NOTES.map((note => {
-        selectedNoteEls.forEach(selectedNoteEl => {
-          if(selectedNoteEl.id === note.id) {
-            console.log(selectedNoteEl, note)
-          }
-        })
-      
-      }));
-
-
-   
-      
-
-    })
   }
 };
+
+colorModalConfirmBtn.addEventListener('click', (event) => {
+  const modalColorActiveEl = document.querySelector('.modal-color.active');
+  const activeColorId = modalColorActiveEl.id;
+
+  const selectedNoteEls = document.querySelectorAll('.note.selected');
+
+  let selectedNotes = [];
+
+  selectedNoteEls.forEach(selectedNote => {
+    const selectedNoteId = parseInt(selectedNote.id);
+
+    selectedNotes.push(selectedNoteId);
+
+    console.log(selectedNotes);
+
+
+    // typeof selectedNote.id -> string
+    let newNotesArray = NOTES.map(note => {
+      if(selectedNotes.indexOf(note.id) > -1) {
+        return {...note, color: activeColorId}
+      } else {
+        return note;
+      }
+    });
+
+    NOTES = newNotesArray;
+    localStorage.setItem('NOTES', JSON.stringify(newNotesArray));
+
+    
+    renderNotes();
+
+    colorModalEl.classList.remove('show');
+    overlayEl.classList.remove('show')
+
+
+  })
+
+
+
+});
+
 
 renderHeader();
 
@@ -347,6 +372,7 @@ const renderNotes = () => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
+      noteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
 
       noteEl.innerHTML = `
       <p class="note-title">${item.title}</p>
@@ -398,9 +424,7 @@ const renderNotes = () => {
   }
 };
 
-const renderModalColor = () => {
-  
-};
+
 
 
 renderNotes();

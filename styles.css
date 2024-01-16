@@ -331,11 +331,11 @@ button {
   flex-direction: column;
   border-radius: 5px;
   border-top-right-radius: 10px;
-  background-image: linear-gradient(to top, #ffe5e5, #fff2f2);
+  /* background-image: linear-gradient(to top, #ffe5e5, #fff2f2); */
 }
 
 .note.selected {
-  background-image: linear-gradient(to top, #756ab6, #fff2f2);
+  background-image: linear-gradient(to top, #756ab6, #fff2f2) !important;
 }
 
 .note-date {
