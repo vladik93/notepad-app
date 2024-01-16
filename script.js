@@ -240,12 +240,23 @@ const renderHeader = () => {
     moreOptionColorize.addEventListener("click", () => {
       moreOptionsEl.classList.remove("show");
       overlayEl.classList.add("show");
+      
+      const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
+      modalColorActiveEls.forEach(colorEl => colorEl.classList.remove('active'));
+
+      
+      const selectedNoteEl = document.querySelector('.note.selected');
+
 
       colorArray.map((color) => {
         const modalColorEl = document.createElement("div");
         modalColorEl.classList.add("modal-color");
         modalColorEl.setAttribute("id", color);
         modalColorEl.style = `background: ${color}`;
+
+        if(selectedNoteEl.dataset.color === modalColorEl.id) {
+          modalColorEl.classList.add('active');
+        }
     
         colorModalGridEl.appendChild(modalColorEl);
 
@@ -372,6 +383,7 @@ const renderNotes = () => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
+      noteEl.dataset.color = item.color;
       noteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
 
       noteEl.innerHTML = `
