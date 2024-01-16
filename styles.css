@@ -410,7 +410,6 @@ button {
 
 .more-options {
   display: flex;
-  z-index: 50;
   flex-direction: column;
   position: absolute;
   width: 200px;
