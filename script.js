@@ -25,7 +25,7 @@ const undoBtn = document.querySelector("#undo-button");
 const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
-let isSearching = false;
+let isSearching = true;
 
 let timeoutId;
 let isNoteHeld = false;
@@ -78,6 +78,7 @@ const renderHeader = () => {
       <div class="header-search" id="header-search">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="header-search-input"/>
+        <button class="reset-search-button" id="reset-search-button"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="header-search-actions">
         <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
@@ -85,6 +86,9 @@ const renderHeader = () => {
     `;
 
     const headerBackBtn = document.querySelector("#header-back-button");
+    const resetSearchBtn = document.querySelector('#reset-search-button');
+    
+    const searchIcon = document.querySelector(".fa-magnifying-glass");
 
     const headerSearchInp = document.querySelector("#header-search-input");
 
@@ -98,17 +102,33 @@ const renderHeader = () => {
     headerSearchInp.addEventListener("input", (e) => {
       let inputValue = e.target.value;
 
-      const searchIcon = document.querySelector(".fa-magnifying-glass");
+     
+      
 
       if (inputValue.length > 0) {
         searchIcon.style.display = "none";
-        const headerSearchEl = document.querySelector("#header-search");
+        resetSearchBtn.classList.add('show');
+
+        console.log('TYPING')
+
+        NOTES.filter(item => item.title.toUpperCase() === inputValue.toUpperCase()).map(note => {
+          console.log(note);
+        })
+
+
       } else {
         searchIcon.style.display = "block";
-        const resetSearchBtn = document.querySelector("#reset-search-button");
-        resetSearchBtn.style.display = "none";
+        resetSearchBtn.classList.remove('show')
       }
     });
+
+    resetSearchBtn.addEventListener('click', () => {
+      headerSearchInp.value = "";
+      resetSearchBtn.classList.remove('show');
+      searchIcon.style.display = "block";
+    
+    })
+
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -202,6 +222,9 @@ const renderHeader = () => {
           selectedNoteCount = 0;
           noteCounterEl.innerText = selectedNoteCount;
 
+          sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
+          IS_NOTE_EDIT_MODE = false;
+
           renderHeader();
           renderNotes();
         });
@@ -238,44 +261,52 @@ const renderHeader = () => {
     });
 
     moreOptionColorize.addEventListener("click", () => {
+      const selectedNoteElsLength = document.querySelectorAll('.note.selected').length;
       moreOptionsEl.classList.remove("show");
-      overlayEl.classList.add("show");
+
+      if(selectedNoteElsLength) {
+       
+        overlayEl.classList.add("show");
+        
+        const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
+        modalColorActiveEls.forEach(colorEl => colorEl.classList.remove('active'));
+  
+        
+        const selectedNoteEl = document.querySelector('.note.selected');
+  
+  
+        colorArray.map((color) => {
+          const modalColorEl = document.createElement("div");
+          modalColorEl.classList.add("modal-color");
+          modalColorEl.setAttribute("id", color);
+          modalColorEl.style = `background: ${color}`;
+  
+          if(selectedNoteEl.dataset.color === modalColorEl.id) {
+            modalColorEl.classList.add('active');
+          }
       
-      const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
-      modalColorActiveEls.forEach(colorEl => colorEl.classList.remove('active'));
+          colorModalGridEl.appendChild(modalColorEl);
+  
+          modalColorEl.addEventListener('click', (e) =>{
+            const colorId = modalColorEl.id;
+            const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
+            const modalColorTitleEl = document.querySelector("#color-modal-title");
+  
+            modalColorActiveEls.forEach(elm => {
+              elm.classList.remove('active');
+            });
+  
+            modalColorEl.classList.add('active');
+            modalColorTitleEl.style.backgroundColor = colorId;
+          })
+  
+        });
+        colorModalEl.classList.add("show");
+      }
 
       
-      const selectedNoteEl = document.querySelector('.note.selected');
 
-
-      colorArray.map((color) => {
-        const modalColorEl = document.createElement("div");
-        modalColorEl.classList.add("modal-color");
-        modalColorEl.setAttribute("id", color);
-        modalColorEl.style = `background: ${color}`;
-
-        if(selectedNoteEl.dataset.color === modalColorEl.id) {
-          modalColorEl.classList.add('active');
-        }
-    
-        colorModalGridEl.appendChild(modalColorEl);
-
-        modalColorEl.addEventListener('click', (e) =>{
-          const colorId = modalColorEl.id;
-          const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
-          const modalColorTitleEl = document.querySelector("#color-modal-title");
-
-          modalColorActiveEls.forEach(elm => {
-            elm.classList.remove('active');
-          });
-
-          modalColorEl.classList.add('active');
-          modalColorTitleEl.style.backgroundColor = colorId;
-        })
-
-      });
-
-      colorModalEl.classList.add("show");
+      
     });
 
     colorRemoveBtn.addEventListener('click', () => {
@@ -293,7 +324,8 @@ const renderHeader = () => {
 
 colorModalConfirmBtn.addEventListener('click', (event) => {
   const modalColorActiveEl = document.querySelector('.modal-color.active');
-  const activeColorId = modalColorActiveEl.id;
+  
+  const activeColorId = modalColorActiveEl ? modalColorActiveEl.id : "#ffe5e5";
 
   const selectedNoteEls = document.querySelectorAll('.note.selected');
 

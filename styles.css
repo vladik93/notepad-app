@@ -34,6 +34,10 @@ button {
   cursor: pointer;
 }
 
+i {
+  font-size: 1.6rem;
+}
+
 /* CHECKBOX */
 .checkbox {
   width: 2rem;
@@ -99,8 +103,8 @@ button {
 .header-search {
   position: relative;
   display: flex;
-  flex: 1;
-  align-items: end;
+  
+  align-items: center;
 }
 
 .header-search input {
@@ -119,6 +123,25 @@ button {
   left: 0.8rem;
   transform: translateY(-50%);
   color: #333;
+}
+
+.reset-search-button {
+  position: absolute;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.reset-search-button.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.header-search-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .note-counter {
