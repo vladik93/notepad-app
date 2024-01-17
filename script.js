@@ -10,6 +10,9 @@ const colorModalGridEl = document.querySelector("#color-modal-grid");
 const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
 
 
+const categoryModalEl = document.querySelector('#category-modal');
+const categoryModalWrapperEl = document.querySelector('#category-modal-wrapper');
+
 const header2backBtn = document.querySelector("#header2-back-button");
 
 const addEditIdInput = document.querySelector("#add-edit-id");
@@ -40,13 +43,34 @@ let colorArray = [
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
+let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
+
+const addCategory = (title) => {
+  const newCategory = {
+    id: new Date().getTime(),
+    title,
+    notes: []
+  }
+
+  CATEGORIES.push(newCategory);
+  localStorage.setItem('CATEGORIES', JSON.stringify(CATEGORIES));
+};
+
+
+
+// addCategory("Category 2");
+
+
+
+
+
 let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
 
 console.log("PAGE_NUM", PAGE_NUM);
 
 sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
-let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
+let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || true;
 
 const addAlert = (text, containerEl) => {
   const alertEl = document.createElement("div");
@@ -187,7 +211,7 @@ const renderHeader = () => {
           <button id="more-options-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
           <div class="more-options" id="more-options">
             <div class="more-option">Export notes to text files</div>
-            <div class="more-option">Categorize</div>
+            <div class="more-option" id="more-option-categorize">Categorize</div>
             <div class="more-option" id="more-option-colorize">Colorize</div>
           </div>
         </div>`;
@@ -203,6 +227,7 @@ const renderHeader = () => {
 
     const colorRemoveBtn = document.querySelector("#color-remove");
    
+    const moreOptionCategorize = document.querySelector('#more-option-categorize');
 
     deleteSelectedBtn.addEventListener("click", () => {
       const deleteConfirm = confirm("Delete selcted noted?");
@@ -303,10 +328,6 @@ const renderHeader = () => {
         });
         colorModalEl.classList.add("show");
       }
-
-      
-
-      
     });
 
     colorRemoveBtn.addEventListener('click', () => {
@@ -318,6 +339,32 @@ const renderHeader = () => {
         modalColorActiveEl.classList.remove("active");
         modalColorTitleEl.style.backgroundColor = "";
       }
+    })
+
+    moreOptionCategorize.addEventListener('click', () => {
+      const selectedNoteElsLength = document.querySelectorAll('.note.selected').length;
+      moreOptionsEl.classList.remove("show");
+
+      if(selectedNoteElsLength) {
+        overlayEl.classList.add('show');
+
+        CATEGORIES.map(category => {
+          const modalCategoryEl = document.createElement('div');
+          modalCategoryEl.classList.add('modal-category');
+          modalCategoryEl.innerHTML = `
+            <p>${category.title}</p>
+            <input type="radio"  class="checkbox" />
+          `
+
+          categoryModalWrapperEl.appendChild(modalCategoryEl);
+        })
+
+
+
+        categoryModalEl.classList.add("show");
+        
+      }
+      
     })
   }
 };
