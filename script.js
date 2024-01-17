@@ -25,7 +25,7 @@ const undoBtn = document.querySelector("#undo-button");
 const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
-let isSearching = true;
+let isSearching = false;
 
 let timeoutId;
 let isNoteHeld = false;
