@@ -324,6 +324,12 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
 
     colorModalEl.classList.remove('show');
     overlayEl.classList.remove('show')
+    
+
+    IS_NOTE_EDIT_MODE = false;
+    sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
+
+    renderHeader();
 
 
   })
