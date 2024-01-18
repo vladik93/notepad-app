@@ -45,16 +45,6 @@ let colorArray = [
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
 
-const addCategory = (title) => {
-  const newCategory = {
-    id: new Date().getTime(),
-    title,
-    notes: []
-  }
-
-  CATEGORIES.push(newCategory);
-  localStorage.setItem('CATEGORIES', JSON.stringify(CATEGORIES));
-};
 
 
 
@@ -70,7 +60,9 @@ console.log("PAGE_NUM", PAGE_NUM);
 
 sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
-let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || true;
+let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
+
+
 
 const addAlert = (text, containerEl) => {
   const alertEl = document.createElement("div");
@@ -451,11 +443,33 @@ const switchPage = () => {
   }
 };
 
-console.log("PAGE_NUM", PAGE_NUM);
+const updateNotePageColor = (currentNote) => {
+        if(localStorage.getItem('CURRENT_NOTE')) {
+          const pageTwoEl = document.querySelector('#page-two');
+          const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
+          const headerAddEditEl = document.querySelector('#header-add-edit');
+
+          if(currentNote.color !== "#ffe5e5") {
+            pageTwoEl.style.backgroundColor = currentNote.color;
+            headerAddEditWrapperEl.style.backgroundColor = currentNote.color;
+            headerAddEditEl.style.backdropFilter = "brightness(50%)";
+          } else {
+            pageTwoEl.style.background = "#ffe5e5";
+            headerAddEditWrapperEl.style.background = "#756ab6";
+            headerAddEditEl.style.backdropFilter = "none";
+            
+          }
+        }
+         
+
+}
 
 const renderPage = () => {
+  const CURRENT_NOTE = JSON.parse(localStorage.getItem('CURRENT_NOTE'));
+  console.log(CURRENT_NOTE);
   if (PAGE_NUM === 2) {
     pageWrapperEl.classList.add("slide");
+    updateNotePageColor(CURRENT_NOTE);
   } else if (PAGE_NUM === 1) {
     pageWrapperEl.classList.remove("slide");
   }
@@ -498,6 +512,10 @@ const renderNotes = () => {
           addEditInput.value = CURRENT_NOTE.title;
           addEditTextarea.value = CURRENT_NOTE.text;
 
+          updateNotePageColor(CURRENT_NOTE);
+          
+
+
           switchPage();
         }
       });
@@ -528,7 +546,10 @@ renderNotes();
 
 renderPage();
 
-addBtn.addEventListener("click", switchPage);
+addBtn.addEventListener("click", () => {
+  
+  switchPage();
+});
 
 // PAGE 2
 
@@ -565,6 +586,7 @@ const addEditNote = () => {
       id: new Date().getTime(),
       title: addEditInput.value ? addEditInput.value : "Untitled",
       text: addEditTextarea.value,
+      categories: [],
       color: "#ffe5e5",
       lastEditDate: new Date().toJSON(),
       dateCreated: new Date().toJSON(),
@@ -599,18 +621,20 @@ header2backBtn.addEventListener("click", () => {
       localStorage.removeItem("CURRENT_NOTE");
     }
 
-    switchPage();
+    // switchPage();
   } else {
     if (localStorage.getItem("CURRENT_NOTE") !== null) {
       localStorage.removeItem("CURRENT_NOTE");
     }
 
-    switchPage();
+    // switchPage();
   }
   isNoteSaved = false;
   addEditIdInput.value = null;
   addEditInput.value = "";
   addEditTextarea.value = "";
+  
+  switchPage();
 });
 
 saveBtn.addEventListener("click", () => {
@@ -620,17 +644,3 @@ saveBtn.addEventListener("click", () => {
   }
 });
 
-// let isMouseHold = false;
-
-// pageWrapperEl.addEventListener("pointerdown", () => {
-//   isMouseHold = true;
-//   setTimeout(() => {
-//     if (isMouseHold) {
-//       console.log("is held!");
-//     }
-//   }, 3000);
-// });
-
-// pageWrapperEl.addEventListener("pointerup", () => {
-//   isMouseHold = false;
-// });
