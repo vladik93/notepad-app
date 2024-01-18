@@ -24,6 +24,7 @@ body {
   background-color: #ffe5e5;
   color: #333;
   display: flex;
+  overflow: hidden;
 }
 
 ul {
@@ -366,6 +367,7 @@ i {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  overflow: scroll;
 }
 
 .note {
