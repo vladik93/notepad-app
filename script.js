@@ -1,6 +1,9 @@
 const addBtn = document.querySelector("#add-button");
 
 const headerEl = document.querySelector("#header");
+
+const sidenavCategoryWrapperEl = document.querySelector('#sidenav-category-wrapper');
+
 const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
@@ -64,7 +67,7 @@ let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 
 
-const addAlert = (text, containerEl) => {
+const addAlert = (text) => {
   const alertEl = document.createElement("div");
   alertEl.classList.add("alert");
 
@@ -76,7 +79,7 @@ const addAlert = (text, containerEl) => {
   alertIcon.classList.add("fa-solid", "fa-note-sticky");
   alertEl.insertAdjacentElement("afterbegin", alertIcon);
 
-  containerEl.insertAdjacentElement("beforeend", alertEl);
+  document.body.insertAdjacentElement("beforeend", alertEl);
 
   setTimeout(() => {
     alertEl.remove();
@@ -92,8 +95,11 @@ const addCategory = (title) => {
 
   CATEGORIES.push(newCategory);
   localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
-
 }
+
+// addCategory("Stuff");
+
+
 
 
 const renderHeader = () => {
@@ -190,9 +196,22 @@ const renderHeader = () => {
     const sortBtn = document.querySelector("#sort-button");
 
     toggleBtn.addEventListener("click", () => {
-      console.log("toggleBTN ->");
+      // sidenavCategoryWrapperEl.innerHTML = "";
+
       overlayEl.classList.add("show");
       sidenavEl.classList.add("show");
+
+      CATEGORIES.map(category => {
+        const noteCategoryEl = document.createElement('div');
+        noteCategoryEl.classList.add('sidenav-action', 'note-category');
+        noteCategoryEl.innerHTML = `
+          <button>
+            <i class="fa-solid fa-note-sticky"></i>
+            <span>${category.title}</span>
+          </button>`;
+    
+        // sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryEl);
+      });
     });
 
     searchBtn.addEventListener("click", () => {
@@ -355,6 +374,7 @@ const renderHeader = () => {
     })
 
     moreOptionCategorize.addEventListener('click', () => {
+      categoryModalWrapperEl.innerHTML = "";
       const selectedNoteElsLength = document.querySelectorAll('.note.selected').length;
       moreOptionsEl.classList.remove("show");
       
@@ -430,6 +450,9 @@ categoryModalConfirmBtn.addEventListener('click', () => {
 
         NOTES = newNotesArray;
         localStorage.setItem("NOTES", JSON.stringify(NOTES));
+        overlayEl.classList.remove('show');
+        categoryModalEl.classList.remove('show');
+        addAlert("Categories updated");
       })
 
 
@@ -491,7 +514,9 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
 });
 
 
+
 renderHeader();
+
 
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
@@ -568,10 +593,47 @@ const renderNotes = (notesArr) => {
 
       noteEl.innerHTML = `
       <p class="note-title">${item.title}</p>
-      <p class="note-date">Last edit: ${new Date(
-        item.lastEditDate
-      ).toLocaleString()}</p>      
+      <div class="note-content" id="note-content">
+        <div class="note-category-wrapper" id="note-category-wrapper"></div>
+        <p class="note-date">Last edit: ${new Date(
+          item.lastEditDate
+        ).toLocaleString()}</p>     
+      </div>
       `;
+
+      const noteContentEl = noteEl.querySelector('#note-content');
+      const noteCategoryWrapperEl = noteEl.querySelector('#note-category-wrapper');
+      
+      if(item.categories.length) {
+        let categoryCount = 0;
+        item.categories.map(((category, index) => {
+          if(index < 2) {
+            const currentCategory = CATEGORIES.find(x => x.id === category);
+            const { id, title, dateCreated } = currentCategory;
+  
+            const categoryEl = document.createElement('div');
+            categoryEl.classList.add('note-category')
+            categoryEl.innerHTML = title + ",";
+
+            noteCategoryWrapperEl.appendChild(categoryEl);
+          } else {
+            const categoryHiddenEl = document.createElement('span');
+            categoryHiddenEl.classList.add('note-category');
+            categoryCount++;
+
+            
+
+            noteCategoryWrapperEl.appendChild(categoryHiddenEl);
+          }
+         
+
+       
+          
+          
+
+
+        }))
+      }
 
       notesWrapperEl.appendChild(noteEl);
 
@@ -678,7 +740,7 @@ const addEditNote = () => {
     renderNotes(NOTES);
   }
 
-  addAlert("Saved", document.body);
+  addAlert("Saved");
   isNoteSaved = true;
 };
 

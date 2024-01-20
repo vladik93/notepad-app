@@ -386,9 +386,24 @@ i {
   filter: saturate(300%) contrast(70%);
 }
 
+.note-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.note-category-wrapper {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.note-category {
+  font-size: 1rem;
+}
+
 .note-date {
   text-align: right;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 /* ADD-EDIT NOTE FORM */
