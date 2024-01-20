@@ -12,6 +12,7 @@ const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
 
 const categoryModalEl = document.querySelector('#category-modal');
 const categoryModalWrapperEl = document.querySelector('#category-modal-wrapper');
+const categoryModalConfirmBtn = document.querySelector("#category-modal-confirm");
 
 const header2backBtn = document.querySelector("#header2-back-button");
 
@@ -45,10 +46,9 @@ let colorArray = [
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
 
+// FILTERED ARRAYS
 
-
-
-// addCategory("Category 2");
+let FILTERED_NOTES = [];
 
 
 
@@ -82,6 +82,19 @@ const addAlert = (text, containerEl) => {
     alertEl.remove();
   }, 2000);
 };
+
+const addCategory = (title) => {
+  let newCategory = {
+    id: new Date().getTime(),
+    title,
+    dateCreated: new Date().toJSON()
+  }
+
+  CATEGORIES.push(newCategory);
+  localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
+
+}
+
 
 const renderHeader = () => {
   headerEl.innerHTML = "";
@@ -118,6 +131,8 @@ const renderHeader = () => {
     headerSearchInp.addEventListener("input", (e) => {
       let inputValue = e.target.value;
 
+      console.log(inputValue);
+
      
       
 
@@ -125,16 +140,22 @@ const renderHeader = () => {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
 
-        console.log('TYPING')
+        let newNotesArr = NOTES.filter(note => note.title.includes(inputValue) || note.text.includes(inputValue));
 
-        NOTES.filter(item => item.title.toUpperCase() === inputValue.toUpperCase()).map(note => {
-          console.log(note);
-        })
+        console.log(newNotesArr);
+
+        FILTERED_NOTES = newNotesArr;
+        renderNotes(FILTERED_NOTES);
+       
+        
+
+
 
 
       } else {
         searchIcon.style.display = "block";
-        resetSearchBtn.classList.remove('show')
+        resetSearchBtn.classList.remove('show');
+        renderNotes(NOTES);
       }
     });
 
@@ -243,7 +264,7 @@ const renderHeader = () => {
           IS_NOTE_EDIT_MODE = false;
 
           renderHeader();
-          renderNotes();
+          renderNotes(NOTES);
         });
       }
     });
@@ -253,7 +274,7 @@ const renderHeader = () => {
       sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
       IS_NOTE_EDIT_MODE = false;
       renderHeader();
-      renderNotes();
+      renderNotes(NOTES);
     });
 
     allSelectedBtn.addEventListener("click", () => {
@@ -336,6 +357,7 @@ const renderHeader = () => {
     moreOptionCategorize.addEventListener('click', () => {
       const selectedNoteElsLength = document.querySelectorAll('.note.selected').length;
       moreOptionsEl.classList.remove("show");
+      
 
       if(selectedNoteElsLength) {
         overlayEl.classList.add('show');
@@ -343,23 +365,82 @@ const renderHeader = () => {
         CATEGORIES.map(category => {
           const modalCategoryEl = document.createElement('div');
           modalCategoryEl.classList.add('modal-category');
+          modalCategoryEl.setAttribute('id', category.id)
           modalCategoryEl.innerHTML = `
-            <p>${category.title}</p>
-            <input type="radio"  class="checkbox" />
+            <label>${category.title}</label>
+            <input type="checkbox"  class="checkbox" name="note-category" value=${category.id}  />
           `
+          let modalCategoryCheckbox = modalCategoryEl.querySelector('[name="note-category"]');
+          modalCategoryCheckbox.checked = false;
+          
+
+          modalCategoryEl.addEventListener('change', (e) => {
+            if(e.target.checked) {
+              modalCategoryCheckbox.checked = true;
+              modalCategoryEl.classList.add('selected');
+            } else {
+              modalCategoryCheckbox.checked = false;
+              modalCategoryEl.classList.remove('selected');
+            }
+          }) 
+          
+
+        
+          
 
           categoryModalWrapperEl.appendChild(modalCategoryEl);
         })
-
-
-
         categoryModalEl.classList.add("show");
         
       }
       
     })
+
+    
   }
 };
+
+categoryModalConfirmBtn.addEventListener('click', () => {
+  const selectedCategoryEls = document.querySelectorAll('.modal-category.selected');
+  const selectedNoteEls = document.querySelectorAll('.note.selected');
+  
+  let selectedCategories = [];
+  
+
+  // if(selectedCategoryEls) {
+    selectedCategoryEls.forEach(categoryEl => {
+      let categoryId = parseInt(categoryEl.id);
+      selectedCategories.push(categoryId);
+      
+      let selectedNotes = [];
+
+      selectedNoteEls.forEach((selectedNoteEl) => {
+        let selectedNoteId = parseInt(selectedNoteEl.id);
+        
+        selectedNotes.push(selectedNoteId);
+
+        console.log(selectedNotes);
+        let newNotesArray = NOTES.map(note => {
+          if(selectedNotes.indexOf(note.id) > -1) {
+            return {...note, categories: [...selectedCategories]}
+          } else {
+            return note;
+          }
+        });
+
+        NOTES = newNotesArray;
+        localStorage.setItem("NOTES", JSON.stringify(NOTES));
+      })
+
+
+
+
+    })
+  // }
+
+
+
+})
 
 colorModalConfirmBtn.addEventListener('click', (event) => {
   const modalColorActiveEl = document.querySelector('.modal-color.active');
@@ -391,7 +472,7 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
     localStorage.setItem('NOTES', JSON.stringify(newNotesArray));
 
     
-    renderNotes();
+    renderNotes(NOTES);
 
     colorModalEl.classList.remove('show');
     overlayEl.classList.remove('show')
@@ -475,10 +556,10 @@ const renderPage = () => {
   }
 };
 
-const renderNotes = () => {
+const renderNotes = (notesArr) => {
   notesWrapperEl.innerHTML = "";
-  if (NOTES && NOTES.length) {
-    NOTES.map((item) => {
+  if (notesArr && notesArr.length) {
+    notesArr.map((item) => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
@@ -542,7 +623,7 @@ const renderNotes = () => {
 
 
 
-renderNotes();
+renderNotes(NOTES);
 
 renderPage();
 
@@ -580,7 +661,7 @@ const addEditNote = () => {
 
     localStorage.setItem("NOTES", JSON.stringify(notesArray));
     NOTES = notesArray;
-    renderNotes();
+    renderNotes(NOTES);
   } else {
     let newNote = {
       id: new Date().getTime(),
@@ -594,7 +675,7 @@ const addEditNote = () => {
 
     NOTES.push(newNote);
     localStorage.setItem("NOTES", JSON.stringify(NOTES));
-    renderNotes();
+    renderNotes(NOTES);
   }
 
   addAlert("Saved", document.body);
