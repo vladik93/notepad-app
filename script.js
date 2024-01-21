@@ -3,6 +3,7 @@ const addBtn = document.querySelector("#add-button");
 const headerEl = document.querySelector("#header");
 
 const sidenavCategoryWrapperEl = document.querySelector('#sidenav-category-wrapper');
+const sidenavAllNotesBtn = document.querySelector('#all-notes-button');
 
 const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
@@ -210,15 +211,32 @@ const renderHeader = () => {
             <span>${category.title}</span>`;
         sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryBtn);
         
-        let categoryId = e.target.parentElement.id;
+       
         
         noteCategoryBtn.addEventListener('click', (e) => {
+          let categoryId = parseInt(e.target.id);
+
+          if(CATEGORIES.some(category => category.id === categoryId)) {
+            renderNotes(NOTES, categoryId);
+            overlayEl.classList.remove("show");
+            sidenavEl.classList.remove("show");
+            
+          }
+          
+          
         
           
           
         });
       });
     });
+
+    sidenavAllNotesBtn.addEventListener('click', () => {
+      renderNotes(NOTES);
+      overlayEl.classList.remove("show");
+      sidenavEl.classList.remove("show");
+      
+    })
 
     searchBtn.addEventListener("click", () => {
       isSearching = true;
@@ -592,10 +610,10 @@ const renderPage = () => {
   }
 };
 
-const renderNotes = (notesArr) => {
+const renderNotes = (notesArr, categoryId) => {
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
-    notesArr.map((item) => {
+    notesArr.filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
@@ -640,6 +658,8 @@ const renderNotes = (notesArr) => {
           categoryEl.innerHTML = `(+${categoryCount})`;
           noteCategoryWrapperEl.insertAdjacentElement('beforeend', categoryEl);
         }
+
+        
         
        
 
@@ -691,9 +711,6 @@ const renderNotes = (notesArr) => {
     });
   }
 };
-
-
-
 
 renderNotes(NOTES);
 
