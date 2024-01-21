@@ -235,6 +235,7 @@ const renderHeader = () => {
       sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
 
       editCategoriesBtn.addEventListener('click', () => {
+        switchPage(3);
         
       })
 
@@ -576,17 +577,18 @@ sortCancelBtn.addEventListener("click", () => {
   sortModalEl.classList.remove("show");
 });
 
-const switchPage = () => {
+const switchPage = (pageNum) => {
   console.log("switchPage ->");
-  if (PAGE_NUM === 1) {
+  if (pageNum === 1) {
     console.log("pageWrapperEl ", pageWrapperEl);
-    pageWrapperEl.classList.add("slide");
-    PAGE_NUM = 2;
-    sessionStorage.setItem("PAGE_NUM", 2);
-  } else if (PAGE_NUM === 2) {
     pageWrapperEl.classList.remove("slide");
-    PAGE_NUM = 1;
     sessionStorage.setItem("PAGE_NUM", 1);
+  } else if (pageNum === 2) {
+    pageWrapperEl.classList.add("slide");
+    sessionStorage.setItem("PAGE_NUM", 2);
+  } else if (pageNum === 3) {
+   pageWrapperEl.classList.add("slide", "three");
+   sessionStorage.setItem('PAGE_NUM', 3); 
   }
 };
 
@@ -703,7 +705,7 @@ const renderNotes = (notesArr, categoryId) => {
           
 
 
-          switchPage();
+          switchPage(2);
         }
       });
 
@@ -732,7 +734,7 @@ renderPage();
 
 addBtn.addEventListener("click", () => {
   
-  switchPage();
+  switchPage(2);
 });
 
 // PAGE 2
@@ -818,7 +820,7 @@ header2backBtn.addEventListener("click", () => {
   addEditInput.value = "";
   addEditTextarea.value = "";
   
-  switchPage();
+  switchPage(1);
 });
 
 saveBtn.addEventListener("click", () => {
