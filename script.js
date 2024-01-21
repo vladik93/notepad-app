@@ -221,15 +221,25 @@ const renderHeader = () => {
             overlayEl.classList.remove("show");
             sidenavEl.classList.remove("show");
             
-          }
-          
-          
-        
-          
+          }    
           
         });
       });
+
+      const editCategoriesBtn = document.createElement('button');
+      editCategoriesBtn.classList.add('sidenav-action', 'note-category-button');
+      editCategoriesBtn.innerHTML = `
+        <i class="fa-solid fa-plus"></i>
+        <span>Edit categories</span>`;
+        
+      sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
+
+      editCategoriesBtn.addEventListener('click', () => {
+        
+      })
+
     });
+    
 
     sidenavAllNotesBtn.addEventListener('click', () => {
       renderNotes(NOTES);
@@ -237,6 +247,8 @@ const renderHeader = () => {
       sidenavEl.classList.remove("show");
       
     })
+    
+    
 
     searchBtn.addEventListener("click", () => {
       isSearching = true;
@@ -659,7 +671,7 @@ const renderNotes = (notesArr, categoryId) => {
           noteCategoryWrapperEl.insertAdjacentElement('beforeend', categoryEl);
         }
 
-        
+
         
        
 
