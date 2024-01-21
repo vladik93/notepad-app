@@ -196,21 +196,27 @@ const renderHeader = () => {
     const sortBtn = document.querySelector("#sort-button");
 
     toggleBtn.addEventListener("click", () => {
-      // sidenavCategoryWrapperEl.innerHTML = "";
+      sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
 
       overlayEl.classList.add("show");
       sidenavEl.classList.add("show");
 
       CATEGORIES.map(category => {
-        const noteCategoryEl = document.createElement('div');
-        noteCategoryEl.classList.add('sidenav-action', 'note-category');
-        noteCategoryEl.innerHTML = `
-          <button>
+        const noteCategoryBtn = document.createElement('button');
+        noteCategoryBtn.classList.add('sidenav-action', 'note-category-button');
+        noteCategoryBtn.setAttribute('id', category.id);
+        noteCategoryBtn.innerHTML = `
             <i class="fa-solid fa-note-sticky"></i>
-            <span>${category.title}</span>
-          </button>`;
-    
-        // sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryEl);
+            <span>${category.title}</span>`;
+        sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryBtn);
+        
+        let categoryId = e.target.parentElement.id;
+        
+        noteCategoryBtn.addEventListener('click', (e) => {
+        
+          
+          
+        });
       });
     });
 
@@ -452,8 +458,15 @@ categoryModalConfirmBtn.addEventListener('click', () => {
         localStorage.setItem("NOTES", JSON.stringify(NOTES));
         overlayEl.classList.remove('show');
         categoryModalEl.classList.remove('show');
+
+        IS_NOTE_EDIT_MODE = false;
+        sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
         addAlert("Categories updated");
-      })
+      })     
+
+      renderHeader();
+      renderNotes(NOTES);
+
 
 
 
@@ -505,8 +518,6 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
     sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
 
     renderHeader();
-
-
   })
 
 
@@ -613,26 +624,25 @@ const renderNotes = (notesArr) => {
   
             const categoryEl = document.createElement('div');
             categoryEl.classList.add('note-category')
-            categoryEl.innerHTML = title + ",";
+            // categoryEl.innerHTML = title + ",";
+            index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
 
             noteCategoryWrapperEl.appendChild(categoryEl);
           } else {
-            const categoryHiddenEl = document.createElement('span');
-            categoryHiddenEl.classList.add('note-category');
             categoryCount++;
-
-            
-
-            noteCategoryWrapperEl.appendChild(categoryHiddenEl);
-          }
          
-
-       
-          
-          
-
-
+          }
         }))
+
+        if(categoryCount > 0) {
+          const categoryEl = document.createElement('div');
+          categoryEl.classList.add('note-category');
+          categoryEl.innerHTML = `(+${categoryCount})`;
+          noteCategoryWrapperEl.insertAdjacentElement('beforeend', categoryEl);
+        }
+        
+       
+
       }
 
       notesWrapperEl.appendChild(noteEl);
