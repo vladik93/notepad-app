@@ -619,6 +619,8 @@ const renderPage = () => {
     updateNotePageColor(CURRENT_NOTE);
   } else if (PAGE_NUM === 1) {
     pageWrapperEl.classList.remove("slide");
+  } else if (PAGE_NUM === 3) {
+    pageWrapperEl.classList.add('slide', 'three');
   }
 };
 

@@ -346,6 +346,10 @@ i {
   transform: translateX(-100%);
 }
 
+.page-wrapper.slide.three {
+  transform: translateX(-200%);
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -356,6 +360,10 @@ i {
 
 #page-two {
   left: 100%;
+}
+
+#page-three {
+  left: 200%;
 }
 
 /* NOTES  */
