@@ -34,6 +34,7 @@ const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
 
 let isSearching = false;
+let isCategoriesEdit = true;
 
 let timeoutId;
 let isNoteHeld = false;
@@ -173,6 +174,8 @@ const renderHeader = () => {
     
     })
 
+  } else if(isCategoriesEdit) {
+    headerEl.innerHTML = ``;
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -192,54 +195,9 @@ const renderHeader = () => {
       </div>    
     `;
 
-    const toggleBtn = document.querySelector("#toggle-button");
+
     const searchBtn = document.querySelector("#search-button");
     const sortBtn = document.querySelector("#sort-button");
-
-    toggleBtn.addEventListener("click", () => {
-      sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
-
-      overlayEl.classList.add("show");
-      sidenavEl.classList.add("show");
-
-      CATEGORIES.map(category => {
-        const noteCategoryBtn = document.createElement('button');
-        noteCategoryBtn.classList.add('sidenav-action', 'note-category-button');
-        noteCategoryBtn.setAttribute('id', category.id);
-        noteCategoryBtn.innerHTML = `
-            <i class="fa-solid fa-note-sticky"></i>
-            <span>${category.title}</span>`;
-        sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryBtn);
-        
-       
-        
-        noteCategoryBtn.addEventListener('click', (e) => {
-          let categoryId = parseInt(e.target.id);
-
-          if(CATEGORIES.some(category => category.id === categoryId)) {
-            renderNotes(NOTES, categoryId);
-            overlayEl.classList.remove("show");
-            sidenavEl.classList.remove("show");
-            
-          }    
-          
-        });
-      });
-
-      const editCategoriesBtn = document.createElement('button');
-      editCategoriesBtn.classList.add('sidenav-action', 'note-category-button');
-      editCategoriesBtn.innerHTML = `
-        <i class="fa-solid fa-plus"></i>
-        <span>Edit categories</span>`;
-        
-      sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
-
-      editCategoriesBtn.addEventListener('click', () => {
-        switchPage(3);
-        
-      })
-
-    });
     
 
     sidenavAllNotesBtn.addEventListener('click', () => {
@@ -455,6 +413,56 @@ const renderHeader = () => {
 
     
   }
+
+  const toggleBtn = document.querySelector("#toggle-button");
+  console.log(toggleBtn)
+
+  toggleBtn.addEventListener("click", () => {
+    sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
+
+    overlayEl.classList.add("show");
+    sidenavEl.classList.add("show");
+
+    CATEGORIES.map(category => {
+      const noteCategoryBtn = document.createElement('button');
+      noteCategoryBtn.classList.add('sidenav-action', 'note-category-button');
+      noteCategoryBtn.setAttribute('id', category.id);
+      noteCategoryBtn.innerHTML = `
+          <i class="fa-solid fa-note-sticky"></i>
+          <span>${category.title}</span>`;
+      sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryBtn);
+      
+     
+      
+      noteCategoryBtn.addEventListener('click', (e) => {
+        let categoryId = parseInt(e.target.id);
+
+        if(CATEGORIES.some(category => category.id === categoryId)) {
+          renderNotes(NOTES, categoryId);
+          overlayEl.classList.remove("show");
+          sidenavEl.classList.remove("show");
+          
+        }    
+        
+      });
+    });
+
+    const editCategoriesBtn = document.createElement('button');
+    editCategoriesBtn.classList.add('sidenav-action', 'note-category-button');
+    editCategoriesBtn.innerHTML = `
+      <i class="fa-solid fa-plus"></i>
+      <span>Edit categories</span>`;
+      
+    sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
+
+    editCategoriesBtn.addEventListener('click', () => {
+      switchPage(3);
+      
+    })
+
+  });
+
+
 };
 
 categoryModalConfirmBtn.addEventListener('click', () => {
