@@ -103,103 +103,31 @@ const addCategory = (title) => {
 
 
 
+//  HEADER FUNC
 
-const renderHeader = () => {
+const renderHeader = (headerText = null, ...actionArgs) => {
   headerEl.innerHTML = "";
+  
+  if(headerText) {
+    headerEl.innerHTML += `<div class="header-text">
+      <h3>${headerText}</h3>
+    </div>`
+  }
+ 
+  let actions = actionArgs[0];
 
-  if (isSearching) {
-    headerEl.innerHTML = `
-      <div class="header-back">
-        <button id="header-back-button"><i class="fa-solid fa-arrow-left"></i></button>
-      </div>
-      <div class="header-search" id="header-search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="header-search-input"/>
-        <button class="reset-search-button" id="reset-search-button"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="header-search-actions">
-        <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
-      </div> 
-    `;
+  console.log(actionArgs);
 
-    const headerBackBtn = document.querySelector("#header-back-button");
-    const resetSearchBtn = document.querySelector('#reset-search-button');
-    
-    const searchIcon = document.querySelector(".fa-magnifying-glass");
-
-    const headerSearchInp = document.querySelector("#header-search-input");
-
-    headerSearchInp.focus();
-
-    headerBackBtn.addEventListener("click", () => {
-      isSearching = false;
-      renderHeader(headerEl);
-    });
-
-    headerSearchInp.addEventListener("input", (e) => {
-      let inputValue = e.target.value;
-
-      console.log(inputValue);
-
-     
-      
-
-      if (inputValue.length > 0) {
-        searchIcon.style.display = "none";
-        resetSearchBtn.classList.add('show');
-
-        let newNotesArr = NOTES.filter(note => note.title.includes(inputValue) || note.text.includes(inputValue));
-
-        console.log(newNotesArr);
-
-        FILTERED_NOTES = newNotesArr;
-        renderNotes(FILTERED_NOTES);
-       
-        
-
-
-
-
-      } else {
-        searchIcon.style.display = "block";
-        resetSearchBtn.classList.remove('show');
-        renderNotes(NOTES);
-      }
-    });
-
-    resetSearchBtn.addEventListener('click', () => {
-      headerSearchInp.value = "";
-      resetSearchBtn.classList.remove('show');
-      searchIcon.style.display = "block";
-    
-    })
-
-  } else if(isCategoriesEdit) {
-    console.log("HELLO")
-  } else {
-    headerEl.innerHTML = `
-      <div class="header-toggler">
+  if(actions.isToggle) {
+    headerEl.insertAdjacentHTML('afterbegin', 
+      `<div class="header-toggler">
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
-      </div>
-      <div class="header-text">
-        <h3>Notepad Free</h3>
-        <p class="header-category">Category</p>
-      </div>
-      <div class="header-actions">
-        <button id="search-button">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <button id="sort-button">SORT</button>
-        
-        <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-      </div>    
-    `;
+      </div>`);
 
     const toggleBtn = document.querySelector("#toggle-button");
-    const searchBtn = document.querySelector("#search-button");
-    const sortBtn = document.querySelector("#sort-button");
 
     toggleBtn.addEventListener("click", () => {
+      console.log('clicked');
       sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
 
       overlayEl.classList.add("show");
@@ -223,7 +151,6 @@ const renderHeader = () => {
             renderNotes(NOTES, categoryId);
             overlayEl.classList.remove("show");
             sidenavEl.classList.remove("show");
-            
           }    
           
         });
@@ -243,222 +170,14 @@ const renderHeader = () => {
       })
 
     });
-    
+  } 
 
-    sidenavAllNotesBtn.addEventListener('click', () => {
-      renderNotes(NOTES);
-      overlayEl.classList.remove("show");
-      sidenavEl.classList.remove("show");
-      
-    })
-    
-    
+  if(actions.isSearch) {}
 
-    searchBtn.addEventListener("click", () => {
-      isSearching = true;
-      renderHeader(headerEl);
-    });
+}
 
-    sortBtn.addEventListener("click", () => {
-      overlayEl.classList.add("show");
-      sortModalEl.classList.add("show");
-    });
-  }
+renderHeader("Notepad Free", {isSearch: true, isToggle: true});
 
-  if (IS_NOTE_EDIT_MODE) {
-    let selectedNoteEls = document.querySelectorAll(".note.selected");
-    let selectedNoteCount = selectedNoteEls.length;
-    console.log("selected notes", selectedNoteEls);
-    console.log("length ->", selectedNoteEls.length);
-    headerEl.innerHTML = `
-      <div class="header-back">
-        <button id="back-selected"><i class="fa-solid fa-arrow-left"></i></button>
-      </div>
-      <span id="note-counter" class="note-counter">${selectedNoteCount}</span>
-      
-      <div class="header-actions">
-        <button id="all-selected"><i class="fa-solid fa-expand"></i></button>
-        <button id="delete-selected"><i class="fa-solid fa-trash"></i></button>
-        <div class="more-options-wrapper">
-          <button id="more-options-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-          <div class="more-options" id="more-options">
-            <div class="more-option">Export notes to text files</div>
-            <div class="more-option" id="more-option-categorize">Categorize</div>
-            <div class="more-option" id="more-option-colorize">Colorize</div>
-          </div>
-        </div>`;
-
-    const deleteSelectedBtn = document.querySelector("#delete-selected");
-    const backSelectedBtn = document.querySelector("#back-selected");
-    const noteCounterEl = document.querySelector("#note-counter");
-    const allSelectedBtn = document.querySelector("#all-selected");
-    const moreOptionsBtn = document.querySelector("#more-options-button");
-    const moreOptionsEl = document.querySelector("#more-options");
-    // document.querySelectorAll("body > div:not(.first)");
-    const moreOptionColorize = document.querySelector("#more-option-colorize");
-
-    const colorRemoveBtn = document.querySelector("#color-remove");
-   
-    const moreOptionCategorize = document.querySelector('#more-option-categorize');
-
-    deleteSelectedBtn.addEventListener("click", () => {
-      const deleteConfirm = confirm("Delete selcted noted?");
-
-      if (deleteConfirm) {
-        let selectedNoteEls = document.querySelectorAll(".note.selected");
-        selectedNoteEls.forEach((noteEl) => {
-          let newNotesArray = NOTES.filter(
-            (note) => note.id !== parseInt(noteEl.id)
-          );
-
-          noteEl.classList.remove("selected");
-
-          NOTES = newNotesArray;
-          localStorage.setItem("NOTES", JSON.stringify(NOTES));
-
-          selectedNoteCount = 0;
-          noteCounterEl.innerText = selectedNoteCount;
-
-          sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
-          IS_NOTE_EDIT_MODE = false;
-
-          renderHeader();
-          renderNotes(NOTES);
-        });
-      }
-    });
-
-    backSelectedBtn.addEventListener("click", () => {
-      console.log("back button pressed");
-      sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
-      IS_NOTE_EDIT_MODE = false;
-      renderHeader();
-      renderNotes(NOTES);
-    });
-
-    allSelectedBtn.addEventListener("click", () => {
-      let noteEls = document.querySelectorAll(".note");
-
-      noteEls.forEach((noteEl) => {
-        if (!noteEl.classList.contains("selected")) {
-          noteEl.classList.add("selected");
-        }
-
-        if (noteEls.length === selectedNoteEls.length) {
-          noteEl.classList.remove("selected");
-        }
-
-        renderHeader();
-      });
-    });
-
-    moreOptionsBtn.addEventListener("click", () => {
-      const moreOptionsEl = document.querySelector("#more-options");
-      moreOptionsEl.classList.add("show");
-    });
-
-    moreOptionColorize.addEventListener("click", () => {
-      const selectedNoteElsLength = document.querySelectorAll('.note.selected').length;
-      moreOptionsEl.classList.remove("show");
-
-      if(selectedNoteElsLength) {
-       
-        overlayEl.classList.add("show");
-        
-        const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
-        modalColorActiveEls.forEach(colorEl => colorEl.classList.remove('active'));
-  
-        
-        const selectedNoteEl = document.querySelector('.note.selected');
-  
-  
-        colorArray.map((color) => {
-          const modalColorEl = document.createElement("div");
-          modalColorEl.classList.add("modal-color");
-          modalColorEl.setAttribute("id", color);
-          modalColorEl.style = `background: ${color}`;
-  
-          if(selectedNoteEl.dataset.color === modalColorEl.id) {
-            modalColorEl.classList.add('active');
-          }
-      
-          colorModalGridEl.appendChild(modalColorEl);
-  
-          modalColorEl.addEventListener('click', (e) =>{
-            const colorId = modalColorEl.id;
-            const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
-            const modalColorTitleEl = document.querySelector("#color-modal-title");
-  
-            modalColorActiveEls.forEach(elm => {
-              elm.classList.remove('active');
-            });
-  
-            modalColorEl.classList.add('active');
-            modalColorTitleEl.style.backgroundColor = colorId;
-          })
-  
-        });
-        colorModalEl.classList.add("show");
-      }
-    });
-
-    colorRemoveBtn.addEventListener('click', () => {
-      const modalColorActiveEl = document.querySelector('.modal-color.active');
-      const modalColorTitleEl = document.querySelector("#color-modal-title");
-
-
-      if(modalColorActiveEl) {
-        modalColorActiveEl.classList.remove("active");
-        modalColorTitleEl.style.backgroundColor = "";
-      }
-    })
-
-    moreOptionCategorize.addEventListener('click', () => {
-      categoryModalWrapperEl.innerHTML = "";
-      const selectedNoteElsLength = document.querySelectorAll('.note.selected').length;
-      moreOptionsEl.classList.remove("show");
-      
-
-      if(selectedNoteElsLength) {
-        overlayEl.classList.add('show');
-
-        CATEGORIES.map(category => {
-          const modalCategoryEl = document.createElement('div');
-          modalCategoryEl.classList.add('modal-category');
-          modalCategoryEl.setAttribute('id', category.id)
-          modalCategoryEl.innerHTML = `
-            <label>${category.title}</label>
-            <input type="checkbox"  class="checkbox" name="note-category" value=${category.id}  />
-          `
-          let modalCategoryCheckbox = modalCategoryEl.querySelector('[name="note-category"]');
-          modalCategoryCheckbox.checked = false;
-          
-
-          modalCategoryEl.addEventListener('change', (e) => {
-            if(e.target.checked) {
-              modalCategoryCheckbox.checked = true;
-              modalCategoryEl.classList.add('selected');
-            } else {
-              modalCategoryCheckbox.checked = false;
-              modalCategoryEl.classList.remove('selected');
-            }
-          }) 
-          
-
-        
-          
-
-          categoryModalWrapperEl.appendChild(modalCategoryEl);
-        })
-        categoryModalEl.classList.add("show");
-        
-      }
-      
-    })
-
-    
-  }
-};
 
 categoryModalConfirmBtn.addEventListener('click', () => {
   const selectedCategoryEls = document.querySelectorAll('.modal-category.selected');
@@ -498,7 +217,7 @@ categoryModalConfirmBtn.addEventListener('click', () => {
         addAlert("Categories updated");
       })     
 
-      renderHeader();
+      // renderHeader();
       renderNotes(NOTES);
 
 
@@ -551,7 +270,7 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
     IS_NOTE_EDIT_MODE = false;
     sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
 
-    renderHeader();
+    // renderHeader();
   })
 
 
@@ -560,7 +279,7 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
 
 
 
-renderHeader();
+// renderHeader();
 
 
 const overlayEl = document.querySelector("#overlay");
@@ -689,7 +408,7 @@ const renderNotes = (notesArr, categoryId) => {
       noteEl.addEventListener("click", () => {
         if (IS_NOTE_EDIT_MODE) {
           noteEl.classList.toggle("selected");
-          renderHeader();
+          // renderHeader();
         } else {
           let currentNote = NOTES.find(
             (note) => note.id === parseInt(noteEl.id)
@@ -719,7 +438,7 @@ const renderNotes = (notesArr, categoryId) => {
           sessionStorage.setItem("IS_NOTE_EDIT_MODE", true);
           noteEl.classList.add("selected");
 
-          renderHeader();
+          // renderHeader();
         }, 500);
       });
 
@@ -799,37 +518,5 @@ addEditTextarea.addEventListener("input", (e) => {
   console.log(addEditTextarea.value);
 });
 
-header2backBtn.addEventListener("click", () => {
-  if (!isNoteSaved) {
-    addEditNote();
 
-    addEditInput.value = "";
-    addEditTextarea.value = "";
-
-    if (localStorage.getItem("CURRENT_NOTE") !== null) {
-      localStorage.removeItem("CURRENT_NOTE");
-    }
-
-    // switchPage();
-  } else {
-    if (localStorage.getItem("CURRENT_NOTE") !== null) {
-      localStorage.removeItem("CURRENT_NOTE");
-    }
-
-    // switchPage();
-  }
-  isNoteSaved = false;
-  addEditIdInput.value = null;
-  addEditInput.value = "";
-  addEditTextarea.value = "";
-  
-  switchPage(1);
-});
-
-saveBtn.addEventListener("click", () => {
-  if (!isNoteSaved) {
-    console.log("!isNoteSaved");
-    addEditNote();
-  }
-});
 
