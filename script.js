@@ -9,6 +9,8 @@ const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
 
+const headerAddEditEl = document.querySelector('#header-add-edit');
+
 const colorModalEl = document.querySelector("#color-modal");
 const colorModalGridEl = document.querySelector("#color-modal-grid");
 const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
@@ -726,6 +728,8 @@ renderNotes(NOTES);
 renderPage();
 
 addBtn.addEventListener("click", () => {
+  headerAddEditEl.style.backgroundColor = "#756ab6"
+  
   
   switchPage(2);
 });
