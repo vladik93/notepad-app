@@ -21,7 +21,7 @@ const categoryModalEl = document.querySelector('#category-modal');
 const categoryModalWrapperEl = document.querySelector('#category-modal-wrapper');
 const categoryModalConfirmBtn = document.querySelector("#category-modal-confirm");
 
-const header2backBtn = document.querySelector("#header2-back-button");
+// const header2backBtn = document.querySelector("#header2-back-button");
 
 const addEditIdInput = document.querySelector("#add-edit-id");
 const addEditInput = document.querySelector("#add-edit-input");
@@ -194,8 +194,9 @@ const renderHeader = () => {
       const headerBackBtn = document.querySelector('#header-back-button');
 
       headerBackBtn.addEventListener("click", () => {
+        console.log("HELLO");
         if (!isNoteSaved) {
-          addEditNote();
+          // addEditNote();
       
           addEditInput.value = "";
           addEditTextarea.value = "";
