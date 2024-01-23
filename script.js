@@ -67,7 +67,7 @@ sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 sessionStorage.removeItem("IS_CATEGORY_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
-let IS_CATEGORY_EDIT_MODE = sessionStorage.getItem("IS_CATEGORY_EDIT_MODE") || true;
+let IS_CATEGORY_EDIT_MODE = sessionStorage.getItem("IS_CATEGORY_EDIT_MODE") || false;
 
 
 
