@@ -165,11 +165,7 @@ const renderHeader = () => {
       headerSearchInp.value = "";
       resetSearchBtn.classList.remove('show');
       searchIcon.style.display = "block";
-    
     })
-
-  } else if(isCategoriesEdit) {
-    console.log("HELLO")
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
