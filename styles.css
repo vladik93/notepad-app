@@ -82,6 +82,9 @@ i {
   align-items: center;
   color: #fff;
   gap: 2.4rem;
+  position: fixed;
+  width: 100%;
+  z-index: 50;
 }
 
 .header-text {
@@ -340,6 +343,7 @@ i {
   height: 100%;
   transform: translateX(0%);
   transition: transform 0.3s ease-in;
+  padding-top: 60px;
 }
 
 .page-wrapper.slide {
