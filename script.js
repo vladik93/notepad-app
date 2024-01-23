@@ -116,8 +116,6 @@ const renderHeader = (headerText = null, ...actionArgs) => {
  
   let actions = actionArgs[0];
 
-  console.log(actionArgs);
-
   if(actions.isToggle) {
     headerEl.insertAdjacentHTML('afterbegin', 
       `<div class="header-toggler">
@@ -172,7 +170,11 @@ const renderHeader = (headerText = null, ...actionArgs) => {
     });
   } 
 
-  if(actions.isSearch) {}
+  if(actions.isSearch) {
+    headerEl.innerHTML += `<button id="search-button">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>`
+  }
 
 }
 
