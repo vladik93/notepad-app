@@ -154,12 +154,6 @@ const renderHeader = () => {
 
         FILTERED_NOTES = newNotesArr;
         renderNotes(FILTERED_NOTES);
-       
-        
-
-
-
-
       } else {
         searchIcon.style.display = "block";
         resetSearchBtn.classList.remove('show');
