@@ -7,7 +7,10 @@ const sidenavAllNotesBtn = document.querySelector('#all-notes-button');
 
 const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
+
 const pageWrapperEl = document.querySelector("#page-wrapper");
+const pageOneEl = document.querySelector('#page-one');
+const pageTwoEl = document.querySelector('#page-two');
 
 const colorModalEl = document.querySelector("#color-modal");
 const colorModalGridEl = document.querySelector("#color-modal-grid");
@@ -65,9 +68,11 @@ console.log("PAGE_NUM", PAGE_NUM);
 
 sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 sessionStorage.removeItem("IS_CATEGORY_EDIT_MODE");
+sessionStorage.removeItem('IS_ADD_EDIT_FORM_MODE');
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 let IS_CATEGORY_EDIT_MODE = sessionStorage.getItem("IS_CATEGORY_EDIT_MODE") || false;
+let IS_ADD_EDIT_FORM_MODE = sessionStorage.getItem("IS_ADD_EDIT_FORM_MODE") || true;
 
 
 
@@ -100,11 +105,6 @@ const addCategory = (title) => {
   CATEGORIES.push(newCategory);
   localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
 }
-
-// addCategory("Stuff");
-
-
-
 
 const renderHeader = () => {
   headerEl.innerHTML = "";
@@ -141,11 +141,6 @@ const renderHeader = () => {
     headerSearchInp.addEventListener("input", (e) => {
       let inputValue = e.target.value;
 
-      console.log(inputValue);
-
-     
-      
-
       if (inputValue.length > 0) {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
@@ -156,12 +151,6 @@ const renderHeader = () => {
 
         FILTERED_NOTES = newNotesArr;
         renderNotes(FILTERED_NOTES);
-       
-        
-
-
-
-
       } else {
         searchIcon.style.display = "block";
         resetSearchBtn.classList.remove('show');
@@ -183,6 +172,55 @@ const renderHeader = () => {
       <div class="header-text">
         <h3>Categories</h3>
       </div>`
+  } else if(IS_ADD_EDIT_FORM_MODE) {
+    headerEl.classList.add("header-add-edit");
+    headerEl.setAttribute("id", "header-add-edit");
+    headerEl.innerHTML = `
+      <button id="header-back-button">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="header-text">
+        <h3>Notepad Free</h3>
+      </div>
+      <div class="header-actions">
+        <button id="save-button">SAVE</button>
+        <button id="undo-button">UNDO</button>
+        <button id="actions-button">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>`
+
+      const headerBackBtn = document.querySelector('#header-back-button');
+
+      headerBackBtn.addEventListener("click", () => {
+        if (!isNoteSaved) {
+          addEditNote();
+      
+          addEditInput.value = "";
+          addEditTextarea.value = "";
+      
+          if (localStorage.getItem("CURRENT_NOTE") !== null) {
+            localStorage.removeItem("CURRENT_NOTE");
+          }
+      
+          // switchPage();
+        } else {
+          if (localStorage.getItem("CURRENT_NOTE") !== null) {
+            localStorage.removeItem("CURRENT_NOTE");
+          }
+      
+          // switchPage();
+        }
+        isNoteSaved = false;
+        addEditIdInput.value = null;
+        addEditInput.value = "";
+        addEditTextarea.value = "";
+        
+        switchPage(1);
+      });
+      
+      
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -457,13 +495,9 @@ const renderHeader = () => {
 
           categoryModalWrapperEl.appendChild(modalCategoryEl);
         })
-        categoryModalEl.classList.add("show");
-        
+        categoryModalEl.classList.add("show"); 
       }
-      
     })
-
-    
   }
 };
 
@@ -507,16 +541,8 @@ categoryModalConfirmBtn.addEventListener('click', () => {
 
       renderHeader();
       renderNotes(NOTES);
-
-
-
-
-
     })
   // }
-
-
-
 })
 
 colorModalConfirmBtn.addEventListener('click', (event) => {
@@ -611,8 +637,8 @@ const updateNotePageColor = (currentNote) => {
             headerAddEditEl.style.backdropFilter = "brightness(50%)";
           } else {
             pageTwoEl.style.background = "#ffe5e5";
-            headerAddEditWrapperEl.style.background = "#756ab6";
-            headerAddEditEl.style.backdropFilter = "none";
+            // headerAddEditWrapperEl.style.background = "#756ab6";
+            // headerEl.style.backdropFilter = "none";
             
           }
         }
@@ -735,9 +761,27 @@ const renderNotes = (notesArr, categoryId) => {
   }
 };
 
+const renderAddEditForm = () => {
+  pageTwoEl.innerHTML = `
+    <form class="add-edit-form">
+      <input type="hidden" id="add-edit-id" />
+      <input
+        class="add-edit-input"
+        id="add-edit-input"
+        type="text"
+        placeholder="Enter title..."
+      />
+      <textarea
+        id="add-edit-textarea"
+        class="add-edit-textarea"
+        placeholder="Enter text..."></textarea>
+    </form>`
+}
+
 renderNotes(NOTES);
 
 renderPage();
+renderAddEditForm();
 
 addBtn.addEventListener("click", () => {
   
@@ -803,32 +847,6 @@ addEditTextarea.addEventListener("input", (e) => {
   console.log(addEditTextarea.value);
 });
 
-header2backBtn.addEventListener("click", () => {
-  if (!isNoteSaved) {
-    addEditNote();
-
-    addEditInput.value = "";
-    addEditTextarea.value = "";
-
-    if (localStorage.getItem("CURRENT_NOTE") !== null) {
-      localStorage.removeItem("CURRENT_NOTE");
-    }
-
-    // switchPage();
-  } else {
-    if (localStorage.getItem("CURRENT_NOTE") !== null) {
-      localStorage.removeItem("CURRENT_NOTE");
-    }
-
-    // switchPage();
-  }
-  isNoteSaved = false;
-  addEditIdInput.value = null;
-  addEditInput.value = "";
-  addEditTextarea.value = "";
-  
-  switchPage(1);
-});
 
 saveBtn.addEventListener("click", () => {
   if (!isNoteSaved) {
