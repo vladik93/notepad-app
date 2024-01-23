@@ -64,8 +64,10 @@ let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
 console.log("PAGE_NUM", PAGE_NUM);
 
 sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
+sessionStorage.removeItem("IS_CATEGORY_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
+let IS_CATEGORY_EDIT_MODE = sessionStorage.getItem("IS_CATEGORY_EDIT_MODE") || true;
 
 
 
@@ -174,8 +176,13 @@ const renderHeader = () => {
     
     })
 
-  } else if(isCategoriesEdit) {
-    console.log("HELLO")
+  } else if(IS_CATEGORY_EDIT_MODE) {
+    headerEl.innerHTML = `<div class="header-toggler">
+        <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="header-text">
+        <h3>Categories</h3>
+      </div>`
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -589,9 +596,6 @@ const switchPage = (pageNum) => {
   } else if (pageNum === 2) {
     pageWrapperEl.classList.add("slide");
     sessionStorage.setItem("PAGE_NUM", 2);
-  } else if (pageNum === 3) {
-   pageWrapperEl.classList.add("slide", "three");
-   sessionStorage.setItem('PAGE_NUM', 3); 
   }
 };
 
