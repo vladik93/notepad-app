@@ -62,9 +62,9 @@ let FILTERED_NOTES = [];
 
 
 
-let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
+// let PAGE_NUM = JSON.parse(sessionStorage.getItem("PAGE_NUM")) || 1;
 
-console.log("PAGE_NUM", PAGE_NUM);
+
 
 sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
@@ -234,7 +234,7 @@ const renderHeader = () => {
         pageTwoEl.innerHTML = "";
 
         pageTwoEl.innerHTML = `
-          <h1>Categories</h1>
+          
         `;
 
         pageWrapperEl.classList.add('slide');
