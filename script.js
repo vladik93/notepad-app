@@ -25,9 +25,7 @@ const categoryModalConfirmBtn = document.querySelector("#category-modal-confirm"
 
 const header2backBtn = document.querySelector("#header2-back-button");
 
-const addEditIdInput = document.querySelector("#add-edit-id");
-const addEditInput = document.querySelector("#add-edit-input");
-const addEditTextarea = document.querySelector("#add-edit-textarea");
+
 
 let addEditInputValue = "";
 let addEditTextareaValue = "";
@@ -233,7 +231,13 @@ const renderHeader = () => {
       sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
 
       editCategoriesBtn.addEventListener('click', () => {
-        switchPage(3);
+        pageTwoEl.innerHTML = "";
+
+        pageTwoEl.innerHTML = `
+          <h1>Categories</h1>
+        `;
+
+        pageWrapperEl.classList.add('slide');
         
       })
 
@@ -521,10 +525,6 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
 
     selectedNotes.push(selectedNoteId);
 
-    console.log(selectedNotes);
-
-
-    // typeof selectedNote.id -> string
     let newNotesArray = NOTES.map(note => {
       if(selectedNotes.indexOf(note.id) > -1) {
         return {...note, color: activeColorId}
@@ -548,9 +548,6 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
 
     renderHeader();
   })
-
-
-
 });
 
 
@@ -591,24 +588,22 @@ const switchPage = (pageNum) => {
 };
 
 const updateNotePageColor = (currentNote) => {
-        if(localStorage.getItem('CURRENT_NOTE')) {
-          const pageTwoEl = document.querySelector('#page-two');
-          const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
-          const headerAddEditEl = document.querySelector('#header-add-edit');
+  if(localStorage.getItem('CURRENT_NOTE')) {
+    const pageTwoEl = document.querySelector('#page-two');
+    // const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
+    // const headerAddEditEl = document.querySelector('#header-add-edit');
 
-          if(currentNote.color !== "#ffe5e5") {
-            pageTwoEl.style.backgroundColor = currentNote.color;
-            headerAddEditWrapperEl.style.backgroundColor = currentNote.color;
-            headerAddEditEl.style.backdropFilter = "brightness(50%)";
-          } else {
-            pageTwoEl.style.background = "#ffe5e5";
-            headerAddEditWrapperEl.style.background = "#756ab6";
-            headerAddEditEl.style.backdropFilter = "none";
-            
-          }
-        }
-         
-
+    if(currentNote.color !== "#ffe5e5") {
+      pageTwoEl.style.backgroundColor = currentNote.color;
+      headerEl.style.backgroundColor = currentNote.color;
+      // headerAddEditEl.style.backdropFilter = "brightness(50%)";
+    } else {
+      pageTwoEl.style.background = "#ffe5e5";
+      headerEl.style.background = "#756ab6";
+      // headerAddEditEl.style.backdropFilter = "none";
+      
+    }
+  }
 }
 
 const renderPage = () => {
@@ -697,6 +692,27 @@ const renderNotes = (notesArr, categoryId) => {
           const CURRENT_NOTE =
             JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
 
+          
+          pageTwoEl.innerHTML = `
+            <form class="add-edit-form">
+              <input type="hidden" id="add-edit-id" />
+              <input
+                class="add-edit-input"
+                id="add-edit-input"
+                type="text"
+                placeholder="Enter title..."
+              />
+              <textarea
+                id="add-edit-textarea"
+                class="add-edit-textarea"
+                placeholder="Enter text..."
+              ></textarea>
+            </form>`
+
+          const addEditIdInput = document.querySelector("#add-edit-id");
+          const addEditInput = document.querySelector("#add-edit-input");
+          const addEditTextarea = document.querySelector("#add-edit-textarea");
+
           addEditIdInput.value = CURRENT_NOTE.id;
           addEditInput.value = CURRENT_NOTE.title;
           addEditTextarea.value = CURRENT_NOTE.text;
@@ -705,7 +721,7 @@ const renderNotes = (notesArr, categoryId) => {
           
 
 
-          switchPage(2);
+          pageWrapperEl.classList.add('slide');
         }
       });
 
@@ -822,6 +838,8 @@ const addEditNote = () => {
 
 addBtn.addEventListener("click", () => {
   pageWrapperEl.classList.add('slide');
+  
+  pageTwoEl.innerHTML = "";
   
   pageTwoEl.innerHTML = `<form class="add-edit-form">
   <input type="hidden" id="add-edit-id" />
