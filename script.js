@@ -9,6 +9,11 @@ const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
 
+const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
+const headerAddEditEl = document.querySelector('#header-add-edit');
+
+const pageTwoEl = document.querySelector('#page-two');
+
 const colorModalEl = document.querySelector("#color-modal");
 const colorModalGridEl = document.querySelector("#color-modal-grid");
 const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
@@ -619,6 +624,8 @@ const renderPage = () => {
   }
 };
 
+
+
 const renderNotes = (notesArr, categoryId) => {
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
@@ -725,10 +732,7 @@ renderNotes(NOTES);
 
 renderPage();
 
-addBtn.addEventListener("click", () => {
-  
-  switchPage(2);
-});
+
 
 // PAGE 2
 
@@ -814,6 +818,13 @@ header2backBtn.addEventListener("click", () => {
   addEditTextarea.value = "";
   
   switchPage(1);
+});
+
+addBtn.addEventListener("click", () => {
+  pageTwoEl.style.backgroundColor = "#ffe5e5";
+  // headerAddEditWrapperEl.style.backgroundColor = "#756ab6";
+  headerAddEditEl.style.backgroundColor = "#756ab6";
+  switchPage(2);
 });
 
 saveBtn.addEventListener("click", () => {
