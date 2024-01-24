@@ -736,13 +736,13 @@ renderPage();
 
 // PAGE 2
 
-// if (localStorage.getItem("CURRENT_NOTE") !== null) {
-//   const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
+if (localStorage.getItem("CURRENT_NOTE") !== null) {
+  const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
 
-//   addEditIdInput.value = CURRENT_NOTE.id;
-//   addEditInput.value = CURRENT_NOTE.title;
-//   addEditTextarea.value = CURRENT_NOTE.text;
-// }
+  addEditIdInput.value = CURRENT_NOTE.id;
+  addEditInput.value = CURRENT_NOTE.title;
+  addEditTextarea.value = CURRENT_NOTE.text;
+}
 
 const addEditNote = () => {
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
@@ -784,66 +784,53 @@ const addEditNote = () => {
   isNoteSaved = true;
 };
 
-// addEditInput.addEventListener("input", (e) => {
-//   addEditInput.value = e.target.value;
-// });
-
-// addEditTextarea.addEventListener("input", (e) => {
-//   addEditTextarea.value = e.target.value;
-//   console.log(addEditTextarea.value);
-// });
-
-// header2backBtn.addEventListener("click", () => {
-//   if (!isNoteSaved) {
-//     addEditNote();
-
-//     addEditInput.value = "";
-//     addEditTextarea.value = "";
-
-//     if (localStorage.getItem("CURRENT_NOTE") !== null) {
-//       localStorage.removeItem("CURRENT_NOTE");
-//     }
-
-//     // switchPage();
-//   } else {
-//     if (localStorage.getItem("CURRENT_NOTE") !== null) {
-//       localStorage.removeItem("CURRENT_NOTE");
-//     }
-
-//     // switchPage();
-//   }
-//   isNoteSaved = false;
-//   addEditIdInput.value = null;
-//   addEditInput.value = "";
-//   addEditTextarea.value = "";
-  
-//   switchPage(1);
-// });
-
-addBtn.addEventListener("click", () => {
-  pageWrapperEl.classList.add('slide');
-  
-  pageTwoEl.innerHTML = `<form class="add-edit-form">
-  <input type="hidden" id="add-edit-id" />
-  <input
-    class="add-edit-input"
-    id="add-edit-input"
-    type="text"
-    placeholder="Enter title..."
-  />
-  <textarea
-    id="add-edit-textarea"
-    class="add-edit-textarea"
-    placeholder="Enter text..."
-  ></textarea>
-</form>`
- 
+addEditInput.addEventListener("input", (e) => {
+  addEditInput.value = e.target.value;
 });
 
-// saveBtn.addEventListener("click", () => {
-//   if (!isNoteSaved) {
-//     console.log("!isNoteSaved");
-//     addEditNote();
-//   }
-// });
+addEditTextarea.addEventListener("input", (e) => {
+  addEditTextarea.value = e.target.value;
+  console.log(addEditTextarea.value);
+});
+
+header2backBtn.addEventListener("click", () => {
+  if (!isNoteSaved) {
+    addEditNote();
+
+    addEditInput.value = "";
+    addEditTextarea.value = "";
+
+    if (localStorage.getItem("CURRENT_NOTE") !== null) {
+      localStorage.removeItem("CURRENT_NOTE");
+    }
+
+    // switchPage();
+  } else {
+    if (localStorage.getItem("CURRENT_NOTE") !== null) {
+      localStorage.removeItem("CURRENT_NOTE");
+    }
+
+    // switchPage();
+  }
+  isNoteSaved = false;
+  addEditIdInput.value = null;
+  addEditInput.value = "";
+  addEditTextarea.value = "";
+  
+  switchPage(1);
+});
+
+addBtn.addEventListener("click", () => {
+  pageTwoEl.style.backgroundColor = "#ffe5e5";
+  // headerAddEditWrapperEl.style.backgroundColor = "#756ab6";
+  headerAddEditEl.style.backgroundColor = "#756ab6";
+  switchPage(2);
+});
+
+saveBtn.addEventListener("click", () => {
+  if (!isNoteSaved) {
+    console.log("!isNoteSaved");
+    addEditNote();
+  }
+});
 

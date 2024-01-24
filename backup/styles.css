@@ -82,10 +82,6 @@ i {
   align-items: center;
   color: #fff;
   gap: 2.4rem;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 50;
 }
 
 .header-text {
@@ -177,7 +173,7 @@ i {
   background-color: #ffe5e5;
   position: absolute;
   width: 75%;
-  z-index: 200;
+  z-index: 50;
   transform: translateX(-100%);
   top: 0;
   left: 0;
@@ -253,7 +249,7 @@ i {
   background: rgba(0, 0, 0, 0.6);
   opacity: 0;
   visibility: hidden;
-  z-index: 100;
+  z-index: 10;
   transition: all 0.3s ease-in;
 }
 
@@ -286,7 +282,6 @@ i {
   font-size: 1.8rem;
 }
 
-
 /* SORT PANEL */
 .sort-modal {
   visibility: hidden;
@@ -297,8 +292,8 @@ i {
   top: 50%;
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
-  z-index: 200;
   background: #fff;
+  z-index: 50;
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -348,13 +343,15 @@ i {
   height: 100%;
   transform: translateX(0%);
   transition: transform 0.3s ease-in;
-  padding-top: 60px;
 }
 
 .page-wrapper.slide {
   transform: translateX(-100%);
 }
 
+.page-wrapper.slide.three {
+  transform: translateX(-200%);
+}
 
 .page {
   display: flex;
@@ -368,6 +365,9 @@ i {
   left: 100%;
 }
 
+#page-three {
+  left: 200%;
+}
 
 /* NOTES  */
 
@@ -549,7 +549,7 @@ i {
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
   background: #fff;
-  z-index: 200;
+  z-index: 50;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -638,7 +638,6 @@ i {
   border-bottom: 1px solid rgba(102, 102, 102, 0.3);
   padding-top: 1.6rem;
   padding-bottom: 0.8rem;
-  z-index: 300;
 
 
 }
