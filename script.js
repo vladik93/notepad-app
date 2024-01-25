@@ -577,7 +577,7 @@ const renderCategoryPage = () => {
                   <button><i class="fa-solid fa-trash"></i></button>
                 </div>
               </li>`
-          })}
+          }).join("")}
       </ul>
     </div>`;
 
@@ -591,17 +591,20 @@ const renderCategoryPage = () => {
     })
 
     categoryEditBtn.addEventListener('click', () => {
-      let newCategory = {
-        id: new Date().getTime(),
-        title: categoryEditInputValue,
-        dateCreated: new Date().toJSON()
+      if(categoryEditInputValue !== "") {
+        let newCategory = {
+          id: new Date().getTime(),
+          title: categoryEditInputValue,
+          dateCreated: new Date().toJSON()
+        }
+  
+        CATEGORIES.push(newCategory);
+        localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
+        categoryEditInputValue = "";
+  
+        renderCategoryPage();
       }
-
-      CATEGORIES.push(newCategory);
-      localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
-      categoryEditInputValue = "";
-
-      renderCategoryPage();
+      
     })
 
   }
