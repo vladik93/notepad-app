@@ -30,6 +30,8 @@ const header2backBtn = document.querySelector("#header2-back-button");
 let addEditInputValue = "";
 let addEditTextareaValue = "";
 
+let categoryEditInputValue = "";
+
 const saveBtn = document.querySelector("#save-button");
 const undoBtn = document.querySelector("#undo-button");
 
@@ -231,13 +233,12 @@ const renderHeader = () => {
       sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
 
       editCategoriesBtn.addEventListener('click', () => {
-        pageTwoEl.innerHTML = "";
+        renderCategoryPage();
 
-        pageTwoEl.innerHTML = `
-          
-        `;
 
         pageWrapperEl.classList.add('slide');
+        sidenavEl.classList.remove("show");
+        overlayEl.classList.remove('show');
         
       })
 
@@ -550,9 +551,61 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
   })
 });
 
-
-
 renderHeader();
+
+
+const renderCategoryPage = () => {
+  pageTwoEl.innerHTML = "";
+  
+  pageTwoEl.innerHTML = `
+    <div class="edit-categories-wrapper">
+      <div class="category-input-wrapper">
+        <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
+        <button class="category-edit-button" id="category-edit-button">ADD</button>
+      </div>
+
+      <ul class="category-list-wrapper">
+        ${CATEGORIES && CATEGORIES.map(category => {
+            return `
+              <li class="category-item" data-category-id=${category.id}>
+                <div class="category-item-content">
+                  <i class="fa-solid fa-grip-vertical"></i>
+                  <span>${category.title}</span>
+                </div>
+                <div class="category-item-actions">
+                  <button><i class="fa-solid fa-pen"></i></button>
+                  <button><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </li>`
+          })}
+      </ul>
+    </div>`;
+
+
+    const categoryEditInputEl = document.querySelector('#category-edit-input');
+    const categoryEditBtn = document.querySelector('#category-edit-button');
+
+          
+    categoryEditInputEl.addEventListener('input', (e) => {
+      categoryEditInputValue = e.target.value;
+    })
+
+    categoryEditBtn.addEventListener('click', () => {
+      let newCategory = {
+        id: new Date().getTime(),
+        title: categoryEditInputValue,
+        dateCreated: new Date().toJSON()
+      }
+
+      CATEGORIES.push(newCategory);
+      localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
+      categoryEditInputValue = "";
+
+      renderCategoryPage();
+    })
+
+  }
+
 
 
 const overlayEl = document.querySelector("#overlay");
@@ -572,20 +625,6 @@ sortCancelBtn.addEventListener("click", () => {
   sortModalEl.classList.remove("show");
 });
 
-const switchPage = (pageNum) => {
-  console.log("switchPage ->");
-  if (pageNum === 1) {
-    console.log("pageWrapperEl ", pageWrapperEl);
-    pageWrapperEl.classList.remove("slide");
-    sessionStorage.setItem("PAGE_NUM", 1);
-  } else if (pageNum === 2) {
-    pageWrapperEl.classList.add("slide");
-    sessionStorage.setItem("PAGE_NUM", 2);
-  } else if (pageNum === 3) {
-   pageWrapperEl.classList.add("slide", "three");
-   sessionStorage.setItem('PAGE_NUM', 3); 
-  }
-};
 
 const updateNotePageColor = (currentNote) => {
   if(localStorage.getItem('CURRENT_NOTE')) {
@@ -605,21 +644,6 @@ const updateNotePageColor = (currentNote) => {
     }
   }
 }
-
-const renderPage = () => {
-  const CURRENT_NOTE = JSON.parse(localStorage.getItem('CURRENT_NOTE'));
-  console.log(CURRENT_NOTE);
-  if (PAGE_NUM === 2) {
-    pageWrapperEl.classList.add("slide");
-    updateNotePageColor(CURRENT_NOTE);
-  } else if (PAGE_NUM === 1) {
-    pageWrapperEl.classList.remove("slide");
-  } else if (PAGE_NUM === 3) {
-    pageWrapperEl.classList.add('slide', 'three');
-  }
-};
-
-
 
 const renderNotes = (notesArr, categoryId) => {
   notesWrapperEl.innerHTML = "";
@@ -744,21 +768,8 @@ const renderNotes = (notesArr, categoryId) => {
   }
 };
 
+
 renderNotes(NOTES);
-
-renderPage();
-
-
-
-// PAGE 2
-
-// if (localStorage.getItem("CURRENT_NOTE") !== null) {
-//   const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
-
-//   addEditIdInput.value = CURRENT_NOTE.id;
-//   addEditInput.value = CURRENT_NOTE.title;
-//   addEditTextarea.value = CURRENT_NOTE.text;
-// }
 
 const addEditNote = () => {
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
