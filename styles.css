@@ -708,3 +708,21 @@ i {
   background: none;
   border: none;
 }
+
+/* EDIT CATEGORY MODAL */
+
+.edit-category-modal {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  min-height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background: #fff;
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+
+}

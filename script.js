@@ -676,12 +676,12 @@ const renderNotes = (notesArr, categoryId) => {
         item.categories.map(((category, index) => {
           if(index < 2) {
             const currentCategory = CATEGORIES.find(x => x.id === category);
-            const { id, title, dateCreated } = currentCategory;
+            // const { id, title, dateCreated } = currentCategory;
   
             const categoryEl = document.createElement('div');
             categoryEl.classList.add('note-category')
             // categoryEl.innerHTML = title + ",";
-            index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
+            // index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
 
             noteCategoryWrapperEl.appendChild(categoryEl);
           } else {
