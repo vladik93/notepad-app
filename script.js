@@ -988,4 +988,4 @@ addBtn.addEventListener("click", () => {
 //   }
 // });
 
-renderCategoryPage();
+// renderCategoryPage();
