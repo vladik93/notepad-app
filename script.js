@@ -30,6 +30,11 @@ const header2backBtn = document.querySelector("#header2-back-button");
 let addEditInputValue = "";
 let addEditTextareaValue = "";
 
+const editCategoryModalEl = document.getElementById('edit-category-modal');
+
+let editCategoryModalInputValue = "";
+
+
 let categoryEditInputValue = "";
 
 const saveBtn = document.querySelector("#save-button");
@@ -557,33 +562,136 @@ renderHeader();
 const renderCategoryPage = () => {
   pageTwoEl.innerHTML = "";
   
-  pageTwoEl.innerHTML = `
-    <div class="edit-categories-wrapper">
-      <div class="category-input-wrapper">
-        <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
-        <button class="category-edit-button" id="category-edit-button">ADD</button>
-      </div>
+  const editCategoriesWrapperEl = document.createElement('div');
+  editCategoriesWrapperEl.classList.add('edit-categories-wrapper');
 
-      <ul class="category-list-wrapper">
-        ${CATEGORIES && CATEGORIES.map(category => {
-            return `
-              <li class="category-item" data-category-id=${category.id}>
-                <div class="category-item-content">
-                  <i class="fa-solid fa-grip-vertical"></i>
-                  <span>${category.title}</span>
-                </div>
-                <div class="category-item-actions">
-                  <button><i class="fa-solid fa-pen"></i></button>
-                  <button><i class="fa-solid fa-trash"></i></button>
-                </div>
-              </li>`
-          }).join("")}
-      </ul>
-    </div>`;
+  editCategoriesWrapperEl.innerHTML += `
+    <div class="category-input-wrapper">
+      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
+      <button class="category-edit-button" id="category-edit-button">ADD</button>
+    </div>`
 
+  const categoryListWrapper = document.createElement('ul');
+  categoryListWrapper.classList.add('category-list-wrapper');
+
+  CATEGORIES.map(category => {
+    if(CATEGORIES) {
+      const categoryItemEl = document.createElement('li');
+      categoryItemEl.classList.add('category-item');
+      categoryItemEl.dataset.categoryId = category.id;
+
+      let categoryId = parseInt(categoryItemEl.dataset.categoryId);
+
+      categoryItemEl.innerHTML = `
+        <div class="category-item-content">
+          <i class="fa-solid fa-grip-vertical"></i>
+            <span>${category.title}</span>
+          </div>
+        <div class="category-item-actions">
+          <button id="category-item-edit"><i class="fa-solid fa-pen"></i></button>
+          <button id="category-item-delete"><i class="fa-solid fa-trash"></i></button>
+        </div>`
+  
+        
+       const categoryItemEditBtn = categoryItemEl.querySelector('#category-item-edit');
+      
+      
+       categoryItemEditBtn.addEventListener('click', () => {
+        let category = CATEGORIES.find(category => category.id === categoryId);
+
+        editCategoryModalEl.innerHTML = `
+          <div class="edit-category-modal-input-wrapper">
+            <input type="hidden" id="edit-category-modal-id-input" />
+            <p class="edit-category-title">Edit category name</p>
+            <input type="text" class="edit-category-modal-input" id="edit-category-modal-input" placeholder="New category name" />
+            <span id="edit-category-modal-message" class="edit-category-modal-message"></span>
+          </div>
+          <div class="edit-category-actions">
+            <button id="edit-category-cancel">CANCEL</button>
+            <button id="edit-category-confirm">OK</button>
+          </div>
+        `
+
+        const editCategoryModalIdInput = document.querySelector('#edit-category-modal-id-input');
+        const editCategoryModalInput = document.querySelector('#edit-category-modal-input');
+
+        editCategoryModalIdInput.value = category.id;
+        editCategoryModalInput.value = category.title;
+
+        editCategoryModalInputValue = editCategoryModalInput.value;
+
+        editCategoryModalInput.addEventListener('input', (e) => {
+          editCategoryModalInputValue = e.target.value;
+        })
+
+        const editCategoryConfirmBtn = editCategoryModalEl.querySelector('#edit-category-confirm');
+        
+        editCategoryConfirmBtn.addEventListener('click', () => {
+          let foundCategory = CATEGORIES.find(category => category.title == editCategoryModalInputValue);
+
+          if(foundCategory) {
+            console.log('category already exists');
+            const editCategoryModalMessageEl = document.getElementById('edit-category-modal-message');
+            editCategoryModalMessageEl.innerHTML = "Category with that name already exists.";
+            
+          }
+
+         
+
+        })
+        
+    
+        overlayEl.classList.add('show');
+        editCategoryModalEl.classList.add('show');
+      });
+
+      editCategoriesWrapperEl.appendChild(categoryItemEl);
+      
+
+    }
+  })
+
+
+
+
+  
+
+
+
+  pageTwoEl.appendChild(editCategoriesWrapperEl);
+
+//   <div class="edit-categories-wrapper">
+//   <div class="category-input-wrapper">
+//     <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
+//     <button class="category-edit-button" id="category-edit-button">ADD</button>
+//   </div>
+// </div>
+
+
+      // <ul class="category-list-wrapper">
+      //   ${CATEGORIES && CATEGORIES.map(category => {
+      //       return `
+      //         <li class="category-item" data-category-id=${category.id}>
+      //           <div class="category-item-content">
+      //             <i class="fa-solid fa-grip-vertical"></i>
+      //             <span>${category.title}</span>
+      //           </div>
+      //           <div class="category-item-actions">
+      //             <button id="category-item-edit"><i class="fa-solid fa-pen"></i></button>
+      //             <button id="category-item-delete"><i class="fa-solid fa-trash"></i></button>
+      //           </div>
+      //         </li>`
+      //     }).join("")
+      //   }
+      // </ul>
 
     const categoryEditInputEl = document.querySelector('#category-edit-input');
     const categoryEditBtn = document.querySelector('#category-edit-button');
+   
+    
+    let categoryId = parseInt(document.querySelector('.category-item').dataset.categoryId);
+
+    console.log(categoryId);
 
           
     categoryEditInputEl.addEventListener('input', (e) => {
@@ -607,7 +715,8 @@ const renderCategoryPage = () => {
       
     })
 
-  }
+}
+
 
 
 
@@ -772,7 +881,7 @@ const renderNotes = (notesArr, categoryId) => {
 };
 
 
-renderNotes(NOTES);
+// renderNotes(NOTES);
 
 const addEditNote = () => {
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
@@ -879,3 +988,4 @@ addBtn.addEventListener("click", () => {
 //   }
 // });
 
+renderCategoryPage();
