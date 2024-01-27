@@ -881,7 +881,7 @@ const renderNotes = (notesArr, categoryId) => {
 };
 
 
-// renderNotes(NOTES);
+renderNotes(NOTES);
 
 const addEditNote = () => {
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
