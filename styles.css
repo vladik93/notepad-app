@@ -620,6 +620,7 @@ i {
   padding: 1.6rem;
   opacity: 0;
   visibility: hidden;
+  z-index: 100;
 
 }
 

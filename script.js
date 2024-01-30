@@ -30,6 +30,8 @@ const header2backBtn = document.querySelector("#header2-back-button");
 let addEditInputValue = "";
 let addEditTextareaValue = "";
 
+
+
 const editCategoryModalEl = document.getElementById('edit-category-modal');
 
 let editCategoryModalInputValue = "";
@@ -46,27 +48,6 @@ const sortCancelBtn = document.querySelector("#sort-cancel-button");
 let isSearching = false;
 let isCategoriesEdit = false;
 
-let PAGE_FLAGS = {
-  IS_CATEGORY_EDIT: true,
-  IS_SEARCHING: true
-}
-
-const renderPage = (pageName) => {
-  let newObject = {};
-
-  Object.entries(PAGE_FLAGS).forEach(([key, value]) => {
-    if(key !== pageName) {
-      newObject[key] = false;
-    } else {
-      newObject[key] = true;
-    }
-  })
-
-  sessionStorage.setItem("PAGE_FLAGS", JSON.stringify(newObject));
-
-}
-
-renderPage("IS_CATEGORY_EDIT");
 
 
 let timeoutId;
@@ -79,10 +60,16 @@ let colorArray = [
   "#908dce", "#c28dce",
 ];
 
+// localStorage.removeItem("CURRENT_PAGE");
+
+let pages = ['category-edit'];
+
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
+
+let CURRENT_PAGE = localStorage.getItem("CURRENT_PAGE") || null;
 
 // FILTERED ARRAYS
 
@@ -91,6 +78,302 @@ let FILTERED_NOTES = [];
 sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
+
+const renderNotes = (notesArr, categoryId = undefined) => {
+  notesWrapperEl.innerHTML = "";
+  if (notesArr && notesArr.length) {
+    console.log(notesArr);
+    notesArr.filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
+      const noteEl = document.createElement("div");
+      noteEl.classList.add("note");
+      noteEl.setAttribute("id", item.id);
+      noteEl.dataset.color = item.color;
+      noteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
+
+      noteEl.innerHTML = `
+      <p class="note-title">${item.title}</p>
+      <div class="note-content" id="note-content">
+        <div class="note-category-wrapper" id="note-category-wrapper"></div>
+        <p class="note-date">Last edit: ${new Date(
+          item.lastEditDate
+        ).toLocaleString()}</p>     
+      </div>
+      `;
+
+
+      const noteContentEl = noteEl.querySelector('#note-content');
+      const noteCategoryWrapperEl = noteEl.querySelector('#note-category-wrapper');
+      
+      if(item.categories.length) {
+        let categoryCount = 0;
+        item.categories.map(((category, index) => {
+          if(index < 2) {
+            const currentCategory = CATEGORIES.find(x => x.id === category);
+            // const { id, title, dateCreated } = currentCategory;
+  
+            const categoryEl = document.createElement('div');
+            categoryEl.classList.add('note-category')
+            // categoryEl.innerHTML = title + ",";
+            // index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
+
+            noteCategoryWrapperEl.appendChild(categoryEl);
+          } else {
+            categoryCount++;
+         
+          }
+        }))
+
+        if(categoryCount > 0) {
+          const categoryEl = document.createElement('div');
+          categoryEl.classList.add('note-category');
+          categoryEl.innerHTML = `(+${categoryCount})`;
+          noteCategoryWrapperEl.insertAdjacentElement('beforeend', categoryEl);
+        }
+
+
+        
+       
+
+      }
+
+      notesWrapperEl.appendChild(noteEl);
+
+      noteEl.addEventListener("click", () => {
+        if (IS_NOTE_EDIT_MODE) {
+          noteEl.classList.toggle("selected");
+          renderHeader();
+        } else {
+          let currentNote = NOTES.find(
+            (note) => note.id === parseInt(noteEl.id)
+          );
+
+          localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
+
+          const CURRENT_NOTE =
+            JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
+
+          
+          pageTwoEl.innerHTML = `
+            <form class="add-edit-form">
+              <input type="hidden" id="add-edit-id" />
+              <input
+                class="add-edit-input"
+                id="add-edit-input"
+                type="text"
+                placeholder="Enter title..."
+              />
+              <textarea
+                id="add-edit-textarea"
+                class="add-edit-textarea"
+                placeholder="Enter text..."
+              ></textarea>
+            </form>`
+
+          const addEditIdInput = document.querySelector("#add-edit-id");
+          const addEditInput = document.querySelector("#add-edit-input");
+          const addEditTextarea = document.querySelector("#add-edit-textarea");
+
+          addEditIdInput.value = CURRENT_NOTE.id;
+          addEditInput.value = CURRENT_NOTE.title;
+          addEditTextarea.value = CURRENT_NOTE.text;
+
+          updateNotePageColor(CURRENT_NOTE);
+          
+
+
+          pageWrapperEl.classList.add('slide');
+        }
+      });
+
+      noteEl.addEventListener("pointerdown", () => {
+        isNoteHeld = true;
+        timeoutId = setTimeout(() => {
+          IS_NOTE_EDIT_MODE = true;
+          sessionStorage.setItem("IS_NOTE_EDIT_MODE", true);
+          noteEl.classList.add("selected");
+
+          renderHeader();
+        }, 500);
+      });
+
+      noteEl.addEventListener("pointerup", () => {
+        isNoteHeld = false;
+        clearTimeout(timeoutId);
+      });
+    });
+  }
+};
+
+const renderCategoryPage = () => {
+  pageTwoEl.innerHTML = "";
+  
+  
+  const editCategoriesWrapperEl = document.createElement('div');
+  editCategoriesWrapperEl.classList.add('edit-categories-wrapper');
+
+  editCategoriesWrapperEl.innerHTML += `
+    <div class="category-input-wrapper">
+      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
+      <button class="category-edit-button" id="category-edit-button">ADD</button>
+    </div>`
+
+  const categoryEditInputEl = editCategoriesWrapperEl.querySelector('#category-edit-input');
+  console.log(categoryEditInputEl);
+
+  const categoryEditBtn = editCategoriesWrapperEl.querySelector('#category-edit-button');
+
+  console.log(categoryEditBtn);
+  
+  
+  // let categoryId = parseInt(document.querySelector('.category-item').dataset.categoryId);
+
+  // console.log(categoryId);
+
+        
+  categoryEditInputEl.addEventListener('input', (e) => {
+    categoryEditInputValue = e.target.value;
+  })
+
+  categoryEditBtn.addEventListener('click', () => {
+    if(categoryEditInputValue !== "") {
+      let newCategory = {
+        id: new Date().getTime(),
+        title: categoryEditInputValue,
+        dateCreated: new Date().toJSON()
+      }
+
+      CATEGORIES.push(newCategory);
+      localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
+      categoryEditInputValue = "";
+
+      renderCategoryPage();
+    }
+  })
+
+  const categoryListWrapper = document.createElement('ul');
+  categoryListWrapper.classList.add('category-list-wrapper');
+
+  if(CATEGORIES && CATEGORIES.length > 0) {
+    CATEGORIES.map(category => {
+      // if(CATEGORIES) {
+        const categoryItemEl = document.createElement('li');
+        categoryItemEl.classList.add('category-item');
+        categoryItemEl.dataset.categoryId = category.id;
+  
+        let categoryId = parseInt(categoryItemEl.dataset.categoryId);
+  
+        categoryItemEl.innerHTML = `
+          <div class="category-item-content">
+            <i class="fa-solid fa-grip-vertical"></i>
+              <span>${category.title}</span>
+            </div>
+          <div class="category-item-actions">
+            <button id="category-item-edit"><i class="fa-solid fa-pen"></i></button>
+            <button id="category-item-delete"><i class="fa-solid fa-trash"></i></button>
+          </div>`
+    
+          
+         const categoryItemEditBtn = categoryItemEl.querySelector('#category-item-edit');
+        
+        
+         categoryItemEditBtn.addEventListener('click', () => {
+          let category = CATEGORIES.find(category => category.id === categoryId);
+  
+          editCategoryModalEl.innerHTML = `
+            <div class="edit-category-modal-input-wrapper">
+              <input type="hidden" id="edit-category-modal-id-input" />
+              <p class="edit-category-title">Edit category name</p>
+              <input type="text" class="edit-category-modal-input" id="edit-category-modal-input" placeholder="New category name" />
+              <span id="edit-category-modal-message" class="edit-category-modal-message"></span>
+            </div>
+            <div class="edit-category-actions">
+              <button id="edit-category-cancel">CANCEL</button>
+              <button id="edit-category-confirm">OK</button>
+            </div>
+          `
+  
+          const editCategoryModalIdInput = document.querySelector('#edit-category-modal-id-input');
+          const editCategoryModalInput = document.querySelector('#edit-category-modal-input');
+  
+          editCategoryModalIdInput.value = category.id;
+          editCategoryModalInput.value = category.title;
+  
+          editCategoryModalInputValue = editCategoryModalInput.value;
+  
+          editCategoryModalInput.addEventListener('input', (e) => {
+            editCategoryModalInputValue = e.target.value;
+          })
+  
+          const editCategoryConfirmBtn = editCategoryModalEl.querySelector('#edit-category-confirm');
+          
+          editCategoryConfirmBtn.addEventListener('click', () => {
+            let foundCategory = CATEGORIES.find(category => category.title == editCategoryModalInputValue);
+  
+            if(foundCategory) {
+              console.log('category already exists');
+              const editCategoryModalMessageEl = document.getElementById('edit-category-modal-message');
+              editCategoryModalMessageEl.innerHTML = "Category with that name already exists.";
+            }
+          })
+          
+          overlayEl.classList.add('show');
+          editCategoryModalEl.classList.add('show');
+        });
+
+        editCategoriesWrapperEl.appendChild(categoryItemEl);
+  
+      // }
+    })
+  }
+ 
+  pageTwoEl.appendChild(editCategoriesWrapperEl);
+
+}
+
+const renderAddEditPage = () => {
+  pageWrapperEl.classList.add('slide');
+  
+  localStorage.setItem("CURRENT_PAGE", 'add-edit-note');
+  CURRENT_PAGE = "add-edit-note";
+
+  
+  renderHeader();
+
+  pageTwoEl.innerHTML = "";
+  
+  pageTwoEl.innerHTML = `
+    <form class="add-edit-form">
+      <input type="hidden" id="add-edit-id" />
+      <input
+        class="add-edit-input"
+        id="add-edit-input"
+        type="text"
+        placeholder="Enter title..."
+      />
+      <textarea
+        id="add-edit-textarea"
+        class="add-edit-textarea"
+        placeholder="Enter text..."
+      ></textarea>
+    </form>`
+
+    const addEditIdInput = document.querySelector("#add-edit-id");
+    const addEditInput = document.querySelector("#add-edit-input");
+    const addEditTextarea = document.querySelector("#add-edit-textarea");
+
+    addEditInput.addEventListener("input", (e) => {
+      addEditInputValue = e.target.value;
+    });
+    
+    addEditTextarea.addEventListener("input", (e) => {
+      addEditTextareaValue.value = e.target.value;
+    });
+  
+}
+
+
+
+
 
 const addAlert = (text) => {
   const alertEl = document.createElement("div");
@@ -122,6 +405,45 @@ const addCategory = (title) => {
   localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
 }
 
+const addEditNote = () => {
+  if (localStorage.getItem("CURRENT_NOTE") !== null) {
+    const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
+
+    const { title, text } = CURRENT_NOTE;
+
+    let notesArray = [...NOTES];
+
+    const noteIndex = notesArray.findIndex((val) => val.id === CURRENT_NOTE.id);
+
+    notesArray.splice(noteIndex, 1, {
+      ...CURRENT_NOTE,
+      title: addEditInputValue ? addEditInputValue : "Untitled",
+      text: addEditTextareaValue,
+      lastEditDate: new Date().toJSON(),
+    });
+
+    localStorage.setItem("NOTES", JSON.stringify(notesArray));
+    NOTES = notesArray;
+    renderNotes(NOTES);
+  } else {
+    let newNote = {
+      id: new Date().getTime(),
+      title: addEditInput.value ? addEditInput.value : "Untitled",
+      text: addEditTextarea.value,
+      categories: [],
+      color: "#ffe5e5",
+      lastEditDate: new Date().toJSON(),
+      dateCreated: new Date().toJSON(),
+    };
+
+    NOTES.push(newNote);
+    localStorage.setItem("NOTES", JSON.stringify(NOTES));
+    renderNotes(NOTES);
+  }
+
+  addAlert("Saved");
+  isNoteSaved = true;
+};
 
 const renderHeader = () => {
   headerEl.innerHTML = "";
@@ -180,6 +502,35 @@ const renderHeader = () => {
       resetSearchBtn.classList.remove('show');
       searchIcon.style.display = "block";
     })
+  } else if(CURRENT_PAGE === 'add-edit-note') {
+    headerEl.innerHTML = `
+      <button id="header-back-button">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      
+      <div class="header-text">
+        <h3>Notepad Free</h3>
+      </div>
+      <div class="header-actions">
+        <button id="save-button">SAVE</button>
+        <button id="undo-button">UNDO</button>
+        <button id="actions-button">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+      `
+      const saveNoteBtn = document.getElementById('save-button');
+
+      saveNoteBtn.addEventListener('click', () => {
+        console.log("CLICKED");
+        if (!isNoteSaved) {
+          addEditNote();
+        }
+      })
+
+
+
+
   } else {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -469,6 +820,20 @@ const renderHeader = () => {
   }
 };
 
+const renderPage = () => {
+  switch(CURRENT_PAGE) {
+    case "category-edit" : renderCategoryPage();
+    break;
+
+    case "add-edit-note" : renderAddEditPage();
+    break;
+
+  }
+}
+
+renderPage();
+
+
 categoryModalConfirmBtn.addEventListener('click', () => {
   const selectedCategoryEls = document.querySelectorAll('.modal-category.selected');
   const selectedNoteEls = document.querySelectorAll('.note.selected');
@@ -476,44 +841,40 @@ categoryModalConfirmBtn.addEventListener('click', () => {
   let selectedCategories = [];
   
 
-  // if(selectedCategoryEls) {
-    selectedCategoryEls.forEach(categoryEl => {
-      let categoryId = parseInt(categoryEl.id);
-      selectedCategories.push(categoryId);
+
+  selectedCategoryEls.forEach(categoryEl => {
+    let categoryId = parseInt(categoryEl.id);
+    selectedCategories.push(categoryId);
+    
+    let selectedNotes = [];
+
+    selectedNoteEls.forEach((selectedNoteEl) => {
+      let selectedNoteId = parseInt(selectedNoteEl.id);
       
-      let selectedNotes = [];
+      selectedNotes.push(selectedNoteId);
 
-      selectedNoteEls.forEach((selectedNoteEl) => {
-        let selectedNoteId = parseInt(selectedNoteEl.id);
-        
-        selectedNotes.push(selectedNoteId);
+      console.log(selectedNotes);
+      let newNotesArray = NOTES.map(note => {
+        if(selectedNotes.indexOf(note.id) > -1) {
+          return {...note, categories: [...selectedCategories]}
+        } else {
+          return note;
+        }
+      });
 
-        console.log(selectedNotes);
-        let newNotesArray = NOTES.map(note => {
-          if(selectedNotes.indexOf(note.id) > -1) {
-            return {...note, categories: [...selectedCategories]}
-          } else {
-            return note;
-          }
-        });
+      NOTES = newNotesArray;
+      localStorage.setItem("NOTES", JSON.stringify(NOTES));
+      overlayEl.classList.remove('show');
+      categoryModalEl.classList.remove('show');
 
-        NOTES = newNotesArray;
-        localStorage.setItem("NOTES", JSON.stringify(NOTES));
-        overlayEl.classList.remove('show');
-        categoryModalEl.classList.remove('show');
+      IS_NOTE_EDIT_MODE = false;
+      sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
+      addAlert("Categories updated");
+    })     
 
-        IS_NOTE_EDIT_MODE = false;
-        sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
-        addAlert("Categories updated");
-      })     
-
-      renderHeader();
-      renderNotes(NOTES);
-    })
-  // }
-
-
-
+    renderHeader();
+    renderNotes(NOTES);
+  })
 })
 
 colorModalConfirmBtn.addEventListener('click', (event) => {
@@ -557,136 +918,6 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
 
 renderHeader();
 
-
-const renderCategoryPage = () => {
-  pageTwoEl.innerHTML = "";
-  
-  
-  const editCategoriesWrapperEl = document.createElement('div');
-  editCategoriesWrapperEl.classList.add('edit-categories-wrapper');
-
-  editCategoriesWrapperEl.innerHTML += `
-    <div class="category-input-wrapper">
-      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
-      <button class="category-edit-button" id="category-edit-button">ADD</button>
-    </div>`
-
-  const categoryEditInputEl = editCategoriesWrapperEl.querySelector('#category-edit-input');
-  console.log(categoryEditInputEl);
-
-  const categoryEditBtn = editCategoriesWrapperEl.querySelector('#category-edit-button');
-
-  console.log(categoryEditBtn);
-  
-  
-  // let categoryId = parseInt(document.querySelector('.category-item').dataset.categoryId);
-
-  // console.log(categoryId);
-
-        
-  categoryEditInputEl.addEventListener('input', (e) => {
-    categoryEditInputValue = e.target.value;
-  })
-
-  categoryEditBtn.addEventListener('click', () => {
-    if(categoryEditInputValue !== "") {
-      let newCategory = {
-        id: new Date().getTime(),
-        title: categoryEditInputValue,
-        dateCreated: new Date().toJSON()
-      }
-
-      CATEGORIES.push(newCategory);
-      localStorage.setItem("CATEGORIES", JSON.stringify(CATEGORIES));
-      categoryEditInputValue = "";
-
-      renderCategoryPage();
-    }
-  })
-
-  const categoryListWrapper = document.createElement('ul');
-  categoryListWrapper.classList.add('category-list-wrapper');
-
-  if(CATEGORIES && CATEGORIES.length > 0) {
-    CATEGORIES.map(category => {
-      // if(CATEGORIES) {
-        const categoryItemEl = document.createElement('li');
-        categoryItemEl.classList.add('category-item');
-        categoryItemEl.dataset.categoryId = category.id;
-  
-        let categoryId = parseInt(categoryItemEl.dataset.categoryId);
-  
-        categoryItemEl.innerHTML = `
-          <div class="category-item-content">
-            <i class="fa-solid fa-grip-vertical"></i>
-              <span>${category.title}</span>
-            </div>
-          <div class="category-item-actions">
-            <button id="category-item-edit"><i class="fa-solid fa-pen"></i></button>
-            <button id="category-item-delete"><i class="fa-solid fa-trash"></i></button>
-          </div>`
-    
-          
-         const categoryItemEditBtn = categoryItemEl.querySelector('#category-item-edit');
-        
-        
-         categoryItemEditBtn.addEventListener('click', () => {
-          let category = CATEGORIES.find(category => category.id === categoryId);
-  
-          editCategoryModalEl.innerHTML = `
-            <div class="edit-category-modal-input-wrapper">
-              <input type="hidden" id="edit-category-modal-id-input" />
-              <p class="edit-category-title">Edit category name</p>
-              <input type="text" class="edit-category-modal-input" id="edit-category-modal-input" placeholder="New category name" />
-              <span id="edit-category-modal-message" class="edit-category-modal-message"></span>
-            </div>
-            <div class="edit-category-actions">
-              <button id="edit-category-cancel">CANCEL</button>
-              <button id="edit-category-confirm">OK</button>
-            </div>
-          `
-  
-          const editCategoryModalIdInput = document.querySelector('#edit-category-modal-id-input');
-          const editCategoryModalInput = document.querySelector('#edit-category-modal-input');
-  
-          editCategoryModalIdInput.value = category.id;
-          editCategoryModalInput.value = category.title;
-  
-          editCategoryModalInputValue = editCategoryModalInput.value;
-  
-          editCategoryModalInput.addEventListener('input', (e) => {
-            editCategoryModalInputValue = e.target.value;
-          })
-  
-          const editCategoryConfirmBtn = editCategoryModalEl.querySelector('#edit-category-confirm');
-          
-          editCategoryConfirmBtn.addEventListener('click', () => {
-            let foundCategory = CATEGORIES.find(category => category.title == editCategoryModalInputValue);
-  
-            if(foundCategory) {
-              console.log('category already exists');
-              const editCategoryModalMessageEl = document.getElementById('edit-category-modal-message');
-              editCategoryModalMessageEl.innerHTML = "Category with that name already exists.";
-            }
-          })
-          
-          overlayEl.classList.add('show');
-          editCategoryModalEl.classList.add('show');
-        });
-
-        editCategoriesWrapperEl.appendChild(categoryItemEl);
-  
-      // }
-    })
-  }
- 
-  pageTwoEl.appendChild(editCategoriesWrapperEl);
-
-}
-
-
-
-
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
 const sidenavEl = document.querySelector("#sidenav");
@@ -703,7 +934,6 @@ sortCancelBtn.addEventListener("click", () => {
   overlayEl.classList.remove("show");
   sortModalEl.classList.remove("show");
 });
-
 
 const updateNotePageColor = (currentNote) => {
   if(localStorage.getItem('CURRENT_NOTE')) {
@@ -724,170 +954,23 @@ const updateNotePageColor = (currentNote) => {
   }
 }
 
-const renderNotes = (notesArr, categoryId) => {
-  notesWrapperEl.innerHTML = "";
-  if (notesArr && notesArr.length) {
-    notesArr.filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
-      const noteEl = document.createElement("div");
-      noteEl.classList.add("note");
-      noteEl.setAttribute("id", item.id);
-      noteEl.dataset.color = item.color;
-      noteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
-
-      noteEl.innerHTML = `
-      <p class="note-title">${item.title}</p>
-      <div class="note-content" id="note-content">
-        <div class="note-category-wrapper" id="note-category-wrapper"></div>
-        <p class="note-date">Last edit: ${new Date(
-          item.lastEditDate
-        ).toLocaleString()}</p>     
-      </div>
-      `;
-
-      const noteContentEl = noteEl.querySelector('#note-content');
-      const noteCategoryWrapperEl = noteEl.querySelector('#note-category-wrapper');
-      
-      if(item.categories.length) {
-        let categoryCount = 0;
-        item.categories.map(((category, index) => {
-          if(index < 2) {
-            const currentCategory = CATEGORIES.find(x => x.id === category);
-            // const { id, title, dateCreated } = currentCategory;
-  
-            const categoryEl = document.createElement('div');
-            categoryEl.classList.add('note-category')
-            // categoryEl.innerHTML = title + ",";
-            // index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
-
-            noteCategoryWrapperEl.appendChild(categoryEl);
-          } else {
-            categoryCount++;
-         
-          }
-        }))
-
-        if(categoryCount > 0) {
-          const categoryEl = document.createElement('div');
-          categoryEl.classList.add('note-category');
-          categoryEl.innerHTML = `(+${categoryCount})`;
-          noteCategoryWrapperEl.insertAdjacentElement('beforeend', categoryEl);
-        }
 
 
-        
-       
+const addNote = (title) => {
+  let newNote = {
+    id: new Date().getTime(),
+    title,
+    text: "HELLO",
+    categories: [],
+    color: "#ffe5e5",
+    lastEditDate: new Date().toJSON(),
+    dateCreated: new Date().toJSON(),
+  };
 
-      }
+  NOTES.push(newNote);
 
-      notesWrapperEl.appendChild(noteEl);
-
-      noteEl.addEventListener("click", () => {
-        if (IS_NOTE_EDIT_MODE) {
-          noteEl.classList.toggle("selected");
-          renderHeader();
-        } else {
-          let currentNote = NOTES.find(
-            (note) => note.id === parseInt(noteEl.id)
-          );
-
-          localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
-
-          const CURRENT_NOTE =
-            JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
-
-          
-          pageTwoEl.innerHTML = `
-            <form class="add-edit-form">
-              <input type="hidden" id="add-edit-id" />
-              <input
-                class="add-edit-input"
-                id="add-edit-input"
-                type="text"
-                placeholder="Enter title..."
-              />
-              <textarea
-                id="add-edit-textarea"
-                class="add-edit-textarea"
-                placeholder="Enter text..."
-              ></textarea>
-            </form>`
-
-          const addEditIdInput = document.querySelector("#add-edit-id");
-          const addEditInput = document.querySelector("#add-edit-input");
-          const addEditTextarea = document.querySelector("#add-edit-textarea");
-
-          addEditIdInput.value = CURRENT_NOTE.id;
-          addEditInput.value = CURRENT_NOTE.title;
-          addEditTextarea.value = CURRENT_NOTE.text;
-
-          updateNotePageColor(CURRENT_NOTE);
-          
-
-
-          pageWrapperEl.classList.add('slide');
-        }
-      });
-
-      noteEl.addEventListener("pointerdown", () => {
-        isNoteHeld = true;
-        timeoutId = setTimeout(() => {
-          IS_NOTE_EDIT_MODE = true;
-          sessionStorage.setItem("IS_NOTE_EDIT_MODE", true);
-          noteEl.classList.add("selected");
-
-          renderHeader();
-        }, 500);
-      });
-
-      noteEl.addEventListener("pointerup", () => {
-        isNoteHeld = false;
-        clearTimeout(timeoutId);
-      });
-    });
-  }
-};
-
-renderNotes(NOTES);
-
-const addEditNote = () => {
-  if (localStorage.getItem("CURRENT_NOTE") !== null) {
-    const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
-
-    const { title, text } = CURRENT_NOTE;
-
-    let notesArray = [...NOTES];
-
-    const noteIndex = notesArray.findIndex((val) => val.id === CURRENT_NOTE.id);
-
-    notesArray.splice(noteIndex, 1, {
-      ...CURRENT_NOTE,
-      title: addEditInput.value ? addEditInput.value : "Untitled",
-      text: addEditTextarea.value,
-      lastEditDate: new Date().toJSON(),
-    });
-
-    localStorage.setItem("NOTES", JSON.stringify(notesArray));
-    NOTES = notesArray;
-    renderNotes(NOTES);
-  } else {
-    let newNote = {
-      id: new Date().getTime(),
-      title: addEditInput.value ? addEditInput.value : "Untitled",
-      text: addEditTextarea.value,
-      categories: [],
-      color: "#ffe5e5",
-      lastEditDate: new Date().toJSON(),
-      dateCreated: new Date().toJSON(),
-    };
-
-    NOTES.push(newNote);
-    localStorage.setItem("NOTES", JSON.stringify(NOTES));
-    renderNotes(NOTES);
-  }
-
-  addAlert("Saved");
-  isNoteSaved = true;
-};
+  localStorage.setItem("NOTES", JSON.stringify(NOTES));
+}
 
 // addEditInput.addEventListener("input", (e) => {
 //   addEditInput.value = e.target.value;
@@ -925,36 +1008,10 @@ const addEditNote = () => {
 //   switchPage(1);
 // });
 
+
+
 addBtn.addEventListener("click", () => {
-  pageWrapperEl.classList.add('slide');
-  
-  pageTwoEl.innerHTML = "";
-  
-  pageTwoEl.innerHTML = `<form class="add-edit-form">
-  <input type="hidden" id="add-edit-id" />
-  <input
-    class="add-edit-input"
-    id="add-edit-input"
-    type="text"
-    placeholder="Enter title..."
-  />
-  <textarea
-    id="add-edit-textarea"
-    class="add-edit-textarea"
-    placeholder="Enter text..."
-  ></textarea>
-</form>`
- 
+  renderAddEditPage();
 });
 
-// saveBtn.addEventListener("click", () => {
-//   if (!isNoteSaved) {
-//     console.log("!isNoteSaved");
-//     addEditNote();
-//   }
-// });
-
-
-
-
-// renderCategoryPage();
+renderNotes(NOTES);
