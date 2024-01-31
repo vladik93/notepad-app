@@ -23,10 +23,9 @@ const categoryModalEl = document.querySelector('#category-modal');
 const categoryModalWrapperEl = document.querySelector('#category-modal-wrapper');
 const categoryModalConfirmBtn = document.querySelector("#category-modal-confirm");
 
-const header2backBtn = document.querySelector("#header2-back-button");
 
 
-
+let addEditIdInput = null;
 let addEditInputValue = "";
 let addEditTextareaValue = "";
 
@@ -143,6 +142,9 @@ const renderNotes = (notesArr, categoryId = undefined) => {
           noteEl.classList.toggle("selected");
           renderHeader();
         } else {
+          CURRENT_PAGE = "add-edit-note";
+          localStorage.setItem("CURRENT_PAGE", 'add-edit-note');
+          
           let currentNote = NOTES.find(
             (note) => note.id === parseInt(noteEl.id)
           );
@@ -182,6 +184,7 @@ const renderNotes = (notesArr, categoryId = undefined) => {
 
 
           pageWrapperEl.classList.add('slide');
+          renderHeader();
         }
       });
 
@@ -366,7 +369,7 @@ const renderAddEditPage = () => {
     });
     
     addEditTextarea.addEventListener("input", (e) => {
-      addEditTextareaValue.value = e.target.value;
+      addEditTextareaValue = e.target.value;
     });
   
 }
@@ -428,8 +431,8 @@ const addEditNote = () => {
   } else {
     let newNote = {
       id: new Date().getTime(),
-      title: addEditInput.value ? addEditInput.value : "Untitled",
-      text: addEditTextarea.value,
+      title: addEditInputValue ? addEditInputValue : "Untitled",
+      text: addEditTextareaValue,
       categories: [],
       color: "#ffe5e5",
       lastEditDate: new Date().toJSON(),
@@ -520,6 +523,8 @@ const renderHeader = () => {
       </div>
       `
       const saveNoteBtn = document.getElementById('save-button');
+      const headerBackBtn = document.getElementById('header-back-button');
+
 
       saveNoteBtn.addEventListener('click', () => {
         console.log("CLICKED");
@@ -527,6 +532,36 @@ const renderHeader = () => {
           addEditNote();
         }
       })
+
+      headerBackBtn.addEventListener("click", () => {
+        console.log("HELLO");
+        if (!isNoteSaved) {
+          addEditNote();
+
+          addEditInputValue = "";
+          addEditTextareaValue = "";
+
+          if (localStorage.getItem("CURRENT_NOTE") !== null) {
+            localStorage.removeItem("CURRENT_NOTE");
+          }
+        } else {
+          if (localStorage.getItem("CURRENT_NOTE") !== null) {
+            localStorage.removeItem("CURRENT_NOTE");
+          }
+
+          
+        }
+        isNoteSaved = false;
+        addEditIdInput = null;
+        addEditInputValue = "";
+        addEditTextareaValue = "";
+        pageWrapperEl.classList.remove('slide');
+        
+        CURRENT_PAGE = null;
+        localStorage.removeItem("CURRENT_PAGE");       
+        
+        renderHeader();
+      });
 
 
 
@@ -578,9 +613,7 @@ const renderHeader = () => {
             renderNotes(NOTES, categoryId);
             overlayEl.classList.remove("show");
             sidenavEl.classList.remove("show");
-            
           }    
-          
         });
       });
 
@@ -803,11 +836,6 @@ const renderHeader = () => {
               modalCategoryEl.classList.remove('selected');
             }
           }) 
-          
-
-        
-          
-
           categoryModalWrapperEl.appendChild(modalCategoryEl);
         })
         categoryModalEl.classList.add("show");
@@ -815,8 +843,6 @@ const renderHeader = () => {
       }
       
     })
-
-    
   }
 };
 
@@ -971,44 +997,6 @@ const addNote = (title) => {
 
   localStorage.setItem("NOTES", JSON.stringify(NOTES));
 }
-
-// addEditInput.addEventListener("input", (e) => {
-//   addEditInput.value = e.target.value;
-// });
-
-// addEditTextarea.addEventListener("input", (e) => {
-//   addEditTextarea.value = e.target.value;
-//   console.log(addEditTextarea.value);
-// });
-
-// header2backBtn.addEventListener("click", () => {
-//   if (!isNoteSaved) {
-//     addEditNote();
-
-//     addEditInput.value = "";
-//     addEditTextarea.value = "";
-
-//     if (localStorage.getItem("CURRENT_NOTE") !== null) {
-//       localStorage.removeItem("CURRENT_NOTE");
-//     }
-
-//     // switchPage();
-//   } else {
-//     if (localStorage.getItem("CURRENT_NOTE") !== null) {
-//       localStorage.removeItem("CURRENT_NOTE");
-//     }
-
-//     // switchPage();
-//   }
-//   isNoteSaved = false;
-//   addEditIdInput.value = null;
-//   addEditInput.value = "";
-//   addEditTextarea.value = "";
-  
-//   switchPage(1);
-// });
-
-
 
 addBtn.addEventListener("click", () => {
   renderAddEditPage();
