@@ -18,12 +18,9 @@ const colorModalEl = document.querySelector("#color-modal");
 const colorModalGridEl = document.querySelector("#color-modal-grid");
 const colorModalConfirmBtn = document.querySelector("#color-modal-confirm");
 
-
 const categoryModalEl = document.querySelector('#category-modal');
 const categoryModalWrapperEl = document.querySelector('#category-modal-wrapper');
 const categoryModalConfirmBtn = document.querySelector("#category-modal-confirm");
-
-
 
 let addEditIdInput = null;
 let addEditInputValue = "";
@@ -128,11 +125,6 @@ const renderNotes = (notesArr, categoryId = undefined) => {
           categoryEl.innerHTML = `(+${categoryCount})`;
           noteCategoryWrapperEl.insertAdjacentElement('beforeend', categoryEl);
         }
-
-
-        
-       
-
       }
 
       notesWrapperEl.appendChild(noteEl);
@@ -151,39 +143,15 @@ const renderNotes = (notesArr, categoryId = undefined) => {
 
           localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
 
-          const CURRENT_NOTE =
+          let CURRENT_NOTE =
             JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
 
-          
-          pageTwoEl.innerHTML = `
-            <form class="add-edit-form">
-              <input type="hidden" id="add-edit-id" />
-              <input
-                class="add-edit-input"
-                id="add-edit-input"
-                type="text"
-                placeholder="Enter title..."
-              />
-              <textarea
-                id="add-edit-textarea"
-                class="add-edit-textarea"
-                placeholder="Enter text..."
-              ></textarea>
-            </form>`
-
-          const addEditIdInput = document.querySelector("#add-edit-id");
-          const addEditInput = document.querySelector("#add-edit-input");
-          const addEditTextarea = document.querySelector("#add-edit-textarea");
-
-          addEditIdInput.value = CURRENT_NOTE.id;
-          addEditInput.value = CURRENT_NOTE.title;
-          addEditTextarea.value = CURRENT_NOTE.text;
+          renderAddEditPage();
 
           updateNotePageColor(CURRENT_NOTE);
-          
-
-
+        
           pageWrapperEl.classList.add('slide');
+
           renderHeader();
         }
       });
@@ -334,6 +302,10 @@ const renderCategoryPage = () => {
 }
 
 const renderAddEditPage = () => {
+  const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
+
+  console.log(CURRENT_NOTE);
+
   pageWrapperEl.classList.add('slide');
   
   localStorage.setItem("CURRENT_PAGE", 'add-edit-note');
@@ -364,8 +336,16 @@ const renderAddEditPage = () => {
     const addEditInput = document.querySelector("#add-edit-input");
     const addEditTextarea = document.querySelector("#add-edit-textarea");
 
+    if(CURRENT_NOTE !== null) {
+      addEditIdInput.value = CURRENT_NOTE.id;
+      addEditInput.value = CURRENT_NOTE.title;
+      addEditTextarea.value = CURRENT_NOTE.text;
+    }
+    
+
     addEditInput.addEventListener("input", (e) => {
       addEditInputValue = e.target.value;
+      console.log(addEditInputValue);
     });
     
     addEditTextarea.addEventListener("input", (e) => {
@@ -373,10 +353,6 @@ const renderAddEditPage = () => {
     });
   
 }
-
-
-
-
 
 const addAlert = (text) => {
   const alertEl = document.createElement("div");
@@ -410,6 +386,7 @@ const addCategory = (title) => {
 
 const addEditNote = () => {
   if (localStorage.getItem("CURRENT_NOTE") !== null) {
+    console.log('NOTE FOUND');
     const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
 
     const { title, text } = CURRENT_NOTE;
@@ -417,6 +394,8 @@ const addEditNote = () => {
     let notesArray = [...NOTES];
 
     const noteIndex = notesArray.findIndex((val) => val.id === CURRENT_NOTE.id);
+
+    console.log(CURRENT_NOTE);
 
     notesArray.splice(noteIndex, 1, {
       ...CURRENT_NOTE,
@@ -444,8 +423,12 @@ const addEditNote = () => {
     renderNotes(NOTES);
   }
 
+  
+
   addAlert("Saved");
   isNoteSaved = true;
+
+
 };
 
 const renderHeader = () => {
@@ -544,21 +527,22 @@ const renderHeader = () => {
           if (localStorage.getItem("CURRENT_NOTE") !== null) {
             localStorage.removeItem("CURRENT_NOTE");
           }
-        } else {
-          if (localStorage.getItem("CURRENT_NOTE") !== null) {
-            localStorage.removeItem("CURRENT_NOTE");
-          }
 
-          
-        }
-        isNoteSaved = false;
-        addEditIdInput = null;
-        addEditInputValue = "";
-        addEditTextareaValue = "";
+          if(localStorage.getItem("CURRENT_PAGE") !== null) {
+            localStorage.removeItem("CURRENT_PAGE");
+          }
+        } 
+
+
+
+        // isNoteSaved = false;
+        // addEditIdInput = null;
+        // addEditInputValue = "";
+        // addEditTextareaValue = "";
         pageWrapperEl.classList.remove('slide');
         
-        CURRENT_PAGE = null;
-        localStorage.removeItem("CURRENT_PAGE");       
+        // CURRENT_PAGE = null;
+        // localStorage.removeItem("CURRENT_PAGE");       
         
         renderHeader();
       });
