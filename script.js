@@ -65,7 +65,7 @@ let pages = ['category-edit'];
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
 
-let CURRENT_PAGE = localStorage.getItem("CURRENT_PAGE") || null;
+let CURRENT_PAGE = sessionStorage.getItem("CURRENT_PAGE") || null;
 
 // FILTERED ARRAYS
 
@@ -134,17 +134,18 @@ const renderNotes = (notesArr, categoryId = undefined) => {
           noteEl.classList.toggle("selected");
           renderHeader();
         } else {
+          console.log(isNoteSaved);
           CURRENT_PAGE = "add-edit-note";
-          localStorage.setItem("CURRENT_PAGE", 'add-edit-note');
+          sessionStorage.setItem("CURRENT_PAGE", 'add-edit-note');
           
           let currentNote = NOTES.find(
             (note) => note.id === parseInt(noteEl.id)
           );
 
-          localStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
+          sessionStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
 
           let CURRENT_NOTE =
-            JSON.parse(localStorage.getItem("CURRENT_NOTE")) || {};
+            JSON.parse(sessionStorage.getItem("CURRENT_NOTE")) || {};
 
           renderAddEditPage();
 
@@ -302,13 +303,11 @@ const renderCategoryPage = () => {
 }
 
 const renderAddEditPage = () => {
-  const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
-
-  console.log(CURRENT_NOTE);
+  const CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
 
   pageWrapperEl.classList.add('slide');
   
-  localStorage.setItem("CURRENT_PAGE", 'add-edit-note');
+  sessionStorage.setItem("CURRENT_PAGE", 'add-edit-note');
   CURRENT_PAGE = "add-edit-note";
 
   
@@ -336,19 +335,25 @@ const renderAddEditPage = () => {
     const addEditInput = document.querySelector("#add-edit-input");
     const addEditTextarea = document.querySelector("#add-edit-textarea");
 
+
     if(CURRENT_NOTE !== null) {
-      addEditIdInput.value = CURRENT_NOTE.id;
+      // addEditIdInput = CURRENT_NOTE.id;
       addEditInput.value = CURRENT_NOTE.title;
       addEditTextarea.value = CURRENT_NOTE.text;
+
+
     }
     
 
     addEditInput.addEventListener("input", (e) => {
+      isSavedNoted = false;
+      console.log(isNoteSaved);
       addEditInputValue = e.target.value;
-      console.log(addEditInputValue);
+      
     });
     
     addEditTextarea.addEventListener("input", (e) => {
+      isSavedNote = false;
       addEditTextareaValue = e.target.value;
     });
   
@@ -385,17 +390,15 @@ const addCategory = (title) => {
 }
 
 const addEditNote = () => {
-  if (localStorage.getItem("CURRENT_NOTE") !== null) {
+  if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
     console.log('NOTE FOUND');
-    const CURRENT_NOTE = JSON.parse(localStorage.getItem("CURRENT_NOTE"));
+    const CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
 
     const { title, text } = CURRENT_NOTE;
 
     let notesArray = [...NOTES];
 
     const noteIndex = notesArray.findIndex((val) => val.id === CURRENT_NOTE.id);
-
-    console.log(CURRENT_NOTE);
 
     notesArray.splice(noteIndex, 1, {
       ...CURRENT_NOTE,
@@ -427,8 +430,6 @@ const addEditNote = () => {
 
   addAlert("Saved");
   isNoteSaved = true;
-
-
 };
 
 const renderHeader = () => {
@@ -489,6 +490,7 @@ const renderHeader = () => {
       searchIcon.style.display = "block";
     })
   } else if(CURRENT_PAGE === 'add-edit-note') {
+    headerEl.classList.add("add-edit");
     headerEl.innerHTML = `
       <button id="header-back-button">
         <i class="fa-solid fa-arrow-left"></i>
@@ -510,45 +512,34 @@ const renderHeader = () => {
 
 
       saveNoteBtn.addEventListener('click', () => {
-        console.log("CLICKED");
+        console.log(isNoteSaved);
         if (!isNoteSaved) {
           addEditNote();
         }
       })
 
       headerBackBtn.addEventListener("click", () => {
-        console.log("HELLO");
         if (!isNoteSaved) {
           addEditNote();
 
           addEditInputValue = "";
           addEditTextareaValue = "";
 
-          if (localStorage.getItem("CURRENT_NOTE") !== null) {
-            localStorage.removeItem("CURRENT_NOTE");
+          if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
+            sessionStorage.removeItem("CURRENT_NOTE");
           }
 
-          if(localStorage.getItem("CURRENT_PAGE") !== null) {
-            localStorage.removeItem("CURRENT_PAGE");
+          if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
+            CURRENT_PAGE = null;
+            sessionStorage.removeItem("CURRENT_PAGE");
           }
         } 
 
-
-
-        // isNoteSaved = false;
-        // addEditIdInput = null;
-        // addEditInputValue = "";
-        // addEditTextareaValue = "";
-        pageWrapperEl.classList.remove('slide');
-        
-        // CURRENT_PAGE = null;
-        // localStorage.removeItem("CURRENT_PAGE");       
+        isNoteSaved = false;
+        pageWrapperEl.classList.remove('slide'); 
         
         renderHeader();
       });
-
-
-
 
   } else {
     headerEl.innerHTML = `
@@ -837,7 +828,6 @@ const renderPage = () => {
 
     case "add-edit-note" : renderAddEditPage();
     break;
-
   }
 }
 
@@ -946,7 +936,7 @@ sortCancelBtn.addEventListener("click", () => {
 });
 
 const updateNotePageColor = (currentNote) => {
-  if(localStorage.getItem('CURRENT_NOTE')) {
+  if(sessionStorage.getItem('CURRENT_NOTE')) {
     const pageTwoEl = document.querySelector('#page-two');
     // const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
     // const headerAddEditEl = document.querySelector('#header-add-edit');

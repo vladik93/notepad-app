@@ -27,6 +27,7 @@ body {
   overflow: hidden;
 }
 
+
 ul {
   list-style: none;
 }
@@ -76,8 +77,8 @@ i {
 /* HEADER */
 
 .header {
-  height: 60px;
-  padding: 1.6rem;
+  /* height: 60px; */
+
   background: #756ab6;
   display: flex;
   align-items: center;
@@ -87,10 +88,16 @@ i {
   top: 0;
   width: 100%;
   z-index: 50;
+  min-height: 55px;
+  height: auto;
+  padding: 0 1rem;
 }
+
+
 
 .header-text {
   flex: 1;
+  font-size: 1.4rem;
 }
 
 .header-actions {
@@ -98,11 +105,17 @@ i {
   gap: 1.6rem;
 }
 
+.header h3 {
+  font-weight: 500;
+  font-size: 1.8rem;
+}
+
 .header button {
   background: none;
   border: none;
   color: #fff;
   font-weight: 700;
+  font-size: 1.2rem;
 }
 
 .header i {
