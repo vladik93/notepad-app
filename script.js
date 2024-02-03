@@ -659,9 +659,9 @@ const renderHeader = () => {
         renderCategoryPage();
 
 
-        pageWrapperEl.classList.add('slide');
         sidenavEl.classList.remove("show");
         overlayEl.classList.remove('show');
+        pageWrapperEl.classList.add('slide');
         
       })
 
@@ -669,11 +669,11 @@ const renderHeader = () => {
     
 
     sidenavAllNotesBtn.addEventListener('click', () => {
-      pageWrapperEl.classList.remove('slide');
-
+      
       renderNotes(NOTES);
       overlayEl.classList.remove("show");
       sidenavEl.classList.remove("show");
+      pageWrapperEl.classList.remove('slide');
       
     })
     
