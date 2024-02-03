@@ -56,7 +56,7 @@ let colorArray = [
   "#908dce", "#c28dce",
 ];
 
-// localStorage.removeItem("CURRENT_PAGE");
+localStorage.removeItem("CURRENT_PAGE");
 
 let pages = ['category-edit'];
 
@@ -77,11 +77,7 @@ let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 const renderNotes = (notesArr, categoryId = undefined) => {
   
-  pageWrapperEl.classList.remove('slide');
-
-  setTimeout(() => {
-    pageTwoEl.innerHTML = "";
-  }, 1500);
+  // pageWrapperEl.classList.remove('slide');
 
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
@@ -193,13 +189,15 @@ const renderNotes = (notesArr, categoryId = undefined) => {
 const renderCategoryPage = () => {
   pageTwoEl.innerHTML = "";
   
+  sessionStorage.setItem("CURRENT_PAGE", 'category-edit');
+  CURRENT_PAGE = "category-edit";
   
   const editCategoriesWrapperEl = document.createElement('div');
   editCategoriesWrapperEl.classList.add('edit-categories-wrapper');
 
   editCategoriesWrapperEl.innerHTML += `
     <div class="category-input-wrapper">
-      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." maxlength="20" />
+      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." maxlength="10" />
       <button class="category-edit-button" id="category-edit-button">ADD</button>
     </div>`
 
@@ -260,6 +258,7 @@ const renderCategoryPage = () => {
     
           
          const categoryItemEditBtn = categoryItemEl.querySelector('#category-item-edit');
+         const categoryItemDeleteBtn = categoryItemEl.querySelector("#category-item-delete");
         
         
          categoryItemEditBtn.addEventListener('click', () => {
@@ -299,12 +298,45 @@ const renderCategoryPage = () => {
               console.log('category already exists');
               const editCategoryModalMessageEl = document.getElementById('edit-category-modal-message');
               editCategoryModalMessageEl.innerHTML = "Category with that name already exists.";
+            } else {
+              let newCategoryArr = CATEGORIES.map(value => {
+                if(value.id === category.id) {
+                  return {...value, title: editCategoryModalInputValue}
+                } else {
+                  return value;
+                }
+              });
+
+              CATEGORIES = newCategoryArr;
+              localStorage.setItem("CATEGORIES", JSON.stringify(newCategoryArr));
+
+              editCategoryModalEl.classList.remove("show");
+              overlayEl.classList.remove("show");
+
+              renderCategoryPage();
             }
           })
           
+
+
           overlayEl.classList.add('show');
           editCategoryModalEl.classList.add('show');
         });
+
+        categoryItemDeleteBtn.addEventListener('click', (e) => {
+          let parentEl = e.target.parentElement;
+          let categoryItemEl = parentEl.parentElement
+
+          let categoryId = parseInt(categoryItemEl.dataset.categoryId);
+          
+          let newCategoryArr = CATEGORIES.filter(category => category.id !== categoryId);
+
+          CATEGORIES = newCategoryArr;
+          localStorage.setItem("CATEGORIES", JSON.stringify(newCategoryArr));
+
+          renderCategoryPage();
+
+        })
 
         editCategoriesWrapperEl.appendChild(categoryItemEl);
   
@@ -355,6 +387,7 @@ const renderAddEditPage = () => {
       addEditInput.value = CURRENT_NOTE.title;
       addEditTextarea.value = CURRENT_NOTE.text;
 
+      headerEl.style.background = CURRENT.color;
 
     }
     
@@ -431,7 +464,8 @@ const addEditNote = () => {
       title: addEditInputValue ? addEditInputValue : "Untitled",
       text: addEditTextareaValue,
       categories: [],
-      color: "#ffe5e5",
+      // color: "#ffe5e5",
+      color: "#ece3e7",
       lastEditDate: new Date().toJSON(),
       dateCreated: new Date().toJSON(),
     };
@@ -561,6 +595,7 @@ const renderHeader = () => {
       });
 
   } else {
+    headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
       <div class="header-toggler">
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
@@ -899,7 +934,8 @@ categoryModalConfirmBtn.addEventListener('click', () => {
 colorModalConfirmBtn.addEventListener('click', (event) => {
   const modalColorActiveEl = document.querySelector('.modal-color.active');
   
-  const activeColorId = modalColorActiveEl ? modalColorActiveEl.id : "#ffe5e5";
+  // const activeColorId = modalColorActiveEl ? modalColorActiveEl.id : "#ffe5e5";
+  const activeColorId = modalColorActiveEl ? modalColorActiveEl.id : "#ece3e7";
 
   const selectedNoteEls = document.querySelectorAll('.note.selected');
 
@@ -966,7 +1002,7 @@ const updateNotePageColor = (currentNote) => {
       // headerAddEditEl.style.backdropFilter = "brightness(50%)";
     } else {
       pageTwoEl.style.background = "#ffe5e5";
-      headerEl.style.background = "#756ab6";
+      headerEl.style.background = "#a68366";
       // headerAddEditEl.style.backdropFilter = "none";
       
     }
