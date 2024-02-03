@@ -639,6 +639,7 @@ const renderHeader = () => {
           let categoryId = parseInt(e.target.id);
 
           if(CATEGORIES.some(category => category.id === categoryId)) {
+            pageWrapperEl.classList.remove('slide');
             renderNotes(NOTES, categoryId);
             overlayEl.classList.remove("show");
             sidenavEl.classList.remove("show");
@@ -668,6 +669,8 @@ const renderHeader = () => {
     
 
     sidenavAllNotesBtn.addEventListener('click', () => {
+      pageWrapperEl.classList.remove('slide');
+
       renderNotes(NOTES);
       overlayEl.classList.remove("show");
       sidenavEl.classList.remove("show");
