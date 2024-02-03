@@ -76,6 +76,13 @@ sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 const renderNotes = (notesArr, categoryId = undefined) => {
+  
+  pageWrapperEl.classList.remove('slide');
+
+  setTimeout(() => {
+    pageTwoEl.innerHTML = "";
+  }, 1500);
+
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
     console.log(notesArr);
@@ -105,12 +112,12 @@ const renderNotes = (notesArr, categoryId = undefined) => {
         item.categories.map(((category, index) => {
           if(index < 2) {
             const currentCategory = CATEGORIES.find(x => x.id === category);
-            // const { id, title, dateCreated } = currentCategory;
+            const { id, title, dateCreated } = currentCategory;
   
             const categoryEl = document.createElement('div');
             categoryEl.classList.add('note-category')
-            // categoryEl.innerHTML = title + ",";
-            // index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
+            categoryEl.innerHTML = title + ",";
+            index === item.categories.length - 1 ? categoryEl.innerHTML = title : categoryEl.innerHTML = title + ", ";
 
             noteCategoryWrapperEl.appendChild(categoryEl);
           } else {
@@ -143,9 +150,16 @@ const renderNotes = (notesArr, categoryId = undefined) => {
           );
 
           sessionStorage.setItem("CURRENT_NOTE", JSON.stringify(currentNote));
+          
 
           let CURRENT_NOTE =
             JSON.parse(sessionStorage.getItem("CURRENT_NOTE")) || {};
+
+
+          addEditIdInput = CURRENT_NOTE.id;
+          addEditInputValue = CURRENT_NOTE.title;
+          addEditTextareaValue = CURRENT_NOTE.text;
+          
 
           renderAddEditPage();
 
@@ -185,7 +199,7 @@ const renderCategoryPage = () => {
 
   editCategoriesWrapperEl.innerHTML += `
     <div class="category-input-wrapper">
-      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." />
+      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." maxlength="20" />
       <button class="category-edit-button" id="category-edit-button">ADD</button>
     </div>`
 
@@ -346,14 +360,15 @@ const renderAddEditPage = () => {
     
 
     addEditInput.addEventListener("input", (e) => {
-      isSavedNoted = false;
-      console.log(isNoteSaved);
+      isNoteSaved = false;
       addEditInputValue = e.target.value;
+
+    
       
     });
     
     addEditTextarea.addEventListener("input", (e) => {
-      isSavedNote = false;
+      isNoteSaved = false;
       addEditTextareaValue = e.target.value;
     });
   
@@ -422,12 +437,14 @@ const addEditNote = () => {
     };
 
     NOTES.push(newNote);
-    localStorage.setItem("NOTES", JSON.stringify(NOTES));
+    sessionStorage.setItem("CURRENT_NOTE", JSON.stringify(newNote));
     renderNotes(NOTES);
+   
   }
 
-  
 
+  
+  localStorage.setItem("NOTES", JSON.stringify(NOTES));
   addAlert("Saved");
   isNoteSaved = true;
 };
@@ -522,18 +539,20 @@ const renderHeader = () => {
         if (!isNoteSaved) {
           addEditNote();
 
-          addEditInputValue = "";
-          addEditTextareaValue = "";
-
-          if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
-            sessionStorage.removeItem("CURRENT_NOTE");
-          }
-
-          if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
-            CURRENT_PAGE = null;
-            sessionStorage.removeItem("CURRENT_PAGE");
-          }
+        
         } 
+
+        addEditInputValue = "";
+        addEditTextareaValue = "";
+
+        if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
+          sessionStorage.removeItem("CURRENT_NOTE");
+        }
+
+        if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
+          CURRENT_PAGE = null;
+          sessionStorage.removeItem("CURRENT_PAGE");
+        }
 
         isNoteSaved = false;
         pageWrapperEl.classList.remove('slide'); 
@@ -604,7 +623,7 @@ const renderHeader = () => {
         renderCategoryPage();
 
 
-        // pageWrapperEl.classList.add('slide');
+        pageWrapperEl.classList.add('slide');
         sidenavEl.classList.remove("show");
         overlayEl.classList.remove('show');
         

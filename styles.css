@@ -1,4 +1,12 @@
 /* GENERAL */
+:root {
+  --color-1: #1b1c1e;
+  --color-2: #ece3e7;
+  --color-3: #e16a40;
+  --color-4: #906440;
+
+}
+
 
 * {
   margin: 0;
@@ -367,6 +375,7 @@ i {
 
 .page-wrapper.slide {
   transform: translateX(-100%);
+  
 }
 
 
