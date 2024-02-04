@@ -107,7 +107,17 @@ i {
 }
 
 
-
+.header > .filter {
+  position: absolute;
+  display: block;
+  /* background-image: linear-gradient(to left, var(--color-3), var(--color-4)); */
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  filter: brightness(50%);
+  z-index: -1;
+}
 
 
 

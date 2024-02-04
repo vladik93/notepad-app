@@ -397,12 +397,17 @@ const renderAddEditPage = () => {
 
 
     if(CURRENT_NOTE !== null) {
+      const headerFilterEl = document.querySelector('.header > .filter');
       // addEditIdInput = CURRENT_NOTE.id;
       addEditInput.value = CURRENT_NOTE.title;
       addEditTextarea.value = CURRENT_NOTE.text;
       headerEl.style.backgroundImage = "none";
-      headerEl.style.backgroundColor = CURRENT_NOTE.color;
+      // headerEl.style.backgroundColor = CURRENT_NOTE.color;
+      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color;
+
+      
       // headerEl.style.backdropFilter = "brightness(50%)";
+      console.log(headerFilterEl);
 
   
 
@@ -579,6 +584,14 @@ const renderHeader = () => {
         </button>
       </div>
       `
+
+      const filterEl = document.createElement('div');
+      filterEl.classList.add('filter');
+
+      headerEl.insertAdjacentElement("afterbegin", filterEl);
+
+
+      
       const saveNoteBtn = document.getElementById('save-button');
       const headerBackBtn = document.getElementById('header-back-button');
 
