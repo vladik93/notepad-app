@@ -58,8 +58,6 @@ let colorArray = [
 
 localStorage.removeItem("CURRENT_PAGE");
 
-let pages = ['category-edit'];
-
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
@@ -75,10 +73,23 @@ sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
-const renderNotes = (notesArr, categoryId = undefined) => {
-  
-  // pageWrapperEl.classList.remove('slide');
 
+const renderPage = () => {
+  console.log('renderPage func');
+  switch(CURRENT_PAGE) {
+    case "category-edit" : renderCategoryPage();
+    break;
+
+    case "add-edit-note" : renderAddEditPage();
+    break;
+  }
+}
+
+
+
+
+
+const renderNotes = (notesArr, categoryId = undefined) => {
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
     console.log(notesArr);
@@ -160,8 +171,6 @@ const renderNotes = (notesArr, categoryId = undefined) => {
           renderAddEditPage();
 
           updateNotePageColor(CURRENT_NOTE);
-        
-          pageWrapperEl.classList.add('slide');
 
           renderHeader();
         }
@@ -184,6 +193,9 @@ const renderNotes = (notesArr, categoryId = undefined) => {
       });
     });
   }
+
+  pageWrapperEl.classList.remove('slide');
+  sessionStorage.removeItem("CURRENT_PAGE");
 };
 
 const renderCategoryPage = () => {
@@ -346,6 +358,8 @@ const renderCategoryPage = () => {
  
   pageTwoEl.appendChild(editCategoriesWrapperEl);
 
+  pageWrapperEl.classList.add('slide');
+
 }
 
 const renderAddEditPage = () => {
@@ -386,8 +400,10 @@ const renderAddEditPage = () => {
       // addEditIdInput = CURRENT_NOTE.id;
       addEditInput.value = CURRENT_NOTE.title;
       addEditTextarea.value = CURRENT_NOTE.text;
+  
 
-      headerEl.style.background = CURRENT.color;
+   
+      
 
     }
     
@@ -878,17 +894,6 @@ const renderHeader = () => {
   }
 };
 
-const renderPage = () => {
-  switch(CURRENT_PAGE) {
-    case "category-edit" : renderCategoryPage();
-    break;
-
-    case "add-edit-note" : renderAddEditPage();
-    break;
-  }
-}
-
-renderPage();
 
 
 categoryModalConfirmBtn.addEventListener('click', () => {
@@ -1013,7 +1018,6 @@ const updateNotePageColor = (currentNote) => {
 }
 
 
-
 const addNote = (title) => {
   let newNote = {
     id: new Date().getTime(),
@@ -1034,4 +1038,8 @@ addBtn.addEventListener("click", () => {
   renderAddEditPage();
 });
 
-renderNotes(NOTES);
+
+renderNotes(NOTES)
+renderPage();
+
+
