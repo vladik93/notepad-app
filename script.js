@@ -194,8 +194,8 @@ const renderNotes = (notesArr, categoryId = undefined) => {
     });
   }
 
-  pageWrapperEl.classList.remove('slide');
-  sessionStorage.removeItem("CURRENT_PAGE");
+  // pageWrapperEl.classList.remove('slide');
+  // sessionStorage.removeItem("CURRENT_PAGE");
 };
 
 const renderCategoryPage = () => {
@@ -400,6 +400,10 @@ const renderAddEditPage = () => {
       // addEditIdInput = CURRENT_NOTE.id;
       addEditInput.value = CURRENT_NOTE.title;
       addEditTextarea.value = CURRENT_NOTE.text;
+      headerEl.style.backgroundImage = "none";
+      headerEl.style.backgroundColor = CURRENT_NOTE.color;
+      // headerEl.style.backdropFilter = "brightness(50%)";
+
   
 
    
@@ -558,6 +562,7 @@ const renderHeader = () => {
     })
   } else if(CURRENT_PAGE === 'add-edit-note') {
     headerEl.classList.add("add-edit");
+
     headerEl.innerHTML = `
       <button id="header-back-button">
         <i class="fa-solid fa-arrow-left"></i>
@@ -1005,9 +1010,14 @@ const updateNotePageColor = (currentNote) => {
     // const headerAddEditEl = document.querySelector('#header-add-edit');
 
     if(currentNote.color !== "#ffe5e5") {
+      
+  
+
       pageTwoEl.style.backgroundColor = currentNote.color;
-      headerEl.style.backgroundColor = currentNote.color;
-      // headerAddEditEl.style.backdropFilter = "brightness(50%)";
+      // headerEl.style.backgroundColor = currentNote.color;
+      headerAddEditEl.style.backdropFilter = "brightness(50%)";
+      
+
     } else {
       pageTwoEl.style.background = "#ffe5e5";
       headerEl.style.background = "#a68366";

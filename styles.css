@@ -103,7 +103,11 @@ i {
   min-height: 55px;
   height: auto;
   padding: 0 1rem;
+  z-index: 50;
 }
+
+
+
 
 
 
@@ -188,10 +192,10 @@ i {
 }
 
 /* HEADER ADD EDIT */
-/* 
+
 .header .add-edit {
   background: transparent;
-} */
+}
 
 
 
@@ -381,7 +385,7 @@ i {
   height: 100%;
   transform: translateX(0%);
   transition: transform 0.3s ease-in;
-  padding-top: 60px;
+  padding-top: 55px;
 }
 
 .page-wrapper.slide {
