@@ -365,6 +365,8 @@ const renderCategoryPage = () => {
 const renderAddEditPage = () => {
   const CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
 
+  
+
   pageWrapperEl.classList.add('slide');
   
   sessionStorage.setItem("CURRENT_PAGE", 'add-edit-note');
@@ -403,16 +405,11 @@ const renderAddEditPage = () => {
       addEditTextarea.value = CURRENT_NOTE.text;
       headerEl.style.backgroundImage = "none";
       // headerEl.style.backgroundColor = CURRENT_NOTE.color;
-      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color;
+      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color !== "#ece3e7" ? CURRENT_NOTE.color : "none";
 
       
       // headerEl.style.backdropFilter = "brightness(50%)";
       console.log(headerFilterEl);
-
-  
-
-   
-      
 
     }
     
@@ -621,7 +618,8 @@ const renderHeader = () => {
         renderHeader();
       });
 
-  } else {
+  
+    } else {
     headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
       <div class="header-toggler">
