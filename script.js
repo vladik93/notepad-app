@@ -585,13 +585,6 @@ const renderHeader = () => {
       </div>
       `
 
-      const filterEl = document.createElement('div');
-      filterEl.classList.add('filter');
-
-      headerEl.insertAdjacentElement("afterbegin", filterEl);
-
-
-      
       const saveNoteBtn = document.getElementById('save-button');
       const headerBackBtn = document.getElementById('header-back-button');
 
@@ -910,6 +903,12 @@ const renderHeader = () => {
       
     })
   }
+
+  
+  const filterEl = document.createElement('div');
+  filterEl.classList.add('filter');
+
+  headerEl.insertAdjacentElement("afterbegin", filterEl);
 };
 
 
