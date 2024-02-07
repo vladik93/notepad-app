@@ -40,6 +40,11 @@ const undoBtn = document.querySelector("#undo-button");
 
 const sortModalEl = document.querySelector("#sort-modal");
 const sortCancelBtn = document.querySelector("#sort-cancel-button");
+const sortConfirmBtn = document.querySelector('#sort-confirm-button');
+const sortOptionEls = document.querySelectorAll('[name="sort-option"]');
+
+let sortBy = undefined;
+
 
 let isSearching = false;
 let isCategoriesEdit = false;
@@ -85,15 +90,44 @@ const renderPage = () => {
   }
 }
 
+const sortNotes = (sortBy, a, b) => {
+  console.log(String(b.title).localeCompare(a.string));
+  switch(sortBy) {
+    case "dateDesc" : {
+      return new Date(b.lastEditDate) - new Date(a.lastEditDate);
+    }
+    case "dateAsc" : {
+      return new Date(a.lastEditDate) - new Date(b.lastEditDate);
+    }
+    case "titleDesc" : {
+      return String(b.title).localeCompare(a.title);
+    }
 
+    case "titleAsc" : {
+      return String(a.title).localeCompare(b.title);
+    }
 
+    case "createDateDesc" : {
+      return new Date(b.dateCreated) - new Date(a.dateCreated);
+    }
 
+    case "createDateAsc" : {
+      return new Date(a.dateCreated) - new Date(b.dateCreated);
+    }
 
-const renderNotes = (notesArr, categoryId = undefined) => {
+    default : {
+      return null;
+    }
+
+  }
+
+}
+
+const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
     console.log(notesArr);
-    notesArr.filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
+    notesArr.sort((a, b) => sortNotes(sortBy, a, b)).filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
@@ -197,6 +231,8 @@ const renderNotes = (notesArr, categoryId = undefined) => {
   // pageWrapperEl.classList.remove('slide');
   // sessionStorage.removeItem("CURRENT_PAGE");
 };
+
+
 
 const renderCategoryPage = () => {
   pageTwoEl.innerHTML = "";
@@ -546,7 +582,14 @@ const renderHeader = () => {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
 
-        let newNotesArr = NOTES.filter(note => note.title.includes(inputValue) || note.text.includes(inputValue));
+        // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue) ||
+        //  String(note.title).toUpperCase().includes(inputValue) ||
+        //  String(note.text).toLowerCase().includes(inputValue)) ||
+
+        let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue) || 
+        String(note.title).toUpperCase().includes(inputValue) || 
+        String(note.text).toLowerCase().includes(inputValue) || 
+        String(note.text).toUpperCase().includes(inputValue));
 
         console.log(newNotesArr);
 
@@ -1026,25 +1069,29 @@ const updateNotePageColor = (currentNote) => {
     // const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
     // const headerAddEditEl = document.querySelector('#header-add-edit');
 
-    if(currentNote.color !== "#ffe5e5") {
-      
-  
-
+    if(currentNote.color !== "#ffe5e5") {  
       pageTwoEl.style.backgroundColor = currentNote.color;
       headerEl.style.backgroundColor = currentNote.color;
-      
-
-      
-
     } else {
       pageTwoEl.style.background = "#ffe5e5";
       headerEl.style.background = "#a68366";
-      
-    
-      
     }
   } 
 }
+
+sortOptionEls.forEach(optionEl => {
+  optionEl.addEventListener('change', (e) => {
+    sortBy = e.target.value;
+  })
+});
+
+sortConfirmBtn.addEventListener('click', () => {
+  if(sortBy) {
+    renderNotes(NOTES, undefined, sortBy);
+    sortModalEl.classList.remove("show");
+    overlayEl.classList.remove('show');
+  }
+});
 
 
 const addNote = (title) => {
