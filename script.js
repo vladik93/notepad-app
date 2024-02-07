@@ -364,7 +364,7 @@ const renderCategoryPage = () => {
 
 const renderAddEditPage = () => {
   const CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
-
+  
   
 
   pageWrapperEl.classList.add('slide');
@@ -406,11 +406,13 @@ const renderAddEditPage = () => {
       headerEl.style.backgroundImage = "none";
       // headerEl.style.backgroundColor = CURRENT_NOTE.color;
       headerFilterEl.style.backgroundColor = CURRENT_NOTE.color !== "#ece3e7" ? CURRENT_NOTE.color : "none";
-
+      pageTwoEl.style.backgroundColor = CURRENT_NOTE.color;
       
       // headerEl.style.backdropFilter = "brightness(50%)";
       console.log(headerFilterEl);
 
+    } else {
+      pageTwoEl.style.backgroundColor = "#ece3e7";
     }
     
 
@@ -594,32 +596,32 @@ const renderHeader = () => {
       })
 
       headerBackBtn.addEventListener("click", () => {
-        if (!isNoteSaved) {
-          addEditNote();
+          if (!isNoteSaved) {
+            addEditNote();
 
-        
-        } 
+          
+          } 
 
-        addEditInputValue = "";
-        addEditTextareaValue = "";
+          addEditInputValue = "";
+          addEditTextareaValue = "";
 
-        if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
-          sessionStorage.removeItem("CURRENT_NOTE");
-        }
+          if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
+            sessionStorage.removeItem("CURRENT_NOTE");
+          }
 
-        if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
-          CURRENT_PAGE = null;
-          sessionStorage.removeItem("CURRENT_PAGE");
-        }
+          if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
+            CURRENT_PAGE = null;
+            sessionStorage.removeItem("CURRENT_PAGE");
+          }
 
-        isNoteSaved = false;
-        pageWrapperEl.classList.remove('slide'); 
-        
-        renderHeader();
-      });
-
-  
-    } else {
+          isNoteSaved = false;
+          pageWrapperEl.classList.remove('slide'); 
+          pageTwoEl.style.backgroundColor = "none";
+          
+          renderHeader();
+        });
+    
+      } else {
     headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -1014,8 +1016,13 @@ sortCancelBtn.addEventListener("click", () => {
 });
 
 const updateNotePageColor = (currentNote) => {
+  const filterEl = document.querySelector('.filter');
+  console.log(filterEl);
+
   if(sessionStorage.getItem('CURRENT_NOTE')) {
     const pageTwoEl = document.querySelector('#page-two');
+    filterEl.background.style.backgroundColor = currentNote.color;
+    
     // const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
     // const headerAddEditEl = document.querySelector('#header-add-edit');
 
@@ -1024,17 +1031,19 @@ const updateNotePageColor = (currentNote) => {
   
 
       pageTwoEl.style.backgroundColor = currentNote.color;
-      // headerEl.style.backgroundColor = currentNote.color;
-      headerAddEditEl.style.backdropFilter = "brightness(50%)";
+      headerEl.style.backgroundColor = currentNote.color;
+      
+
       
 
     } else {
       pageTwoEl.style.background = "#ffe5e5";
       headerEl.style.background = "#a68366";
-      // headerAddEditEl.style.backdropFilter = "none";
+      
+    
       
     }
-  }
+  } 
 }
 
 
