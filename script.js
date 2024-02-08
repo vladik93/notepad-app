@@ -45,6 +45,8 @@ const sortOptionEls = document.querySelectorAll('[name="sort-option"]');
 
 let sortBy = undefined;
 
+let SORT_BY = localStorage.getItem("SORT_BY") || null;
+
 
 let isSearching = false;
 let isCategoriesEdit = false;
@@ -113,6 +115,10 @@ const sortNotes = (sortBy, a, b) => {
 
     case "createDateAsc" : {
       return new Date(a.dateCreated) - new Date(b.dateCreated);
+    }
+
+    case "byColor" : {
+      return colorArray.indexOf(a.color) - colorArray.indexOf(b.color);
     }
 
     default : {
@@ -755,8 +761,16 @@ const renderHeader = () => {
     });
 
     sortBtn.addEventListener("click", () => {
+      sortOptionEls.forEach(option => {
+        if(option.value === SORT_BY) {
+          option.checked = true;
+        }
+      });
+
+
       overlayEl.classList.add("show");
       sortModalEl.classList.add("show");
+
     });
   }
 
@@ -1091,7 +1105,11 @@ sortConfirmBtn.addEventListener('click', () => {
     sortModalEl.classList.remove("show");
     overlayEl.classList.remove('show');
 
+    NOTES = NOTES;
+    localStorage.setItem("NOTES", JSON.stringify(NOTES));
     
+    localStorage.setItem("SORT_BY", sortBy)
+    SORT_BY = sortBy;
   }
 });
 
