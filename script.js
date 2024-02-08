@@ -1090,6 +1090,8 @@ sortConfirmBtn.addEventListener('click', () => {
     renderNotes(NOTES, undefined, sortBy);
     sortModalEl.classList.remove("show");
     overlayEl.classList.remove('show');
+
+    
   }
 });
 
