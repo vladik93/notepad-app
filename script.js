@@ -5,6 +5,8 @@ const headerEl = document.querySelector("#header");
 const sidenavCategoryWrapperEl = document.querySelector('#sidenav-category-wrapper');
 const sidenavAllNotesBtn = document.querySelector('#all-notes-button');
 
+const sidenavDeleteNotesBtn = document.querySelector('#deleted-notes-button');
+
 const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
 const pageWrapperEl = document.querySelector("#page-wrapper");
@@ -25,6 +27,8 @@ const categoryModalConfirmBtn = document.querySelector("#category-modal-confirm"
 let addEditIdInput = null;
 let addEditInputValue = "";
 let addEditTextareaValue = "";
+
+
 
 
 
@@ -71,6 +75,8 @@ let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
 
 let CURRENT_PAGE = sessionStorage.getItem("CURRENT_PAGE") || null;
+
+let DELETED_NOTES = JSON.parse(localStorage.getItem("DELETED_NOTES")) || [];
 
 // FILTERED ARRAYS
 
@@ -669,8 +675,9 @@ const renderHeader = () => {
           
           renderHeader();
         });
-    
-      } else {
+      }
+      
+    else {
     headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -774,6 +781,43 @@ const renderHeader = () => {
     });
   }
 
+  sidenavDeleteNotesBtn.addEventListener('click', () => {
+    CURRENT_PAGE = "deleted-notes";
+    sessionStorage.setItem("CURRENT_PAGE", CURRENT_PAGE);
+
+    notesWrapperEl.innerHTML = "";
+
+    
+    renderHeader();
+
+
+    DELETED_NOTES.map((item) => {
+      const removedNoteEl = document.createElement("div");
+      removedNoteEl.classList.add("note");
+      removedNoteEl.setAttribute("id", item.id);
+      removedNoteEl.dataset.color = item.color;
+      removedNoteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
+
+      removedNoteEl.innerHTML = `
+      <p class="note-title">${item.title}</p>
+      <div class="note-content" id="note-content">
+        <div class="note-category-wrapper" id="note-category-wrapper"></div>
+        <p class="note-date">Last edit: ${new Date(
+          item.lastEditDate
+        ).toLocaleString()}</p>     
+      </div>
+      `;
+      notesWrapperEl.appendChild(removedNoteEl);
+    })
+
+    sidenavEl.classList.remove('show');
+    overlayEl.classList.remove('show');
+
+
+
+    
+  })
+
   if (IS_NOTE_EDIT_MODE) {
     let selectedNoteEls = document.querySelectorAll(".note.selected");
     let selectedNoteCount = selectedNoteEls.length;
@@ -815,7 +859,19 @@ const renderHeader = () => {
 
       if (deleteConfirm) {
         let selectedNoteEls = document.querySelectorAll(".note.selected");
+
+        
+
+
         selectedNoteEls.forEach((noteEl) => {
+          console.log(noteEl.id);
+
+          let deletedNote = NOTES.find(note => note.id === parseInt(noteEl.id));
+          
+          DELETED_NOTES.push(deletedNote);
+
+          localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
+
           let newNotesArray = NOTES.filter(
             (note) => note.id !== parseInt(noteEl.id)
           );
@@ -830,6 +886,8 @@ const renderHeader = () => {
 
           sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
           IS_NOTE_EDIT_MODE = false;
+
+          
 
           renderHeader();
           renderNotes(NOTES);
