@@ -675,8 +675,20 @@ const renderHeader = () => {
           
           renderHeader();
         });
-      }
-      
+  } else if(CURRENT_PAGE === "deleted-notes") {
+    headerEl.innerHTML = `
+      <div class="header-toggler">
+        <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div class="header-text">
+        <h3>Trash</h3>
+      </div>
+      <div class="header-actions">
+        
+        <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div>    
+    `;
+  }
     else {
     headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
@@ -784,11 +796,11 @@ const renderHeader = () => {
   sidenavDeleteNotesBtn.addEventListener('click', () => {
     CURRENT_PAGE = "deleted-notes";
     sessionStorage.setItem("CURRENT_PAGE", CURRENT_PAGE);
-
-    notesWrapperEl.innerHTML = "";
-
     
     renderHeader();
+    
+    notesWrapperEl.innerHTML = "";
+    
 
 
     DELETED_NOTES.map((item) => {
