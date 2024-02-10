@@ -28,14 +28,9 @@ let addEditIdInput = null;
 let addEditInputValue = "";
 let addEditTextareaValue = "";
 
-
-
-
-
 const editCategoryModalEl = document.getElementById('edit-category-modal');
 
 let editCategoryModalInputValue = "";
-
 
 let categoryEditInputValue = "";
 
@@ -244,7 +239,35 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
   // sessionStorage.removeItem("CURRENT_PAGE");
 };
 
+const renderDeletedNotes = () => {
+  CURRENT_PAGE = "deleted-notes";
+  sessionStorage.setItem("CURRENT_PAGE", CURRENT_PAGE);
+  
+  renderHeader();
+  
+  notesWrapperEl.innerHTML = "";
+  
 
+
+  DELETED_NOTES.map((item) => {
+    const removedNoteEl = document.createElement("div");
+    removedNoteEl.classList.add("note");
+    removedNoteEl.setAttribute("id", item.id);
+    removedNoteEl.dataset.color = item.color;
+    removedNoteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
+
+    removedNoteEl.innerHTML = `
+    <p class="note-title">${item.title}</p>
+    <div class="note-content" id="note-content">
+      <div class="note-category-wrapper" id="note-category-wrapper"></div>
+      <p class="note-date">Last edit: ${new Date(
+        item.lastEditDate
+      ).toLocaleString()}</p>     
+    </div>
+    `;
+    notesWrapperEl.appendChild(removedNoteEl);
+  })
+}
 
 const renderCategoryPage = () => {
   pageTwoEl.innerHTML = "";
@@ -686,16 +709,69 @@ const renderHeader = () => {
         <h3>Trash</h3>
       </div>
       <div class="header-actions">
-        
-        <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-      </div>    
-    `;
 
-    const actionsBtn = document.getElementById('actions-button');
-    
-    actionsBtn.addEventListener('click', () => {
-      console.log('button clicked!');
-    })
+      <div class="more-options-wrapper">
+        <button id="more-options-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        <div class="more-options" id="more-options">
+          <div class="more-option" id="more-option-undelete-all">Undelete All</div>
+          <div class="more-option" id="more-option-empty-trash">Empty Trash</div>
+        </div>
+      </div>`;   
+
+
+    const actionsBtn = document.getElementById('more-options-button');
+    if(actionsBtn) {
+      const moreOptionsEl = document.querySelector('.more-options');
+
+      actionsBtn.addEventListener('click', () => {
+        moreOptionsEl.classList.add('show');
+      });
+
+      const moreOptionUndeleteAllEl = document.getElementById('more-option-undelete-all');
+      
+      moreOptionUndeleteAllEl.addEventListener('click', () => {
+        moreOptionsEl.classList.remove('show');
+        overlayEl.classList.add('show');
+        
+        const promptEl = document.getElementById('prompt');
+        promptEl.classList.add('show');
+
+        promptEl.innerHTML = `
+          <p>Restore all notes?</p>
+            <div class="prompt-actions">
+              <button>No</button>
+              <button id="undelete-notes-button">Yes</button>
+            </div>
+        `
+
+        const undeleteNotesBtn = document.getElementById('undelete-notes-button');
+
+        if(undeleteNotesBtn) {
+          undeleteNotesBtn.addEventListener('click', () => {
+            let removedNotes = [];
+            
+            let notesArray = [...NOTES];
+
+            DELETED_NOTES.forEach(note => {
+              removedNotes.push(note);
+            });
+
+            NOTES = [...removedNotes, ...notesArray];
+            localStorage.setItem("NOTES", JSON.stringify(NOTES));
+
+            DELETED_NOTES = [];
+            localStorage.removeItem("DELETED_NOTES");
+            renderDeletedNotes();
+
+            promptEl.innerHTML = "";
+            promptEl.classList.remove('show');
+            overlayEl.classList.remove('show');
+
+          })
+        }
+        
+      })
+    }
   } 
   
   else {
@@ -811,39 +887,11 @@ const renderHeader = () => {
     }
  
     sidenavDeleteNotesBtn.addEventListener('click', () => {
-    CURRENT_PAGE = "deleted-notes";
-    sessionStorage.setItem("CURRENT_PAGE", CURRENT_PAGE);
     
-    renderHeader();
-    
-    notesWrapperEl.innerHTML = "";
-    
-
-
-    DELETED_NOTES.map((item) => {
-      const removedNoteEl = document.createElement("div");
-      removedNoteEl.classList.add("note");
-      removedNoteEl.setAttribute("id", item.id);
-      removedNoteEl.dataset.color = item.color;
-      removedNoteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
-
-      removedNoteEl.innerHTML = `
-      <p class="note-title">${item.title}</p>
-      <div class="note-content" id="note-content">
-        <div class="note-category-wrapper" id="note-category-wrapper"></div>
-        <p class="note-date">Last edit: ${new Date(
-          item.lastEditDate
-        ).toLocaleString()}</p>     
-      </div>
-      `;
-      notesWrapperEl.appendChild(removedNoteEl);
-    })
+    renderDeletedNotes();
 
     sidenavEl.classList.remove('show');
     overlayEl.classList.remove('show');
-
-
-
     
   })
 
@@ -1054,8 +1102,6 @@ const renderHeader = () => {
 
   headerEl.insertAdjacentElement("afterbegin", filterEl);
 };
-
-
 
 categoryModalConfirmBtn.addEventListener('click', () => {
   const selectedCategoryEls = document.querySelectorAll('.modal-category.selected');
