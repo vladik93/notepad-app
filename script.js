@@ -619,7 +619,9 @@ const renderHeader = () => {
       resetSearchBtn.classList.remove('show');
       searchIcon.style.display = "block";
     })
-  } else if(CURRENT_PAGE === 'add-edit-note') {
+  } 
+  
+  else if(CURRENT_PAGE === 'add-edit-note') {
     headerEl.classList.add("add-edit");
 
     headerEl.innerHTML = `
@@ -675,7 +677,9 @@ const renderHeader = () => {
           
           renderHeader();
         });
-  } else if(CURRENT_PAGE === "deleted-notes") {
+  } 
+  
+  else if(CURRENT_PAGE === "deleted-notes") {
     headerEl.innerHTML = `
       <div class="header-toggler">
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
@@ -688,8 +692,11 @@ const renderHeader = () => {
         <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div>    
     `;
-  }
-    else {
+
+    
+  } 
+  
+  else {
     headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -704,63 +711,15 @@ const renderHeader = () => {
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
         <button id="sort-button">SORT</button>
-        
         <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
       </div>    
     `;
 
-    const toggleBtn = document.querySelector("#toggle-button");
+   
     const searchBtn = document.querySelector("#search-button");
     const sortBtn = document.querySelector("#sort-button");
 
-    toggleBtn.addEventListener("click", () => {
-      sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
-
-      overlayEl.classList.add("show");
-      sidenavEl.classList.add("show");
-
-      CATEGORIES.map(category => {
-        const noteCategoryBtn = document.createElement('button');
-        noteCategoryBtn.classList.add('sidenav-action', 'note-category-button');
-        noteCategoryBtn.setAttribute('id', category.id);
-        noteCategoryBtn.innerHTML = `
-            <i class="fa-solid fa-note-sticky"></i>
-            <span>${category.title}</span>`;
-        sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryBtn);
-        
-       
-        
-        noteCategoryBtn.addEventListener('click', (e) => {
-          let categoryId = parseInt(e.target.id);
-
-          if(CATEGORIES.some(category => category.id === categoryId)) {
-            pageWrapperEl.classList.remove('slide');
-            renderNotes(NOTES, categoryId);
-            overlayEl.classList.remove("show");
-            sidenavEl.classList.remove("show");
-          }    
-        });
-      });
-
-      const editCategoriesBtn = document.createElement('button');
-      editCategoriesBtn.classList.add('sidenav-action', 'note-category-button');
-      editCategoriesBtn.innerHTML = `
-        <i class="fa-solid fa-plus"></i>
-        <span>Edit categories</span>`;
-        
-      sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
-
-      editCategoriesBtn.addEventListener('click', () => {
-        renderCategoryPage();
-
-
-        sidenavEl.classList.remove("show");
-        overlayEl.classList.remove('show');
-        pageWrapperEl.classList.add('slide');
-        
-      })
-
-    });
+   
     
 
     sidenavAllNotesBtn.addEventListener('click', () => {
@@ -793,7 +752,63 @@ const renderHeader = () => {
     });
   }
 
-  sidenavDeleteNotesBtn.addEventListener('click', () => {
+    const toggleBtn = document.querySelector("#toggle-button");
+
+    // SIDENAV TOGGLE
+  
+    if(toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+        sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
+    
+        overlayEl.classList.add("show");
+        sidenavEl.classList.add("show");
+    
+        CATEGORIES.map(category => {
+          const noteCategoryBtn = document.createElement('button');
+          noteCategoryBtn.classList.add('sidenav-action', 'note-category-button');
+          noteCategoryBtn.setAttribute('id', category.id);
+          noteCategoryBtn.innerHTML = `
+              <i class="fa-solid fa-note-sticky"></i>
+              <span>${category.title}</span>`;
+          sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', noteCategoryBtn);
+          
+        
+          
+          noteCategoryBtn.addEventListener('click', (e) => {
+            let categoryId = parseInt(e.target.id);
+    
+            if(CATEGORIES.some(category => category.id === categoryId)) {
+              pageWrapperEl.classList.remove('slide');
+              renderNotes(NOTES, categoryId);
+              overlayEl.classList.remove("show");
+              sidenavEl.classList.remove("show");
+            }    
+          });
+        });
+    
+        const editCategoriesBtn = document.createElement('button');
+        editCategoriesBtn.classList.add('sidenav-action', 'note-category-button');
+        editCategoriesBtn.innerHTML = `
+          <i class="fa-solid fa-plus"></i>
+          <span>Edit categories</span>`;
+          
+        sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
+    
+        editCategoriesBtn.addEventListener('click', () => {
+          renderCategoryPage();
+    
+    
+          sidenavEl.classList.remove("show");
+          overlayEl.classList.remove('show');
+          pageWrapperEl.classList.add('slide');
+          
+        })
+    
+      });
+    
+    }
+ 
+    sidenavDeleteNotesBtn.addEventListener('click', () => {
     CURRENT_PAGE = "deleted-notes";
     sessionStorage.setItem("CURRENT_PAGE", CURRENT_PAGE);
     
