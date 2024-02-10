@@ -548,8 +548,6 @@ const addEditNote = () => {
    
   }
 
-
-  
   localStorage.setItem("NOTES", JSON.stringify(NOTES));
   addAlert("Saved");
   isNoteSaved = true;
@@ -693,7 +691,11 @@ const renderHeader = () => {
       </div>    
     `;
 
+    const actionsBtn = document.getElementById('actions-button');
     
+    actionsBtn.addEventListener('click', () => {
+      console.log('button clicked!');
+    })
   } 
   
   else {
