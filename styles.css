@@ -510,7 +510,7 @@ i {
   z-index: 50;
   top: 0;
   left: 0;
-  /* width: 30px; */
+  min-width: auto;
   height: 30px;
   top: 80%;
   left: 50%;
@@ -644,8 +644,6 @@ i {
   font-family: "Font Awesome 5 Free"; 
   font-weight: 300; 
   font-size: 3.2rem;
-  
-
 }
 
 
@@ -861,4 +859,18 @@ i {
   display: flex;
   justify-content: flex-end;
   gap: 0.8rem;
+}
+
+/* DELETED NOTES */
+
+.deleted-select-wrapper {
+  display: flex;
+  gap: 1.6rem;
+  padding-bottom: 0.4rem;
+}
+
+.deleted-action-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }

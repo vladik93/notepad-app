@@ -90,6 +90,9 @@ const renderPage = () => {
 
     case "add-edit-note" : renderAddEditPage();
     break;
+
+    case "deleted-notes" : renderDeletedNotes();
+    break;
   }
 }
 
@@ -265,6 +268,73 @@ const renderDeletedNotes = () => {
       ).toLocaleString()}</p>     
     </div>
     `;
+
+    removedNoteEl.addEventListener('click', () => {
+      overlayEl.classList.add('show');
+
+      const promptEl = document.getElementById('prompt');
+      promptEl.classList.add('show');
+
+      promptEl.innerHTML = `
+        <p>Select an action for the note:</p>
+        <div class="deleted-action-wrapper">
+          <div class="deleted-select-wrapper">
+            <input type="radio" class="checkbox rounded" id="select-undelete" value="undelete" name="delete-note-action" checked />
+            <label for="select-undelete">Recover</label>
+          </div>
+          <div class="deleted-select-wrapper">
+            <input type="radio" class="checkbox rounded" id="select-delete" value="delete" name="delete-note-action" />
+            <label for="select-delete">Delete</label>
+          </div>
+        </div>
+        <div class="deleted-action-buttons">
+          <button>CANCEL</button>
+          <button id="deleted-action-confirm">OK</button>
+        </div>`
+
+     
+
+      const deleteNoteActionEls = document.querySelectorAll('[name="delete-note-action"]');
+
+      let selectedDeleteOption = deleteNoteActionEls[0].value;
+      let selectedNoteId = parseInt(removedNoteEl.id);
+
+
+      deleteNoteActionEls.forEach(deleteNoteActionEl => {
+        deleteNoteActionEl.addEventListener('change', (e) => {
+          console.log(removedNoteEl.id);
+          selectedDeleteOption = e.target.value;
+        });
+      })
+
+      const deletedActionConfirmBtn = document.getElementById('deleted-action-confirm');
+      
+      deletedActionConfirmBtn.addEventListener('click', () => {
+        if(selectedDeleteOption === "undelete" && selectedNoteId) {
+          let deletedNotes = [...DELETED_NOTES];
+
+          let deletedNoteIndex = deletedNotes.findIndex(note => note.id === selectedNoteId);
+
+          let deletedItem = deletedNotes.splice(deletedNoteIndex, 1);
+
+          DELETED_NOTES = deletedNotes;
+          localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
+
+          let notesArray = [...NOTES];
+
+          let newNotesArray = [...notesArray, ...deletedItem];
+
+          NOTES = newNotesArray;
+          localStorage.setItem("NOTES", JSON.stringify(NOTES));
+
+          renderDeletedNotes();
+        
+          promptEl.innerHTML = "";
+          promptEl.classList.remove('show');
+          overlayEl.classList.remove('show');
+        }
+      });
+    });
     notesWrapperEl.appendChild(removedNoteEl);
   })
 }
@@ -290,12 +360,6 @@ const renderCategoryPage = () => {
   const categoryEditBtn = editCategoriesWrapperEl.querySelector('#category-edit-button');
 
   console.log(categoryEditBtn);
-  
-  
-  // let categoryId = parseInt(document.querySelector('.category-item').dataset.categoryId);
-
-  // console.log(categoryId);
-
         
   categoryEditInputEl.addEventListener('input', (e) => {
     categoryEditInputValue = e.target.value;
@@ -790,6 +854,7 @@ const renderHeader = () => {
         
         confirmEmptyTrashBtn.addEventListener('click', () => {
           let deletedNotes = [...DELETED_NOTES];
+          let deleteNotesLength = deletedNotes.length;
 
           deletedNotes.length = 0;
 
@@ -801,6 +866,9 @@ const renderHeader = () => {
           promptEl.innerHTML = "";
           promptEl.classList.remove('show');
           overlayEl.classList.remove('show');
+         
+          addAlert(`Deleted Notes (${deleteNotesLength})`);
+          
           
         });
       });
