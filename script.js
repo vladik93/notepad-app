@@ -766,11 +766,44 @@ const renderHeader = () => {
             promptEl.innerHTML = "";
             promptEl.classList.remove('show');
             overlayEl.classList.remove('show');
-
           })
         }
-        
       })
+
+      const moreOptionEmptyTrash = document.getElementById('more-option-empty-trash');
+
+      moreOptionEmptyTrash.addEventListener('click', () => {
+        moreOptionsEl.classList.remove('show');
+        overlayEl.classList.add('show');
+
+        const promptEl = document.getElementById('prompt');
+        promptEl.classList.add('show');
+
+        promptEl.innerHTML = `
+          <p>Are you sure that you want to delete all of the trashed notes?</p>
+          <div class="prompt-actions">
+            <button>No</button>
+            <button id="confirm-empty-trash-button">Yes</button>
+          </div>`
+        
+        const confirmEmptyTrashBtn = document.getElementById('confirm-empty-trash-button');
+        
+        confirmEmptyTrashBtn.addEventListener('click', () => {
+          let deletedNotes = [...DELETED_NOTES];
+
+          deletedNotes.length = 0;
+
+          DELETED_NOTES = deletedNotes;
+          localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
+          
+          renderDeletedNotes();
+          
+          promptEl.innerHTML = "";
+          promptEl.classList.remove('show');
+          overlayEl.classList.remove('show');
+          
+        });
+      });
     }
   } 
   
