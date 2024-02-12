@@ -704,10 +704,12 @@ const renderHeader = () => {
         //  String(note.title).toUpperCase().includes(inputValue) ||
         //  String(note.text).toLowerCase().includes(inputValue)) ||
 
-        let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue) || 
-        String(note.title).toUpperCase().includes(inputValue) || 
-        String(note.text).toLowerCase().includes(inputValue) || 
-        String(note.text).toUpperCase().includes(inputValue));
+        // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue) || 
+        // String(note.title).toUpperCase().includes(inputValue) || 
+        // String(note.text).toLowerCase().includes(inputValue) || 
+        // String(note.text).toUpperCase().includes(inputValue));
+
+        let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
 
         console.log(newNotesArr);
 
