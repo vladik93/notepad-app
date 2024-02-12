@@ -94,6 +94,7 @@ const renderPage = () => {
     case "deleted-notes" : renderDeletedNotes();
     break;
   }
+  
 }
 
 const sortNotes = (sortBy, a, b) => {
@@ -332,8 +333,27 @@ const renderDeletedNotes = () => {
           promptEl.innerHTML = "";
           promptEl.classList.remove('show');
           overlayEl.classList.remove('show');
+        } 
+        else if(selectedDeleteOption === "delete" && selectedNoteId) {
+          let deletedNotes = [...DELETED_NOTES];
+
+          let newDeleteNotesArr = deletedNotes.filter((note) => note.id !== selectedNoteId);
+
+          DELETED_NOTES = newDeleteNotesArr;
+          localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
+          
+          renderDeletedNotes();
+          
+          promptEl.innerHTML = "";
+          promptEl.classList.remove('show');
+          overlayEl.classList.remove('show');
+
         }
       });
+
+      
+
+
     });
     notesWrapperEl.appendChild(removedNoteEl);
   })
@@ -894,21 +914,20 @@ const renderHeader = () => {
       </div>    
     `;
 
-   
     const searchBtn = document.querySelector("#search-button");
-    const sortBtn = document.querySelector("#sort-button");
-
-   
+    const sortBtn = document.querySelector("#sort-button");   
     
+    
+    // sidenavAllNotesBtn.addEventListener('click', () => { 
+    //   console.log("SIDENAV CLICKED");
+    //   overlayEl.classList.remove("show")
+    //   sidenavEl.classList.remove("show");
+    //   pageWrapperEl.classList.remove('slide');
 
-    sidenavAllNotesBtn.addEventListener('click', () => {
+    //   renderNotes(NOTES);
+    //   sessionStorage.removeItem("CURRENT_PAGE");
       
-      renderNotes(NOTES);
-      overlayEl.classList.remove("show");
-      sidenavEl.classList.remove("show");
-      pageWrapperEl.classList.remove('slide');
-      
-    })
+    // })
     
     
 
@@ -937,8 +956,20 @@ const renderHeader = () => {
   
     if(toggleBtn) {
       toggleBtn.addEventListener("click", () => {
+        sidenavAllNotesBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('CURRENT_PAGE');
+        overlayEl.classList.remove("show")
+        sidenavEl.classList.remove("show");
+        pageWrapperEl.classList.remove('slide');
+
+        renderNotes(NOTES);
+        sessionStorage.removeItem("CURRENT_PAGE");
+      });
+
+
         sidenavCategoryWrapperEl.innerHTML = `<span class="sidenav-title">Catergories</span>`;
     
+        
         overlayEl.classList.add("show");
         sidenavEl.classList.add("show");
     
@@ -961,6 +992,8 @@ const renderHeader = () => {
               renderNotes(NOTES, categoryId);
               overlayEl.classList.remove("show");
               sidenavEl.classList.remove("show");
+
+              sessionStorage.removeItem("CURRENT_PAGE");
             }    
           });
         });
