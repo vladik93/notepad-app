@@ -93,6 +93,7 @@ const renderPage = () => {
 
     case "deleted-notes" : renderDeletedNotes();
     break;
+
   }
   
 }
@@ -725,7 +726,6 @@ const renderHeader = () => {
       searchIcon.style.display = "block";
     })
   } 
-  
   else if(CURRENT_PAGE === 'add-edit-note') {
     headerEl.classList.add("add-edit");
 
@@ -783,7 +783,6 @@ const renderHeader = () => {
           renderHeader();
         });
   } 
-  
   else if(CURRENT_PAGE === "deleted-notes") {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -894,8 +893,7 @@ const renderHeader = () => {
       });
     }
   } 
-  
-  else {
+   else {
     headerEl.classList.remove('add-edit');
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -956,6 +954,7 @@ const renderHeader = () => {
   
     if(toggleBtn) {
       toggleBtn.addEventListener("click", () => {
+
         sidenavAllNotesBtn.addEventListener('click', () => {
         sessionStorage.removeItem('CURRENT_PAGE');
         overlayEl.classList.remove("show")
@@ -964,6 +963,13 @@ const renderHeader = () => {
 
         renderNotes(NOTES);
         sessionStorage.removeItem("CURRENT_PAGE");
+        CURRENT_PAGE = null;
+
+        if(sessionStorage.getItem("CURRENT_PAGE") === null) {
+         renderHeader();
+        }
+        
+        
       });
 
 
