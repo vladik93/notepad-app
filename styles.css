@@ -91,7 +91,7 @@ i {
 
   /* background: #756ab6; */
   background: var(--color-4);
-  background-image: linear-gradient(var(--color-4-1), var(--color-4));
+  /* background-image: linear-gradient(var(--color-4-1), var(--color-4)); */
   display: flex;
   align-items: center;
   color: #fff;
@@ -184,6 +184,8 @@ i {
   right: 0;
   opacity: 0;
   visibility: hidden;
+  height: 16px;
+  width: 12px;
 }
 
 .reset-search-button.show {

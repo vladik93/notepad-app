@@ -245,6 +245,7 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
 };
 
 const renderDeletedNotes = () => {
+  pageWrapperEl.classList.remove('slide');
   CURRENT_PAGE = "deleted-notes";
   sessionStorage.setItem("CURRENT_PAGE", CURRENT_PAGE);
   
@@ -351,10 +352,6 @@ const renderDeletedNotes = () => {
 
         }
       });
-
-      
-
-
     });
     notesWrapperEl.appendChild(removedNoteEl);
   })
@@ -672,7 +669,7 @@ const renderHeader = () => {
       <div class="header-search" id="header-search">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="header-search-input"/>
-        <button class="reset-search-button" id="reset-search-button"><i class="fa-solid fa-xmark"></i></button>
+        <button class="reset-search-button" id="reset-search-button"><i class="fa-solid fa-xmark reset-search-icon"></i></button>
       </div>
       <div class="header-search-actions">
         <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
@@ -693,21 +690,19 @@ const renderHeader = () => {
       renderHeader(headerEl);
     });
 
+    resetSearchBtn.addEventListener('click', () => {
+      headerSearchInp.value = "";
+      resetSearchBtn.classList.remove('show');
+      searchIcon.style.display = "block";
+      headerSearchInp.focus();
+    })
+
     headerSearchInp.addEventListener("input", (e) => {
       let inputValue = e.target.value;
 
       if (inputValue.length > 0) {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
-
-        // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue) ||
-        //  String(note.title).toUpperCase().includes(inputValue) ||
-        //  String(note.text).toLowerCase().includes(inputValue)) ||
-
-        // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue) || 
-        // String(note.title).toUpperCase().includes(inputValue) || 
-        // String(note.text).toLowerCase().includes(inputValue) || 
-        // String(note.text).toUpperCase().includes(inputValue));
 
         let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
 
@@ -722,11 +717,7 @@ const renderHeader = () => {
       }
     });
 
-    resetSearchBtn.addEventListener('click', () => {
-      headerSearchInp.value = "";
-      resetSearchBtn.classList.remove('show');
-      searchIcon.style.display = "block";
-    })
+    
   } 
   else if(CURRENT_PAGE === 'add-edit-note') {
     headerEl.classList.add("add-edit");
@@ -956,22 +947,19 @@ const renderHeader = () => {
   
     if(toggleBtn) {
       toggleBtn.addEventListener("click", () => {
-
         sidenavAllNotesBtn.addEventListener('click', () => {
-        sessionStorage.removeItem('CURRENT_PAGE');
-        overlayEl.classList.remove("show")
-        sidenavEl.classList.remove("show");
-        pageWrapperEl.classList.remove('slide');
+          sessionStorage.removeItem('CURRENT_PAGE');
+          overlayEl.classList.remove("show")
+          sidenavEl.classList.remove("show");
+          pageWrapperEl.classList.remove('slide');
 
-        renderNotes(NOTES);
-        sessionStorage.removeItem("CURRENT_PAGE");
-        CURRENT_PAGE = null;
+          renderNotes(NOTES);
+          sessionStorage.removeItem("CURRENT_PAGE");
+          CURRENT_PAGE = null;
 
-        if(sessionStorage.getItem("CURRENT_PAGE") === null) {
-         renderHeader();
-        }
-        
-        
+          if(sessionStorage.getItem("CURRENT_PAGE") === null) {
+          renderHeader();
+          }
       });
 
 
