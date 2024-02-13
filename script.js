@@ -60,8 +60,12 @@ let isNoteHeld = false;
 let isNoteSaved = false;
 
 let colorArray = [
-  "#ce8d8d", "#ceb38d", "#cec88d", "#b6ce8d", "#8dceb1", "#8daece", 
-  "#908dce", "#c28dce",
+  "#d28383", "#d2a483", "#d2cc83", "#83d290", "#83d2ce", "#8394d2",
+  "#9883d2", "#c883d2", "#e4d9b4", "#b4b7e4", "#b4e2e4", "#dbe4b4",
+  "#e0cca9", "#e0c1a9", "#caa9e0", "#8b89c8", "#92a2bf", "#92bfa8",
+  "#bcd7c9", "#c6bcd7", "#784f7d", "#87455e", "#bf5f5f", "#b06936",
+  "#d99463", "#e4be7c" 
+
 ];
 
 localStorage.removeItem("CURRENT_PAGE");
@@ -1186,7 +1190,7 @@ const renderHeader = () => {
       moreOptionsEl.classList.remove("show");
 
       if(selectedNoteElsLength) {
-       
+        colorModalGridEl.innerHTML = "";
         overlayEl.classList.add("show");
         
         const modalColorActiveEls = document.querySelectorAll('.modal-color.active');
