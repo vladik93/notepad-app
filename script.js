@@ -2,6 +2,8 @@ const addBtn = document.querySelector("#add-button");
 
 const headerEl = document.querySelector("#header");
 
+const promptEl = document.getElementById("prompt");
+
 const sidenavCategoryWrapperEl = document.querySelector('#sidenav-category-wrapper');
 const sidenavAllNotesBtn = document.querySelector('#all-notes-button');
 
@@ -1062,17 +1064,20 @@ const renderHeader = () => {
     const moreOptionCategorize = document.querySelector('#more-option-categorize');
 
     deleteSelectedBtn.addEventListener("click", () => {
-      const deleteConfirm = confirm("Delete selcted noted?");
+      overlayEl.classList.add('show');
+      promptEl.classList.add('show');
 
-      if (deleteConfirm) {
-        let selectedNoteEls = document.querySelectorAll(".note.selected");
+      promptEl.innerHTML = `
+        <p>Delete the selected notes?</p>
+        <div class="prompt-actions">
+          <button>CANCEL</button>
+          <button id="delete-note-button">OK</button>
+        </div>
+      `
+      const deleteNoteBtn = document.getElementById('delete-note-button');
 
-        
-
-
-        selectedNoteEls.forEach((noteEl) => {
-          console.log(noteEl.id);
-
+      deleteNoteBtn.addEventListener('click', () => {
+        selectedNoteEls.forEach(noteEl => {
           let deletedNote = NOTES.find(note => note.id === parseInt(noteEl.id));
           
           DELETED_NOTES.push(deletedNote);
@@ -1094,12 +1099,57 @@ const renderHeader = () => {
           sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
           IS_NOTE_EDIT_MODE = false;
 
-          
-
           renderHeader();
           renderNotes(NOTES);
-        });
-      }
+
+          promptEl.innerHTML = "";
+          promptEl.classList.remove('show');
+          overlayEl.classList.remove('show');
+
+        })
+      });
+
+
+
+
+      
+
+      // if (deleteConfirm) {
+      //   let selectedNoteEls = document.querySelectorAll(".note.selected");
+
+        
+
+
+      //   selectedNoteEls.forEach((noteEl) => {
+      //     console.log(noteEl.id);
+
+      //     let deletedNote = NOTES.find(note => note.id === parseInt(noteEl.id));
+          
+      //     DELETED_NOTES.push(deletedNote);
+
+      //     localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
+
+      //     let newNotesArray = NOTES.filter(
+      //       (note) => note.id !== parseInt(noteEl.id)
+      //     );
+
+      //     noteEl.classList.remove("selected");
+
+      //     NOTES = newNotesArray;
+      //     localStorage.setItem("NOTES", JSON.stringify(NOTES));
+
+      //     selectedNoteCount = 0;
+      //     noteCounterEl.innerText = selectedNoteCount;
+
+      //     sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
+      //     IS_NOTE_EDIT_MODE = false;
+
+          
+
+      //     renderHeader();
+      //     renderNotes(NOTES);
+      //   });
+      // }
     });
 
     backSelectedBtn.addEventListener("click", () => {
