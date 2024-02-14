@@ -88,8 +88,12 @@ sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
-// DISPLAY MODE
-let DISPLAY_MODE = localStorage.getItem("DISPLAY_MODE") || 'light';
+let DISPLAY_MODE = localStorage.getItem("DISPLAY_MODE") || null;
+
+if(localStorage.getItem("DISPLAY_MODE") === null) {
+  localStorage.setItem("DISPLAY_MODE", 'light');
+  DISPLAY_MODE = "light";
+}
 
 
 const renderPage = () => {
@@ -160,8 +164,6 @@ const setNoteColor = (noteColor) => {
     return noteColor;
   }
 }
-
-
 
 const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
   notesWrapperEl.innerHTML = "";
@@ -1052,15 +1054,22 @@ const renderHeader = () => {
       })
       
       sidenavDisplayToggleBtn.addEventListener('click', () => {
+        console.log("display toggle clicked");
         if(localStorage.getItem("DISPLAY_MODE") === 'light') {
           DISPLAY_MODE = 'dark';
           localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+
+          document.documentElement.setAttribute("data-display-mode", 'dark');
+
           sidenavDisplayToggleBtn.innerHTML = `
           <i class="fa-solid fa-sun"></i>
           <span>Light Mode</span>`
-        } else {
+        } else if(localStorage.getItem("DISPLAY_MODE") === 'dark') {
           DISPLAY_MODE = 'light';
           localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+          
+          document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
+
           sidenavDisplayToggleBtn.innerHTML = `
           <i class="fa-solid fa-moon"></i>
           <span>Dark Mode</span>`
@@ -1069,7 +1078,7 @@ const renderHeader = () => {
         overlayEl.classList.remove('show');
         sidenavEl.classList.remove("show");
 
-        document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
+        
         renderNotes(NOTES);
         
       })
@@ -1419,7 +1428,6 @@ colorModalConfirmBtn.addEventListener('click', (event) => {
   })
 });
 
-renderHeader();
 
 const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
@@ -1500,7 +1508,7 @@ addBtn.addEventListener("click", () => {
   renderAddEditPage();
 });
 
-
+renderHeader();
 renderNotes(NOTES)
 renderPage();
 
