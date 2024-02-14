@@ -6,8 +6,9 @@ const promptEl = document.getElementById("prompt");
 
 const sidenavCategoryWrapperEl = document.querySelector('#sidenav-category-wrapper');
 const sidenavAllNotesBtn = document.querySelector('#all-notes-button');
-
 const sidenavDeleteNotesBtn = document.querySelector('#deleted-notes-button');
+const sidenavDisplayToggleBtn = document.querySelector("#display-mode-button");
+
 
 const headerPageTwoEl = document.querySelector("#header-page-two");
 const notesWrapperEl = document.querySelector("#notes-wrapper");
@@ -87,6 +88,13 @@ sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
+// DISPLAY MODE
+
+
+let DISPLAY_MODE = localStorage.getItem("DISPLAY_MODE") || 'light';
+
+
+
 
 const renderPage = () => {
   console.log('renderPage func');
@@ -141,6 +149,24 @@ const sortNotes = (sortBy, a, b) => {
 
 }
 
+
+const setNoteColor = (noteColor) => {
+  if(noteColor === "#ece3e7") {
+    switch(localStorage.getItem('DISPLAY_MODE')) {
+      case "light" : {
+        return "#ece3e7";
+      }
+      case "dark" : {
+        return "#333333";
+      }
+    }
+  } else {
+    return noteColor;
+  }
+}
+
+
+
 const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
@@ -150,7 +176,7 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
       noteEl.dataset.color = item.color;
-      noteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
+      noteEl.style.backgroundColor = setNoteColor(item.color);
 
       noteEl.innerHTML = `
       <p class="note-title">${item.title}</p>
@@ -1019,17 +1045,42 @@ const renderHeader = () => {
         })
     
       });
+
+      sidenavDeleteNotesBtn.addEventListener('click', () => {
+        renderDeletedNotes();
+
+        sidenavEl.classList.remove('show');
+        overlayEl.classList.remove('show');        
+      })
+      
+      sidenavDisplayToggleBtn.addEventListener('click', () => {
+        if(DISPLAY_MODE === 'light') {
+          DISPLAY_MODE = 'dark';
+          localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+          sidenavDisplayToggleBtn.innerHTML = `
+          <i class="fa-solid fa-sun"></i>
+          <span>Light Mode</span>`
+        } else {
+          DISPLAY_MODE = 'light';
+          localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+          sidenavDisplayToggleBtn.innerHTML = `
+          <i class="fa-solid fa-moon"></i>
+          <span>Dark Mode</span>`
+        }
+         
+        overlayEl.classList.remove('show');
+        sidenavEl.classList.remove("show");
+
+        document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
+        renderNotes(NOTES);
+        
+      })
     
     }
  
-    sidenavDeleteNotesBtn.addEventListener('click', () => {
-    
-    renderDeletedNotes();
+   
 
-    sidenavEl.classList.remove('show');
-    overlayEl.classList.remove('show');
-    
-  })
+
 
   if (IS_NOTE_EDIT_MODE) {
     let selectedNoteEls = document.querySelectorAll(".note.selected");

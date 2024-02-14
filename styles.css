@@ -1,11 +1,20 @@
 /* GENERAL */
-:root {
-  --color-1: #1b1c1e;
-  --color-2: #ece3e7;
-  --color-3: #e16a40;
-  --color-4-1: #906440;
-  --color-4: #a68366;
 
+:root[data-display-mode="light"] {
+  /* --color-1: #1b1c1e; */
+  --text-color: #1b1c1e;
+  --sub-text-color: #666666;
+  --main-color: #a68366;
+  --bg-color: #ece3e7;
+  --color-3: #e16a40;
+
+}
+
+:root[data-display-mode="dark"] {
+  --text-color: #ffffff;
+  --sub-text-color: #e6e6e6;
+  --bg-color: #333333;
+  --main-color: #6588A6;
 }
 
 
@@ -31,10 +40,11 @@ body {
   font-family: "Poppins", sans-serif;
   position: relative;
   /* background-color: #ffe5e5; */
-  background-color: var(--color-2);
-  color: var(--color-1);
+  background-color: var(--bg-color);
+  color: var(--text-color);
   display: flex;
   overflow: hidden;
+  transition: background-color 0.3s ease-in;
 }
 
 
@@ -56,7 +66,7 @@ i {
   width: 2rem;
   height: 2rem;
   appearance: none;
-  border: 2px solid var(--color-4);
+  border: 2px solid var(--main-color);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -73,7 +83,7 @@ i {
   width: 70%;
   height: 70%;
   border-radius: 1px;
-  background-color: var(--color-4);
+  background-color: var(--main-color);
 }
 
 .checkbox.rounded::after {
@@ -87,11 +97,7 @@ i {
 /* HEADER */
 
 .header {
-  /* height: 60px; */
-
-  /* background: #756ab6; */
-  background: var(--color-4);
-  /* background-image: linear-gradient(var(--color-4-1), var(--color-4)); */
+  background: var(--main-color);
   display: flex;
   align-items: center;
   color: #fff;
@@ -104,6 +110,7 @@ i {
   height: auto;
   padding: 0 1rem;
   z-index: 50;
+  transition: background-color 0.3s ease-in;
 }
 
 
@@ -218,7 +225,7 @@ i {
 
 .sidenav {
   /* background-color: #ffe5e5; */
-  background-color: var(--color-2);
+  background-color: var(--bg-color);
   position: absolute;
   width: 75%;
   z-index: 200;
@@ -226,9 +233,10 @@ i {
   top: 0;
   left: 0;
   height: 100%;
-  transition: transform 0.3s ease-in;
+  transition: transform 0.3s ease-in, background-color 0.3s ease-in;;
   pointer-events: none;
   overflow-y: auto;
+
 }
 
 .sidenav.show {
@@ -239,10 +247,11 @@ i {
 .sidenav-header {
   /* background-color: #756ab6; */
   /* background-color: var(--color-4); */
-  background-image: linear-gradient(var(--color-4-1), var(--color-4));
+  background: var(--main-color);
   padding: 0.8rem;
   color: #fff;
   font-size: 1.4rem;
+  transition: background-color 0.3s ease-in;
 }
 
 .sidenav-actions {
@@ -269,6 +278,7 @@ i {
   gap: 3.2rem;
   background: none;
   border: none;
+  color: var(--text-color);
 }
 
 .sidenav-action {
@@ -285,7 +295,7 @@ i {
 .sidenav-title {
   font-size: 1.2rem;
   padding: 0.8rem 1.6rem;
-  color: #666666;
+  color: var(--sub-text-color);
 }
 
 
@@ -328,7 +338,7 @@ i {
   color: #fff;
   /* background-color: #756ab6; */
   /* background-color: var(--color-4); */
-  background-image: linear-gradient(var(--color-4-1), var(--color-4));
+  background: var(--main-color);
   box-shadow: 3px 5px 10px rgba(51, 51, 51, 0.4);
 }
 
@@ -440,6 +450,7 @@ i {
   flex-direction: column;
   border-radius: 5px;
   border-top-right-radius: 10px;
+  transition: background-color 0.3s ease-in;
   
 }
 
@@ -598,7 +609,7 @@ i {
     font-weight: 700;
     border: none;
     background: none;
-    color: var(--color-4);
+    color: var(--main-color);
 }
 
 
