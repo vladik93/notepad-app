@@ -6,15 +6,20 @@
   --sub-text-color: #666666;
   --main-color: #a68366;
   --bg-color: #ece3e7;
+  --sub-bg-color: #ffffff;
   --color-3: #e16a40;
+  --btn-color: #756ab6;
+
 
 }
 
 :root[data-display-mode="dark"] {
   --text-color: #ffffff;
   --sub-text-color: #e6e6e6;
-  --bg-color: #333333;
+  --bg-color: #1b1c1e;
   --main-color: #6588A6;
+  --sub-bg-color: #323335;
+  --btn-color: #6588A6;
 }
 
 
@@ -395,7 +400,7 @@ i {
 .sort-button-wrapper button {
   background: none;
   border: none;
-  color: #756ab6;
+  color: var(--btn-color);
   font-weight: 700;
 }
 
@@ -500,8 +505,9 @@ i {
   outline: none;
   padding: 0.8rem;
   /* box-sizing: border-box; */
-  /* border-bottom: 1px solid #333; */
+  border-bottom: 1px solid var(--sub-text-color);
   box-shadow: 0px 1px 0px 0px #333;
+  color: var(--text-color);
 }
 
 .add-edit-input:focus,
@@ -528,7 +534,7 @@ i {
   top: 80%;
   left: 50%;
   transform: translateX(-50%);
-  background: #fff;
+  background: var(--sub-bg-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -549,8 +555,8 @@ i {
   top: 0;
   right: 0;
   margin: 0.4rem;
-  background: #fff;
-  color: #333;
+  background: var(--sub-bg-color);
+  color: var(--text-color);
   border-radius: 3px;
   opacity: 0;
   visibility: hidden;
@@ -596,8 +602,8 @@ i {
   top: 50%;
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
-  background: #fff;
-  z-index: 50;
+  background: var(--sub-bg-color);
+  z-index: 200;
   padding: 1.6rem;;
 }
 
@@ -631,6 +637,7 @@ i {
   transition: opacity 0.1s ease-in, visibility 0.1s ease-in;
   text-align: center;
   padding-top: 0.8rem;
+  background-color: var(--sub-bg-color);
 }
 
 .color-modal.show {
@@ -678,7 +685,7 @@ i {
 
 .color-modal-actions button {
   background: none;
-  color: #756ab6;
+  color: var(--btn-color);
 }
 
 .color-modal p {
@@ -731,7 +738,7 @@ i {
   font-weight: 700;
   border: none;
   background: none;
-  color: #756ab6;
+  color: var(--btn-color);
 }
 
 
@@ -860,6 +867,7 @@ i {
   gap: 2.4rem;
   opacity: 0;
   visibility: hidden;
+  background-color: var(--sub-bg-color);
 }
 
 .prompt.show {

@@ -89,11 +89,7 @@ sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
 let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 // DISPLAY MODE
-
-
 let DISPLAY_MODE = localStorage.getItem("DISPLAY_MODE") || 'light';
-
-
 
 
 const renderPage = () => {
@@ -292,7 +288,7 @@ const renderDeletedNotes = () => {
     removedNoteEl.classList.add("note");
     removedNoteEl.setAttribute("id", item.id);
     removedNoteEl.dataset.color = item.color;
-    removedNoteEl.style.backgroundImage = `linear-gradient(to top, ${item.color}, #fff2f2)`;
+    removedNoteEl.style.backgroundColor = setNoteColor(item.color);
 
     removedNoteEl.innerHTML = `
     <p class="note-title">${item.title}</p>
@@ -590,14 +586,16 @@ const renderAddEditPage = () => {
       addEditTextarea.value = CURRENT_NOTE.text;
       headerEl.style.backgroundImage = "none";
       // headerEl.style.backgroundColor = CURRENT_NOTE.color;
-      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color !== "#ece3e7" ? CURRENT_NOTE.color : "none";
-      pageTwoEl.style.backgroundColor = CURRENT_NOTE.color;
+      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color !== "#ece3e7" ? setNoteColor(CURRENT_NOTE.color) : "none";
+      pageTwoEl.style.backgroundColor = setNoteColor(CURRENT_NOTE.color);
+
+      
       
       // headerEl.style.backdropFilter = "brightness(50%)";
       console.log(headerFilterEl);
 
     } else {
-      pageTwoEl.style.backgroundColor = "#ece3e7";
+      pageTwoEl.style.backgroundColor = setNoteColor("#ece3e7");
     }
     
 
@@ -1054,7 +1052,7 @@ const renderHeader = () => {
       })
       
       sidenavDisplayToggleBtn.addEventListener('click', () => {
-        if(DISPLAY_MODE === 'light') {
+        if(localStorage.getItem("DISPLAY_MODE") === 'light') {
           DISPLAY_MODE = 'dark';
           localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
           sidenavDisplayToggleBtn.innerHTML = `
