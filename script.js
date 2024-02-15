@@ -292,8 +292,6 @@ const renderDeletedNotes = () => {
   renderHeader();
   
   notesWrapperEl.innerHTML = "";
-  
-
 
   DELETED_NOTES.map((item) => {
     const removedNoteEl = document.createElement("div");
