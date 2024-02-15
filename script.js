@@ -152,7 +152,7 @@ const sortNotes = (sortBy, a, b) => {
 
 const setNoteColor = (noteColor) => {
   if(noteColor === "#ece3e7") {
-    switch(localStorage.getItem('DISPLAY_MODE')) {
+    switch(DISPLAY_MODE) {
       case "light" : {
         return "#ece3e7";
       }
@@ -164,6 +164,17 @@ const setNoteColor = (noteColor) => {
     return noteColor;
   }
 }
+
+const checkDisplayMode = () => {
+  if(DISPLAY_MODE === 'light') {
+    document.documentElement.setAttribute('data-display-mode', 'light');
+  } else {
+    document.documentElement.setAttribute('data-display-mode', 'dark');
+  }
+
+  console.log("DISPLAY IS ", DISPLAY_MODE)
+}
+
 
 const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
   notesWrapperEl.innerHTML = "";
@@ -269,9 +280,8 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
       });
     });
   }
+  
 
-  // pageWrapperEl.classList.remove('slide');
-  // sessionStorage.removeItem("CURRENT_PAGE");
 };
 
 const renderDeletedNotes = () => {
@@ -1052,14 +1062,7 @@ const renderHeader = () => {
         sidenavEl.classList.remove('show');
         overlayEl.classList.remove('show');        
       })
-      
-     
-    
     }
- 
-   
-
-
 
   if (IS_NOTE_EDIT_MODE) {
     let selectedNoteEls = document.querySelectorAll(".note.selected");
@@ -1476,6 +1479,9 @@ const addNote = (title) => {
   localStorage.setItem("NOTES", JSON.stringify(NOTES));
 }
 
+
+
+
 addBtn.addEventListener("click", () => {
   renderAddEditPage();
 });
@@ -1486,27 +1492,41 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
     DISPLAY_MODE = 'dark';
     localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
 
+    document.documentElement.setAttribute("data-display-mode", 'dark');
+
     sidenavDisplayToggleBtn.innerHTML = `
     <i class="fa-solid fa-sun"></i>
     <span>Light Mode</span>`
   } else if(localStorage.getItem("DISPLAY_MODE") === 'dark') {
     DISPLAY_MODE = 'light';
     localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+    
+    document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
+
     sidenavDisplayToggleBtn.innerHTML = `
     <i class="fa-solid fa-moon"></i>
     <span>Dark Mode</span>`
   }
+    
 
-  document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
-   
+  const noteEls = document.querySelectorAll('.note');
+
+  noteEls.forEach(noteEl => {
+    if(noteEl.getAttribute('data-color') === '#ece3e7'){
+      noteEl.style.backgroundColor = DISPLAY_MODE === 'light' ? "#ece3e7" : 'rgb(51, 51, 51)'
+    }
+  })
+
   overlayEl.classList.remove('show');
   sidenavEl.classList.remove("show");
-  
-  renderNotes(NOTES);
+
+
 })
+
+
+checkDisplayMode();
 
 renderHeader();
 renderNotes(NOTES)
 renderPage();
-
 
