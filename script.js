@@ -768,7 +768,7 @@ const renderHeader = () => {
       </button>
       
       <div class="header-text">
-        <h3>Notepad Free</h3>
+        <h3>Vladi's Notes</h3>
       </div>
       <div class="header-actions">
         <button id="save-button">SAVE</button>
@@ -933,7 +933,7 @@ const renderHeader = () => {
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
       </div>
       <div class="header-text">
-        <h3>Notepad Free</h3>
+        <h3>Vladi's Notes</h3>
         <p class="header-category">Category</p>
       </div>
       <div class="header-actions">
