@@ -1053,35 +1053,7 @@ const renderHeader = () => {
         overlayEl.classList.remove('show');        
       })
       
-      sidenavDisplayToggleBtn.addEventListener('click', () => {
-        console.log("display toggle clicked");
-        if(localStorage.getItem("DISPLAY_MODE") === 'light') {
-          DISPLAY_MODE = 'dark';
-          localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
-
-          document.documentElement.setAttribute("data-display-mode", 'dark');
-
-          sidenavDisplayToggleBtn.innerHTML = `
-          <i class="fa-solid fa-sun"></i>
-          <span>Light Mode</span>`
-        } else if(localStorage.getItem("DISPLAY_MODE") === 'dark') {
-          DISPLAY_MODE = 'light';
-          localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
-          
-          document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
-
-          sidenavDisplayToggleBtn.innerHTML = `
-          <i class="fa-solid fa-moon"></i>
-          <span>Dark Mode</span>`
-        }
-         
-        overlayEl.classList.remove('show');
-        sidenavEl.classList.remove("show");
-
-        
-        renderNotes(NOTES);
-        
-      })
+     
     
     }
  
@@ -1507,6 +1479,31 @@ const addNote = (title) => {
 addBtn.addEventListener("click", () => {
   renderAddEditPage();
 });
+
+sidenavDisplayToggleBtn.addEventListener('click', () => {
+  console.log("display toggle clicked");
+  if(localStorage.getItem("DISPLAY_MODE") === 'light') {
+    DISPLAY_MODE = 'dark';
+    localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+
+    sidenavDisplayToggleBtn.innerHTML = `
+    <i class="fa-solid fa-sun"></i>
+    <span>Light Mode</span>`
+  } else if(localStorage.getItem("DISPLAY_MODE") === 'dark') {
+    DISPLAY_MODE = 'light';
+    localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
+    sidenavDisplayToggleBtn.innerHTML = `
+    <i class="fa-solid fa-moon"></i>
+    <span>Dark Mode</span>`
+  }
+
+  document.documentElement.setAttribute("data-display-mode", DISPLAY_MODE);
+   
+  overlayEl.classList.remove('show');
+  sidenavEl.classList.remove("show");
+  
+  renderNotes(NOTES);
+})
 
 renderHeader();
 renderNotes(NOTES)
