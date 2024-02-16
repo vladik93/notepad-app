@@ -157,7 +157,7 @@ const setNoteColor = (noteColor) => {
         return "#ece3e7";
       }
       case "dark" : {
-        return "#333333";
+        return "#1b1c1e";
       }
     }
   } else {
@@ -768,7 +768,7 @@ const renderHeader = () => {
       </button>
       
       <div class="header-text">
-        <h3>Vladi's Notes</h3>
+        <h3>Vladi's Notepad</h3>
       </div>
       <div class="header-actions">
         <button id="save-button">SAVE</button>
@@ -933,7 +933,7 @@ const renderHeader = () => {
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
       </div>
       <div class="header-text">
-        <h3>Vladi's Notes</h3>
+        <h3>Vladi's Notepad</h3>
         <p class="header-category">Category</p>
       </div>
       <div class="header-actions">
@@ -1511,7 +1511,7 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
 
   noteEls.forEach(noteEl => {
     if(noteEl.getAttribute('data-color') === '#ece3e7'){
-      noteEl.style.backgroundColor = DISPLAY_MODE === 'light' ? "#ece3e7" : 'rgb(51, 51, 51)'
+      noteEl.style.backgroundColor = setNoteColor(noteEl.dataset.color);
     }
   })
 
