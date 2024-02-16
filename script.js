@@ -744,7 +744,36 @@ const renderHeader = () => {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
 
-        let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
+        // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
+
+        let newNotesArr = NOTES.filter(note => {
+          // if(String(note.title).toLowerCase().includes(inputValue.toLowerCase())) {
+          //   return note;
+          // } 
+          
+          if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
+            console.log(String(inputValue));
+            let index = String(note.text).indexOf(inputValue.toLowerCase());
+            
+            // if(index > -1) {
+              let sentence = String(note.text).substring(index, 18);
+
+              let beforeSentence = String(note.text).substring(index - 10, index);
+              
+              let fullSentence = "..." + beforeSentence + sentence + "...";
+
+              const noteEl = document.querySelectorAll(`#${note.id}`);
+
+              console.log(noteEl);
+
+            // }
+
+            
+
+
+            return note;
+          }
+        })
 
         console.log(newNotesArr);
 
