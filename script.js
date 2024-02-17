@@ -53,6 +53,7 @@ let SORT_BY = localStorage.getItem("SORT_BY") || null;
 let isSearching = false;
 let isCategoriesEdit = false;
 
+let snippetLength = 18;
 
 
 let timeoutId;
@@ -90,6 +91,8 @@ let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 let DISPLAY_MODE = localStorage.getItem("DISPLAY_MODE") || null;
 
+let noteSnippets = [];
+
 if(localStorage.getItem("DISPLAY_MODE") === null) {
   localStorage.setItem("DISPLAY_MODE", 'light');
   DISPLAY_MODE = "light";
@@ -97,7 +100,6 @@ if(localStorage.getItem("DISPLAY_MODE") === null) {
 
 
 const renderPage = () => {
-  console.log('renderPage func');
   switch(CURRENT_PAGE) {
     case "category-edit" : renderCategoryPage();
     break;
@@ -113,7 +115,6 @@ const renderPage = () => {
 }
 
 const sortNotes = (sortBy, a, b) => {
-  console.log(String(b.title).localeCompare(a.string));
   switch(sortBy) {
     case "dateDesc" : {
       return new Date(b.lastEditDate) - new Date(a.lastEditDate);
@@ -171,15 +172,12 @@ const checkDisplayMode = () => {
   } else {
     document.documentElement.setAttribute('data-display-mode', 'dark');
   }
-
-  console.log("DISPLAY IS ", DISPLAY_MODE)
 }
 
 
-const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
+const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined, snippetsArr = []) => {
   notesWrapperEl.innerHTML = "";
   if (notesArr && notesArr.length) {
-    console.log(notesArr);
     notesArr.sort((a, b) => sortNotes(sortBy, a, b)).filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
@@ -187,10 +185,14 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
       noteEl.dataset.color = item.color;
       noteEl.style.backgroundColor = setNoteColor(item.color);
 
+      let noteSnippet = snippetsArr.find(snippet => snippet.id === parseInt(noteEl.id)) || {};
+
       noteEl.innerHTML = `
       <p class="note-title">${item.title}</p>
       <div class="note-content" id="note-content">
+      ${noteSnippet.id === item.id ? `<span class="note-snippet">${noteSnippet.snippet}</span>` : ""}
         <div class="note-category-wrapper" id="note-category-wrapper"></div>
+       
         <p class="note-date">Last edit: ${new Date(
           item.lastEditDate
         ).toLocaleString()}</p>     
@@ -235,7 +237,6 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined) => {
           noteEl.classList.toggle("selected");
           renderHeader();
         } else {
-          console.log(isNoteSaved);
           CURRENT_PAGE = "add-edit-note";
           sessionStorage.setItem("CURRENT_PAGE", 'add-edit-note');
           
@@ -343,7 +344,6 @@ const renderDeletedNotes = () => {
 
       deleteNoteActionEls.forEach(deleteNoteActionEl => {
         deleteNoteActionEl.addEventListener('change', (e) => {
-          console.log(removedNoteEl.id);
           selectedDeleteOption = e.target.value;
         });
       })
@@ -411,11 +411,8 @@ const renderCategoryPage = () => {
     </div>`
 
   const categoryEditInputEl = editCategoriesWrapperEl.querySelector('#category-edit-input');
-  console.log(categoryEditInputEl);
 
   const categoryEditBtn = editCategoriesWrapperEl.querySelector('#category-edit-button');
-
-  console.log(categoryEditBtn);
         
   categoryEditInputEl.addEventListener('input', (e) => {
     categoryEditInputValue = e.target.value;
@@ -498,7 +495,6 @@ const renderCategoryPage = () => {
             let foundCategory = CATEGORIES.find(category => category.title == editCategoryModalInputValue);
   
             if(foundCategory) {
-              console.log('category already exists');
               const editCategoryModalMessageEl = document.getElementById('edit-category-modal-message');
               editCategoryModalMessageEl.innerHTML = "Category with that name already exists.";
             } else {
@@ -602,7 +598,6 @@ const renderAddEditPage = () => {
       
       
       // headerEl.style.backdropFilter = "brightness(50%)";
-      console.log(headerFilterEl);
 
     } else {
       pageTwoEl.style.backgroundColor = setNoteColor("#ece3e7");
@@ -656,7 +651,6 @@ const addCategory = (title) => {
 
 const addEditNote = () => {
   if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
-    console.log('NOTE FOUND');
     const CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
 
     const { title, text } = CURRENT_NOTE;
@@ -739,6 +733,8 @@ const renderHeader = () => {
 
     headerSearchInp.addEventListener("input", (e) => {
       let inputValue = e.target.value;
+      console.log(inputValue);
+
 
       if (inputValue.length > 0) {
         searchIcon.style.display = "none";
@@ -752,22 +748,34 @@ const renderHeader = () => {
           // } 
           
           if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
-            console.log(String(inputValue));
-            let index = String(note.text).indexOf(inputValue.toLowerCase());
+           
+            let text = String(note.text).toLowerCase();
+            let index = text.indexOf(String(inputValue).toLowerCase());
+            let snippet = text.substring(index);
+
+            let formattedSnippet = "..." + snippet.substring(0, 10) + "...";
+
             
+
+            console.log(formattedSnippet);
+            
+
+            // let x = String(note.text).toLowerCase().substring(String(note.text).indexOf(inputValue));
+
+            // console.log
+
             // if(index > -1) {
-              let sentence = String(note.text).substring(index, 18);
+            // let sentence = String(note.text).substring(index, 18);
 
-              let beforeSentence = String(note.text).substring(index - 10, index);
-              
-              let fullSentence = "..." + beforeSentence + sentence + "...";
 
-              const noteEl = document.querySelectorAll(`#${note.id}`);
+            // let beforeSentence = String(note.text).substring(index - 10, index);
+            
+            // let fullSentence = "..." + beforeSentence + sentence + "...";
 
-              console.log(noteEl);
+            // console.log(sentence);
 
-            // }
-
+            // noteSnippets.push({id: note.id, snippet: fullSentence});
+             
             
 
 
@@ -775,10 +783,11 @@ const renderHeader = () => {
           }
         })
 
-        console.log(newNotesArr);
+       
 
         FILTERED_NOTES = newNotesArr;
-        renderNotes(FILTERED_NOTES);
+        renderNotes(FILTERED_NOTES, undefined, undefined, noteSnippets);
+    
       } else {
         searchIcon.style.display = "block";
         resetSearchBtn.classList.remove('show');
@@ -813,7 +822,6 @@ const renderHeader = () => {
 
 
       saveNoteBtn.addEventListener('click', () => {
-        console.log(isNoteSaved);
         if (!isNoteSaved) {
           addEditNote();
         }
@@ -1094,8 +1102,6 @@ const renderHeader = () => {
   if (IS_NOTE_EDIT_MODE) {
     let selectedNoteEls = document.querySelectorAll(".note.selected");
     let selectedNoteCount = selectedNoteEls.length;
-    console.log("selected notes", selectedNoteEls);
-    console.log("length ->", selectedNoteEls.length);
     headerEl.innerHTML = `
       <div class="header-back">
         <button id="back-selected"><i class="fa-solid fa-arrow-left"></i></button>
@@ -1172,52 +1178,9 @@ const renderHeader = () => {
 
         })
       });
-
-
-
-
-      
-
-      // if (deleteConfirm) {
-      //   let selectedNoteEls = document.querySelectorAll(".note.selected");
-
-        
-
-
-      //   selectedNoteEls.forEach((noteEl) => {
-      //     console.log(noteEl.id);
-
-      //     let deletedNote = NOTES.find(note => note.id === parseInt(noteEl.id));
-          
-      //     DELETED_NOTES.push(deletedNote);
-
-      //     localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
-
-      //     let newNotesArray = NOTES.filter(
-      //       (note) => note.id !== parseInt(noteEl.id)
-      //     );
-
-      //     noteEl.classList.remove("selected");
-
-      //     NOTES = newNotesArray;
-      //     localStorage.setItem("NOTES", JSON.stringify(NOTES));
-
-      //     selectedNoteCount = 0;
-      //     noteCounterEl.innerText = selectedNoteCount;
-
-      //     sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
-      //     IS_NOTE_EDIT_MODE = false;
-
-          
-
-      //     renderHeader();
-      //     renderNotes(NOTES);
-      //   });
-      // }
     });
 
     backSelectedBtn.addEventListener("click", () => {
-      console.log("back button pressed");
       sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
       IS_NOTE_EDIT_MODE = false;
       renderHeader();
@@ -1366,7 +1329,7 @@ categoryModalConfirmBtn.addEventListener('click', () => {
       
       selectedNotes.push(selectedNoteId);
 
-      console.log(selectedNotes);
+      (selectedNotes);
       let newNotesArray = NOTES.map(note => {
         if(selectedNotes.indexOf(note.id) > -1) {
           return {...note, categories: [...selectedCategories]}
@@ -1450,7 +1413,7 @@ sortCancelBtn.addEventListener("click", () => {
 
 const updateNotePageColor = (currentNote) => {
   const filterEl = document.querySelector('.filter');
-  console.log(filterEl);
+   (filterEl);
 
   if(sessionStorage.getItem('CURRENT_NOTE')) {
     const pageTwoEl = document.querySelector('#page-two');
@@ -1514,7 +1477,6 @@ addBtn.addEventListener("click", () => {
 });
 
 sidenavDisplayToggleBtn.addEventListener('click', () => {
-  console.log("display toggle clicked");
   if(localStorage.getItem("DISPLAY_MODE") === 'light') {
     DISPLAY_MODE = 'dark';
     localStorage.setItem("DISPLAY_MODE", DISPLAY_MODE);
