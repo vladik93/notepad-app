@@ -54,7 +54,7 @@ let isSearching = false;
 let isCategoriesEdit = false;
 
 let noteSnippets = [];
-let snippetLength = 15;
+let snippetLength = 20;
 
 
 
@@ -191,7 +191,7 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined, snipp
       noteEl.innerHTML = `
       <p class="note-title">${item.title}</p>
       <div class="note-content" id="note-content">
-      ${noteSnippet.id === item.id ? `<span class="note-snippet">${noteSnippet.snippet}</span>` : ""}
+      ${noteSnippet.id === item.id ? `<span class="note-snippet">...${noteSnippet.snippet}...</span>` : ""}
         <div class="note-category-wrapper" id="note-category-wrapper"></div>
        
         <p class="note-date">Last edit: ${new Date(
@@ -746,19 +746,34 @@ const renderHeader = () => {
         // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
 
         let newNotesArr = NOTES.filter(note => {
-          if(String(note.title).toLowerCase().includes(inputValue.toLowerCase())) {
-            return note;
-          } 
-          
-          if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
-            
+          if(String(note.title).toLowerCase().includes(inputValue.toLowerCase()) || String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
+ 
             let text = String(note.text).toLowerCase();
             let index = text.indexOf(String(inputValue).toLowerCase());
+            let highlighted = '<mark>' + inputValue + '</mark>';
             let snippet = text.substring(index);
+            let beforeSnippet = text.substring(index - 10, index);
+            let afterSnippet = text.substring(index).replace(inputValue, "");
+            console.log(afterSnippet);
+
+            console.log(afterSnippet);
+            
+            
+
+            
            
-            let formattedSnippet = "..." + snippet.substring(0, snippetLength) + "...";
+            // let formattedSnippet = beforeSnippet +  snippet.substring(0, snippetLength);
+            let formattedSnippet = beforeSnippet + highlighted + afterSnippet;
+
+            console.log('formattedSnippet', formattedSnippet);
+
+            if(snippet.length > 0) {
+              noteSnippets.push({id: note.id, snippet: formattedSnippet});
+            }
         
-            noteSnippets.push({id: note.id, snippet: formattedSnippet});
+
+            console.log(noteSnippets);
+
 
             return note;
           }
