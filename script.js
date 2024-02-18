@@ -754,14 +754,7 @@ const renderHeader = () => {
             let snippet = text.substring(index);
             let beforeSnippet = text.substring(index - 10, index);
             let afterSnippet = text.substring(index).replace(inputValue, "");
-            console.log(afterSnippet);
-
-            console.log(afterSnippet);
             
-            
-
-            
-           
             // let formattedSnippet = beforeSnippet +  snippet.substring(0, snippetLength);
             let formattedSnippet = beforeSnippet + highlighted + afterSnippet;
 
@@ -770,11 +763,7 @@ const renderHeader = () => {
             if(snippet.length > 0) {
               noteSnippets.push({id: note.id, snippet: formattedSnippet});
             }
-        
-
-            console.log(noteSnippets);
-
-
+  
             return note;
           }
         })
