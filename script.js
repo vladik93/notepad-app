@@ -553,7 +553,7 @@ const renderCategoryPage = () => {
 const renderAddEditPage = () => {
   const CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
   
-  
+  isSearching = false;
 
   pageWrapperEl.classList.add('slide');
   
