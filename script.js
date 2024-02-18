@@ -53,7 +53,9 @@ let SORT_BY = localStorage.getItem("SORT_BY") || null;
 let isSearching = false;
 let isCategoriesEdit = false;
 
-let snippetLength = 18;
+let noteSnippets = [];
+let snippetLength = 15;
+
 
 
 let timeoutId;
@@ -91,7 +93,6 @@ let IS_NOTE_EDIT_MODE = sessionStorage.getItem("IS_NOTE_EDIT_MODE") || false;
 
 let DISPLAY_MODE = localStorage.getItem("DISPLAY_MODE") || null;
 
-let noteSnippets = [];
 
 if(localStorage.getItem("DISPLAY_MODE") === null) {
   localStorage.setItem("DISPLAY_MODE", 'light');
@@ -733,7 +734,9 @@ const renderHeader = () => {
 
     headerSearchInp.addEventListener("input", (e) => {
       let inputValue = e.target.value;
-      console.log(inputValue);
+    
+      noteSnippets.length = 0;
+    
 
 
       if (inputValue.length > 0) {
@@ -743,41 +746,19 @@ const renderHeader = () => {
         // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
 
         let newNotesArr = NOTES.filter(note => {
-          // if(String(note.title).toLowerCase().includes(inputValue.toLowerCase())) {
-          //   return note;
-          // } 
+          if(String(note.title).toLowerCase().includes(inputValue.toLowerCase())) {
+            return note;
+          } 
           
           if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
-           
+            
             let text = String(note.text).toLowerCase();
             let index = text.indexOf(String(inputValue).toLowerCase());
             let snippet = text.substring(index);
-
-            let formattedSnippet = "..." + snippet.substring(0, 10) + "...";
-
-            
-
-            console.log(formattedSnippet);
-            
-
-            // let x = String(note.text).toLowerCase().substring(String(note.text).indexOf(inputValue));
-
-            // console.log
-
-            // if(index > -1) {
-            // let sentence = String(note.text).substring(index, 18);
-
-
-            // let beforeSentence = String(note.text).substring(index - 10, index);
-            
-            // let fullSentence = "..." + beforeSentence + sentence + "...";
-
-            // console.log(sentence);
-
-            // noteSnippets.push({id: note.id, snippet: fullSentence});
-             
-            
-
+           
+            let formattedSnippet = "..." + snippet.substring(0, snippetLength) + "...";
+        
+            noteSnippets.push({id: note.id, snippet: formattedSnippet});
 
             return note;
           }
