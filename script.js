@@ -751,7 +751,7 @@ const renderHeader = () => {
           if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
  
             let text = String(note.text).toLowerCase();
-            let index = text.toLowerCase().indexOf(inputValue.toLowerCase());
+            let index = text.indexOf(inputValue.toLowerCase());
             console.log(index);
             
           
