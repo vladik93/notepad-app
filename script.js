@@ -743,11 +743,7 @@ const renderHeader = () => {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
 
-        // let newNotesArr = NOTES.filter(note => String(note.title).toLowerCase().includes(inputValue.toLowerCase()));
-
         let newNotesArr = NOTES.filter(note => {
-          
-
           if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
  
             let text = String(note.text).toLowerCase();
