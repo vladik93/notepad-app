@@ -407,7 +407,7 @@ const renderCategoryPage = () => {
 
   editCategoriesWrapperEl.innerHTML += `
     <div class="category-input-wrapper">
-      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." maxlength="10" />
+      <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." maxlength="15" />
       <button class="category-edit-button" id="category-edit-button">ADD</button>
     </div>`
 
@@ -444,6 +444,7 @@ const renderCategoryPage = () => {
         const categoryItemEl = document.createElement('li');
         categoryItemEl.classList.add('category-item');
         categoryItemEl.dataset.categoryId = category.id;
+        categoryItemEl.draggable = "true";
   
         let categoryId = parseInt(categoryItemEl.dataset.categoryId);
   
@@ -457,6 +458,10 @@ const renderCategoryPage = () => {
             <button id="category-item-delete"><i class="fa-solid fa-trash"></i></button>
           </div>`
     
+          categoryItemEl.addEventListener('dragstart', (event) => {
+            
+            
+          })
           
          const categoryItemEditBtn = categoryItemEl.querySelector('#category-item-edit');
          const categoryItemDeleteBtn = categoryItemEl.querySelector("#category-item-delete");
@@ -821,6 +826,7 @@ const renderHeader = () => {
 
           if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
             sessionStorage.removeItem("CURRENT_NOTE");
+            updateNotePageColor();
           }
 
           if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
@@ -844,8 +850,9 @@ const renderHeader = () => {
         <h3>Trash</h3>
       </div>
       <div class="header-actions">
-
+      <div class="hotfix-overlay" id="hotfix-overlay"></div>
       <div class="more-options-wrapper">
+
         <button id="more-options-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
         <div class="more-options" id="more-options">
           <div class="more-option" id="more-option-undelete-all">Undelete All</div>
@@ -855,11 +862,24 @@ const renderHeader = () => {
 
 
     const actionsBtn = document.getElementById('more-options-button');
+    const hotfixOverlayEl = document.getElementById('hotfix-overlay');
+
+    hotfixOverlayEl.addEventListener("click", () => {
+      document.querySelectorAll(".show").forEach((item) => {
+        item.classList.remove("show");
+      });
+    });
+  
+
+
     if(actionsBtn) {
       const moreOptionsEl = document.querySelector('.more-options');
 
       actionsBtn.addEventListener('click', () => {
         moreOptionsEl.classList.add('show');
+        hotfixOverlayEl.classList.add('show');
+        
+ 
       });
 
       const moreOptionUndeleteAllEl = document.getElementById('more-option-undelete-all');
@@ -939,8 +959,6 @@ const renderHeader = () => {
           overlayEl.classList.remove('show');
          
           addAlert(`Deleted Notes (${deleteNotesLength})`);
-          
-          
         });
       });
     }
@@ -960,12 +978,31 @@ const renderHeader = () => {
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
         <button id="sort-button">SORT</button>
-        <button id="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        <button id="all-selected"><i class="fa-solid fa-expand"></i></button>
       </div>    
     `;
 
     const searchBtn = document.querySelector("#search-button");
     const sortBtn = document.querySelector("#sort-button");   
+    const allSelectedBtn = document.getElementById('all-selected');
+
+    let selectedNoteEls = document.querySelectorAll(".note.selected");
+
+    allSelectedBtn.addEventListener("click", () => {
+      let noteEls = document.querySelectorAll(".note");
+
+      noteEls.forEach((noteEl) => {
+        if (!noteEl.classList.contains("selected")) {
+          noteEl.classList.add("selected");
+        }
+
+        if (noteEls.length === selectedNoteEls.length) {
+          noteEl.classList.remove("selected");
+        }
+        
+        renderHeader();
+      });
+    });
     
     
     // sidenavAllNotesBtn.addEventListener('click', () => { 
@@ -1380,13 +1417,19 @@ const overlayEl = document.querySelector("#overlay");
 const searchBtn = document.querySelector("#search-button");
 const sidenavEl = document.querySelector("#sidenav");
 
+
+
+
 const headerBackBtn = document.querySelector("#header-back-button");
 
 overlayEl.addEventListener("click", () => {
   document.querySelectorAll(".show").forEach((item) => {
     item.classList.remove("show");
+    item.classList.remove('transparent');
   });
 });
+
+
 
 sortCancelBtn.addEventListener("click", () => {
   overlayEl.classList.remove("show");
@@ -1411,7 +1454,9 @@ const updateNotePageColor = (currentNote) => {
       pageTwoEl.style.background = "#ffe5e5";
       headerEl.style.background = "#a68366";
     }
-  } 
+  } else {
+    pageTwoEl.style.backgroundColor = setNoteColor("#ece3e7");
+  }
 }
 
 sortOptionEls.forEach(optionEl => {
@@ -1493,6 +1538,26 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
 
 
 })
+
+// window.addEventListener('click', (e) => {
+//   let elm = document.getElementById('more-options-button');
+
+//   if(e.target.contains(elm) && e.target !== elm) {
+//     console.log("CLICKED OUTSIDE");
+//   } else {
+//     console.log('CLICKED INSIDE');
+//   }
+//   // if(document.getElementById('more-options').contains(e.target)) {
+
+//   // } else {
+//   //   let moreOptionsEl = document.getElementById('more-options');
+//   //   moreOptionsEl.classList.remove('show');
+//   // }
+
+  
+// })
+
+
 
 
 checkDisplayMode();
