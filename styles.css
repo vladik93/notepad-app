@@ -336,6 +336,7 @@ i {
   height: 100vh;
   visibility: hidden;
   opacity: 0;
+  z-index: 100;
 }
 
 .hotfix-overlay.show {
@@ -489,6 +490,7 @@ i {
   display: flex;
   gap: 0.4rem;
   align-items: center;
+ 
 }
 
 .note-category {
@@ -932,3 +934,43 @@ i {
   display: flex;
   justify-content: flex-end;
 }
+
+/* ABOUT MODAL */
+
+.about-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.about-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.about-description {
+  padding-bottom: 0.8rem;
+}
+
+.made-with {
+  font-size: 1.4rem;
+}
+
+.made-with-list {
+  display: flex;
+  gap: 2.4rem;
+  padding-bottom: 0.8rem;
+}
+
+.made-with-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-modal-copyright {
+  font-size: 1.2rem;
+}
+

@@ -798,9 +798,6 @@ const renderHeader = () => {
       <div class="header-actions">
         <button id="save-button">SAVE</button>
         <button id="undo-button">UNDO</button>
-        <button id="actions-button">
-          <i class="fa-solid fa-ellipsis-vertical"></i>
-        </button>
       </div>
       `
 
@@ -999,6 +996,10 @@ const renderHeader = () => {
         if (noteEls.length === selectedNoteEls.length) {
           noteEl.classList.remove("selected");
         }
+
+        IS_NOTE_EDIT_MODE = true;
+
+        sessionStorage.setItem("IS_NOTE_EDIT_MODE", true);
         
         renderHeader();
       });
@@ -1128,6 +1129,7 @@ const renderHeader = () => {
       <span id="note-counter" class="note-counter">${selectedNoteCount}</span>
       
       <div class="header-actions">
+        <div class="hotfix-overlay" id="hotfix-overlay"></div>
         <button id="all-selected"><i class="fa-solid fa-expand"></i></button>
         <button id="delete-selected"><i class="fa-solid fa-trash"></i></button>
         <div class="more-options-wrapper">
@@ -1145,6 +1147,7 @@ const renderHeader = () => {
     const allSelectedBtn = document.querySelector("#all-selected");
     const moreOptionsBtn = document.querySelector("#more-options-button");
     const moreOptionsEl = document.querySelector("#more-options");
+    const hotfixOverlayEl = document.getElementById('hotfix-overlay');
     // document.querySelectorAll("body > div:not(.first)");
     const moreOptionColorize = document.querySelector("#more-option-colorize");
 
@@ -1202,6 +1205,9 @@ const renderHeader = () => {
     backSelectedBtn.addEventListener("click", () => {
       sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
       IS_NOTE_EDIT_MODE = false;
+      selectedNoteEls.forEach(noteEl => {
+        noteEl.classList.remove('selected');
+      })
       renderHeader();
       renderNotes(NOTES);
     });
@@ -1222,9 +1228,21 @@ const renderHeader = () => {
       });
     });
 
+    hotfixOverlayEl.addEventListener("click", () => {
+      document.querySelectorAll(".show").forEach((item) => {
+        item.classList.remove("show");
+      });
+    });
+
     moreOptionsBtn.addEventListener("click", () => {
       const moreOptionsEl = document.querySelector("#more-options");
+      
+
+      console.log(hotfixOverlayEl);
+
+      hotfixOverlayEl.classList.add('show');
       moreOptionsEl.classList.add("show");
+
     });
 
     moreOptionColorize.addEventListener("click", () => {
