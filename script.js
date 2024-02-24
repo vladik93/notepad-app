@@ -80,9 +80,12 @@ localStorage.removeItem("CURRENT_PAGE");
 // STORAGE
 
 let NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
+
 let CATEGORIES = JSON.parse(localStorage.getItem("CATEGORIES")) || [];
 
 let CURRENT_PAGE = sessionStorage.getItem("CURRENT_PAGE") || null;
+
+let CURRENT_CATEGORY = JSON.parse(sessionStorage.getItem("CURRENT_CATEGORY")) || null;
 
 let DELETED_NOTES = JSON.parse(localStorage.getItem("DELETED_NOTES")) || [];
 
@@ -103,6 +106,7 @@ if(localStorage.getItem("DISPLAY_MODE") === null) {
 }
 
 
+
 const renderPage = () => {
   switch(CURRENT_PAGE) {
     case "category-edit" : renderCategoryPage();
@@ -114,6 +118,10 @@ const renderPage = () => {
     case "deleted-notes" : renderDeletedNotes();
     break;
 
+    default : {
+      renderNotes(NOTES, CURRENT_CATEGORY);
+      break;
+    }
   }
   
 }
@@ -179,10 +187,12 @@ const checkDisplayMode = () => {
 }
 
 
-const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined, snippetsArr = []) => {
+const renderNotes = (notesArr, categoryId = null, sortBy = undefined, snippetsArr = []) => {
   notesWrapperEl.innerHTML = "";
+
+  console.log(notesArr, categoryId);
   if (notesArr && notesArr.length) {
-    notesArr.sort((a, b) => sortNotes(sortBy, a, b)).filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === undefined).map((item) => {
+    notesArr.sort((a, b) => sortNotes(sortBy, a, b)).filter(x => x.categories.indexOf(categoryId) > -1 || categoryId === null).map((item) => {
       const noteEl = document.createElement("div");
       noteEl.classList.add("note");
       noteEl.setAttribute("id", item.id);
@@ -202,8 +212,7 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined, snipp
         ).toLocaleString()}</p>     
       </div>
       `;
-
-
+      
       const noteContentEl = noteEl.querySelector('#note-content');
       const noteCategoryWrapperEl = noteEl.querySelector('#note-category-wrapper');
       
@@ -285,9 +294,14 @@ const renderNotes = (notesArr, categoryId = undefined, sortBy = undefined, snipp
       });
     });
   }
-  
+  CURRENT_CATEGORY = categoryId;;
+
+  console.log(CURRENT_CATEGORY);
+  sessionStorage.setItem('CURRENT_CATEGORY', JSON.stringify(CURRENT_CATEGORY));
 
 };
+
+
 
 const renderDeletedNotes = () => {
   pageWrapperEl.classList.remove('slide');
@@ -550,6 +564,8 @@ const renderCategoryPage = () => {
     })
   }
  
+  renderHeader();
+
   pageTwoEl.appendChild(editCategoriesWrapperEl);
 
   pageWrapperEl.classList.add('slide');
@@ -785,6 +801,7 @@ const renderHeader = () => {
 
     
   } 
+
   else if(CURRENT_PAGE === 'add-edit-note') {
     headerEl.classList.add("add-edit");
 
@@ -839,6 +856,17 @@ const renderHeader = () => {
           renderHeader();
         });
   } 
+
+  else if(CURRENT_PAGE === 'category-edit') {
+    headerEl.innerHTML = `
+    <div class="header-toggler">
+      <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="header-text">
+      <h3>Categories</h3>
+    </div>
+  `;
+  }
   else if(CURRENT_PAGE === "deleted-notes") {
     headerEl.innerHTML = `
       <div class="header-toggler">
@@ -1006,20 +1034,6 @@ const renderHeader = () => {
       });
     });
     
-    
-    // sidenavAllNotesBtn.addEventListener('click', () => { 
-    //   console.log("SIDENAV CLICKED");
-    //   overlayEl.classList.remove("show")
-    //   sidenavEl.classList.remove("show");
-    //   pageWrapperEl.classList.remove('slide');
-
-    //   renderNotes(NOTES);
-    //   sessionStorage.removeItem("CURRENT_PAGE");
-      
-    // })
-    
-    
-
     searchBtn.addEventListener("click", () => {
       isSearching = true;
       renderHeader(headerEl);
@@ -1058,6 +1072,8 @@ const renderHeader = () => {
           if(sessionStorage.getItem("CURRENT_PAGE") === null) {
           renderHeader();
           }
+          CURRENT_CATEGORY = null;
+          sessionStorage.setItem('CURRENT_CATEGORY', JSON.stringify(CURRENT_CATEGORY));
       });
 
 
@@ -1088,6 +1104,7 @@ const renderHeader = () => {
               sidenavEl.classList.remove("show");
 
               sessionStorage.removeItem("CURRENT_PAGE");
+              sessionStorage.setItem("CURRENT_CATEGORY", JSON.stringify(category.id));
             }    
           });
         });
@@ -1101,7 +1118,7 @@ const renderHeader = () => {
         sidenavCategoryWrapperEl.insertAdjacentElement('beforeend', editCategoriesBtn);
     
         editCategoriesBtn.addEventListener('click', () => {
-          renderCategoryPage();
+        renderCategoryPage();
     
     
           sidenavEl.classList.remove("show");
@@ -1387,7 +1404,7 @@ categoryModalConfirmBtn.addEventListener('click', () => {
     })     
 
     renderHeader();
-    renderNotes(NOTES);
+    renderNotes(NOTES, CURRENT_CATEGORY);
   })
 })
 
@@ -1565,6 +1582,6 @@ sidenavAboutBtn.addEventListener('click', () => {
 checkDisplayMode();
 
 renderHeader();
-renderNotes(NOTES)
+renderNotes(NOTES, CURRENT_CATEGORY)
 renderPage();
 
