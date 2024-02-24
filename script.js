@@ -904,8 +904,6 @@ const renderHeader = () => {
       });
     });
   
-
-
     if(actionsBtn) {
       const moreOptionsEl = document.querySelector('.more-options');
 
@@ -1205,28 +1203,32 @@ const renderHeader = () => {
       deleteNoteBtn.addEventListener('click', () => {
         selectedNoteEls.forEach(noteEl => {
           let deletedNote = NOTES.find(note => note.id === parseInt(noteEl.id));
+
+          noteEl.classList.add('deleted');
           
           DELETED_NOTES.push(deletedNote);
 
           localStorage.setItem("DELETED_NOTES", JSON.stringify(DELETED_NOTES));
 
-          let newNotesArray = NOTES.filter(
-            (note) => note.id !== parseInt(noteEl.id)
-          );
-
-          noteEl.classList.remove("selected");
-
-          NOTES = newNotesArray;
-          localStorage.setItem("NOTES", JSON.stringify(NOTES));
-
-          selectedNoteCount = 0;
-          noteCounterEl.innerText = selectedNoteCount;
-
-          sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
-          IS_NOTE_EDIT_MODE = false;
-
-          renderHeader();
-          renderNotes(NOTES);
+          setTimeout(() => {
+            let newNotesArray = NOTES.filter(
+              (note) => note.id !== parseInt(noteEl.id)
+            );
+  
+            noteEl.classList.remove("selected");
+  
+            NOTES = newNotesArray;
+            localStorage.setItem("NOTES", JSON.stringify(NOTES));
+  
+            selectedNoteCount = 0;
+            noteCounterEl.innerText = selectedNoteCount;
+  
+            sessionStorage.removeItem('IS_NOTE_EDIT_MODE');
+            IS_NOTE_EDIT_MODE = false;
+  
+            renderHeader();
+            renderNotes(NOTES);  
+          }, 300);
 
           promptEl.innerHTML = "";
           promptEl.classList.remove('show');
