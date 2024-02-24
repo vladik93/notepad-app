@@ -567,6 +567,7 @@ const renderCategoryPage = () => {
  
   renderHeader();
 
+ 
   pageTwoEl.appendChild(editCategoriesWrapperEl);
 
   pageWrapperEl.classList.add('slide');
