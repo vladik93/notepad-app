@@ -8,6 +8,7 @@ const sidenavCategoryWrapperEl = document.querySelector('#sidenav-category-wrapp
 const sidenavAllNotesBtn = document.querySelector('#all-notes-button');
 const sidenavDeleteNotesBtn = document.querySelector('#deleted-notes-button');
 const sidenavDisplayToggleBtn = document.querySelector("#display-mode-button");
+const sidenavAboutBtn = document.getElementById('about-button');
 
 
 const headerPageTwoEl = document.querySelector("#header-page-two");
@@ -48,6 +49,8 @@ const sortOptionEls = document.querySelectorAll('[name="sort-option"]');
 let sortBy = undefined;
 
 let SORT_BY = localStorage.getItem("SORT_BY") || null;
+
+const aboutModalEl = document.getElementById('about-modal');
 
 
 let isSearching = false;
@@ -521,8 +524,6 @@ const renderCategoryPage = () => {
               renderCategoryPage();
             }
           })
-          
-
 
           overlayEl.classList.add('show');
           editCategoryModalEl.classList.add('show');
@@ -1514,9 +1515,6 @@ const addNote = (title) => {
   localStorage.setItem("NOTES", JSON.stringify(NOTES));
 }
 
-
-
-
 addBtn.addEventListener("click", () => {
   renderAddEditPage();
 });
@@ -1557,26 +1555,12 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
 
 })
 
-// window.addEventListener('click', (e) => {
-//   let elm = document.getElementById('more-options-button');
+sidenavAboutBtn.addEventListener('click', () => {
+  aboutModalEl.classList.add('show');
+  overlayEl.classList.add('show');
 
-//   if(e.target.contains(elm) && e.target !== elm) {
-//     console.log("CLICKED OUTSIDE");
-//   } else {
-//     console.log('CLICKED INSIDE');
-//   }
-//   // if(document.getElementById('more-options').contains(e.target)) {
-
-//   // } else {
-//   //   let moreOptionsEl = document.getElementById('more-options');
-//   //   moreOptionsEl.classList.remove('show');
-//   // }
-
-  
-// })
-
-
-
+  sidenavEl.classList.remove('show');
+})
 
 checkDisplayMode();
 
