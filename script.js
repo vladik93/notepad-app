@@ -219,8 +219,9 @@ const renderNotes = (notesArr, categoryId = null, sortBy = undefined, snippetsAr
       if(item.categories.length) {
         let categoryCount = 0;
         item.categories.map(((category, index) => {
+          console.log(category);
           if(index < 2) {
-            const currentCategory = CATEGORIES.find(x => x.id === category);
+            const currentCategory = CATEGORIES.find(x =>  x.id === category);
             const { id, title, dateCreated } = currentCategory;
   
             const categoryEl = document.createElement('div');
@@ -691,7 +692,7 @@ const addEditNote = () => {
 
     localStorage.setItem("NOTES", JSON.stringify(notesArray));
     NOTES = notesArray;
-    renderNotes(NOTES);
+    renderNotes(NOTES, CURRENT_CATEGORY);
   } else {
     let newNote = {
       id: new Date().getTime(),
@@ -704,9 +705,13 @@ const addEditNote = () => {
       dateCreated: new Date().toJSON(),
     };
 
+    CURRENT_CATEGORY !== null ? newNote.categories.push(CURRENT_CATEGORY) : newNote.categories;
+
     NOTES.push(newNote);
     sessionStorage.setItem("CURRENT_NOTE", JSON.stringify(newNote));
-    renderNotes(NOTES);
+
+    
+    renderNotes(NOTES, CURRENT_CATEGORY);
    
   }
 
@@ -790,7 +795,7 @@ const renderHeader = () => {
         })
 
         FILTERED_NOTES = newNotesArr;
-        renderNotes(FILTERED_NOTES, undefined, undefined, noteSnippets);
+        renderNotes(FILTERED_NOTES, null, undefined, noteSnippets);
     
       } else {
         searchIcon.style.display = "block";
@@ -826,6 +831,7 @@ const renderHeader = () => {
       saveNoteBtn.addEventListener('click', () => {
         if (!isNoteSaved) {
           addEditNote();
+          
         }
       })
 
@@ -854,6 +860,7 @@ const renderHeader = () => {
           pageTwoEl.style.backgroundColor = "none";
           
           renderHeader();
+          renderNotes(NOTES, CURRENT_CATEGORY);
         });
   } 
 
@@ -991,13 +998,19 @@ const renderHeader = () => {
   } 
    else {
     headerEl.classList.remove('add-edit');
+
+    let current = CURRENT_CATEGORY !== null ? CATEGORIES.find(category => CURRENT_CATEGORY === category.id) : null;
+
+    let title = current?.title || "";
+    
+
     headerEl.innerHTML = `
       <div class="header-toggler">
         <button id="toggle-button"><i class="fa-solid fa-bars"></i></button>
       </div>
       <div class="header-text">
         <h3>Vladi's Notepad</h3>
-        <p class="header-category">Category</p>
+        <p class="header-category">${title}</p>
       </div>
       <div class="header-actions">
         <button id="search-button">
@@ -1105,6 +1118,8 @@ const renderHeader = () => {
 
               sessionStorage.removeItem("CURRENT_PAGE");
               sessionStorage.setItem("CURRENT_CATEGORY", JSON.stringify(category.id));
+
+              renderHeader();
             }    
           });
         });
