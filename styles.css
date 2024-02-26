@@ -375,7 +375,7 @@ input {
 
 .add-button {
   position: fixed;
-  bottom: 60px;
+  bottom: 10%;
   right: 0;
   margin: 1.6rem;
   padding: 2rem;
