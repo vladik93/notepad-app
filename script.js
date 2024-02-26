@@ -75,6 +75,8 @@ let colorArray = [
 
 ];
 
+let searchedNotes = [];
+
 localStorage.removeItem("CURRENT_PAGE");
 
 // STORAGE
@@ -198,6 +200,8 @@ const renderNotes = (notesArr, categoryId = null, sortBy = undefined, snippetsAr
       noteEl.setAttribute("id", item.id);
       noteEl.dataset.color = item.color;
       noteEl.style.backgroundColor = setNoteColor(item.color);
+
+      // noteEl.classList.add()
 
       let noteSnippet = snippetsArr.find(snippet => snippet.id === parseInt(noteEl.id)) || {};
 
@@ -552,18 +556,22 @@ const renderCategoryPage = () => {
         });
 
         categoryItemDeleteBtn.addEventListener('click', (e) => {
+
           let parentEl = e.target.parentElement;
           let categoryItemEl = parentEl.parentElement
 
-          let categoryId = parseInt(categoryItemEl.dataset.categoryId);
+          categoryItemEl.classList.add('deleted');
+
+          setTimeout(() => {
+            let categoryId = parseInt(categoryItemEl.dataset.categoryId);
           
-          let newCategoryArr = CATEGORIES.filter(category => category.id !== categoryId);
-
-          CATEGORIES = newCategoryArr;
-          localStorage.setItem("CATEGORIES", JSON.stringify(newCategoryArr));
-
-          renderCategoryPage();
-
+            let newCategoryArr = CATEGORIES.filter(category => category.id !== categoryId);
+  
+            CATEGORIES = newCategoryArr;
+            localStorage.setItem("CATEGORIES", JSON.stringify(newCategoryArr));
+  
+            renderCategoryPage();
+          }, 300);
         })
 
         editCategoriesWrapperEl.appendChild(categoryItemEl);
@@ -741,9 +749,7 @@ const renderHeader = () => {
         <input type="text" id="header-search-input"/>
         <button class="reset-search-button" id="reset-search-button"><i class="fa-solid fa-xmark reset-search-icon"></i></button>
       </div>
-      <div class="header-search-actions">
-        <button><i class="fa-solid fa-ellipsis-vertical"></i></button>
-      </div> 
+     
     `;
 
     const headerBackBtn = document.querySelector("#header-back-button");
@@ -778,6 +784,8 @@ const renderHeader = () => {
         searchIcon.style.display = "none";
         resetSearchBtn.classList.add('show');
 
+        
+
         let newNotesArr = NOTES.filter(note => {
           if(String(note.text).toLowerCase().includes(inputValue.toLowerCase())) {
  
@@ -799,10 +807,14 @@ const renderHeader = () => {
             
           } else if(String(note.title).toLowerCase().includes(inputValue.toLowerCase())) {
             return note;
-          }
+          } 
         })
 
+        
+
         FILTERED_NOTES = newNotesArr;
+        searchedNotes = [...FILTERED_NOTES];
+       
         renderNotes(FILTERED_NOTES, null, undefined, noteSnippets);
     
       } else {

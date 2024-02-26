@@ -51,8 +51,8 @@ body {
   display: flex;
   overflow: hidden;
   transition: background-color 0.3s ease-in;
-  
 }
+
 
 
 ul {
@@ -66,6 +66,29 @@ button {
 i {
   font-size: 1.6rem;
   pointer-events: none;
+}
+
+input {
+  font-size: 1.6rem;
+}
+
+/* CONTAINER  */
+
+.container {
+  height: 100%;
+  width: 100%;
+  max-width: 667px;
+  overflow: hidden;
+  margin: 0 auto;
+  background: var(--bg-color);
+  transition: background-color 0.3s ease-in;
+  position: relative;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  background: #333;
 }
 
 /* CHECKBOX */
@@ -109,7 +132,7 @@ i {
   align-items: center;
   color: #fff;
   gap: 2.4rem;
-  position: fixed;
+  position: relative;
   top: 0;
   width: 100%;
   z-index: 50;
@@ -118,6 +141,7 @@ i {
   padding: 0 1rem;
   /* z-index: 100; */
   transition: background-color 0.3s ease-in;
+  
 }
 
 
@@ -351,7 +375,7 @@ i {
 
 .add-button {
   position: fixed;
-  bottom: 0;
+  bottom: 80px;
   right: 0;
   margin: 1.6rem;
   padding: 2rem;
@@ -433,7 +457,7 @@ i {
   height: 100%;
   transform: translateX(0%);
   transition: transform 0.3s ease-in;
-  padding-top: 55px;
+
 }
 
 .page-wrapper.slide {
@@ -481,11 +505,19 @@ i {
   border-radius: 5px;
   border-top-right-radius: 10px;
   transform: translateX(0%);
-  transition: filter 0.15s ease-in, transform 0.3s linear;
+  opacity: 1;
+  transition: filter 0.15s ease-in, transform 0.3s linear, opacity 0.3s ease-in;
+
 }
+
+
 
 .note.selected {
   filter: saturate(300%) contrast(70%);
+}
+
+.note.faded {
+  opacity: 0;
 }
 
 .note.deleted {
@@ -822,6 +854,12 @@ i {
   align-items: flex-end;
   padding: 0 0.8rem;
   padding-bottom: 0.8rem;
+  transform: translateX(0%);
+  transition: transform 0.30s ease-in;
+}
+
+.category-item.deleted {
+  transform: translateX(100%);
 }
 
 .category-item-content {
