@@ -456,6 +456,13 @@ const renderCategoryPage = () => {
   const categoryListWrapper = document.createElement('ul');
   categoryListWrapper.classList.add('category-list-wrapper');
 
+  if(DISPLAY_MODE === 'light') {
+    pageTwoEl.style.backgroundColor = "#ece3e7";
+  } else if(DISPLAY_MODE === 'dark') {
+    pageTwoEl.style.backgroundColor = "#1b1c1e";
+  }
+
+
   if(CATEGORIES && CATEGORIES.length > 0) {
     CATEGORIES.map(category => {
       // if(CATEGORIES) {
@@ -1587,7 +1594,7 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
   overlayEl.classList.remove('show');
   sidenavEl.classList.remove("show");
 
-
+  renderPage();
 })
 
 sidenavAboutBtn.addEventListener('click', () => {

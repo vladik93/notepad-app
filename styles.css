@@ -51,6 +51,7 @@ body {
   display: flex;
   overflow: hidden;
   transition: background-color 0.3s ease-in;
+  
 }
 
 
@@ -463,6 +464,11 @@ i {
   flex-direction: column;
   gap: 0.4rem;
   overflow: scroll;
+  overflow-x: hidden;
+}
+
+.notes-wrapper::-webkit-scrollbar {
+  width: 0;
 }
 
 .note {
