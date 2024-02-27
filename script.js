@@ -660,22 +660,22 @@ const renderAddEditPage = () => {
 }
 
 const addAlert = (text) => {
-  const alertEl = document.createElement("div");
-  alertEl.classList.add("alert");
+  const alertEl = document.getElementById('alert');
+  alertEl.classList.add('show');
 
-  const alertTextEl = document.createElement("span");
-  alertTextEl.innerText = text;
-  alertEl.appendChild(alertTextEl);
+  const textEl = document.createElement('span');
+  textEl.innerHTML = text;
 
-  const alertIcon = document.createElement("i");
-  alertIcon.classList.add("fa-solid", "fa-note-sticky");
-  alertEl.insertAdjacentElement("afterbegin", alertIcon);
 
-  document.body.insertAdjacentElement("beforeend", alertEl);
+  alertEl.insertAdjacentElement('beforeend', textEl);
 
   setTimeout(() => {
-    alertEl.remove();
-  }, 2000);
+    alertEl.classList.remove('show');
+  }, 3000);
+
+  setTimeout(() => {
+    alertEl.innerHTML = "<i class='fa-solid fa-note-sticky'></i>";
+  }, 3500);
 };
 
 const addCategory = (title) => {

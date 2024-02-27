@@ -344,7 +344,7 @@ input {
   opacity: 0;
   visibility: hidden;
   z-index: 100;
-  transition: opacity 0.3s ease-in;
+  transition: opacity 0.3s ease-in, visiblity 0.3s ease-in;
 }
 
 .overlay.show {
@@ -607,6 +607,15 @@ input {
   gap: 0.8rem;
   padding: 2.4rem 1.6rem;
   border-radius: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease-in, visibility 0.5s ease-in;
+}
+
+.alert.show {
+  opacity: 1;
+  visibility: visible;
+
 }
 
 /* */
@@ -669,14 +678,16 @@ input {
 .modal {
   position: absolute;
   width: 90%;
-  align-items: center;
   top: 50%;
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
   background: var(--sub-bg-color);
   z-index: 200;
-  padding: 1.6rem;;
+  transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
+  opacity: 0;
+  visibility: hidden;
 }
+
 
 
 .modal button {
@@ -771,6 +782,8 @@ input {
   opacity: 0;
   visibility: hidden;
   z-index: 100;
+  transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
+
 
 }
 
@@ -896,6 +909,7 @@ input {
   padding: 0.8rem;
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
 }
 
 .edit-category-modal.show {
@@ -950,12 +964,14 @@ input {
 .prompt {
   z-index: 100;
   display: flex;
+  padding: 1.6rem;
   flex-direction: column;
   align-items:flex-start;
   gap: 2.4rem;
   opacity: 0;
   visibility: hidden;
   background-color: var(--sub-bg-color);
+  transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
 }
 
 .prompt.show {
