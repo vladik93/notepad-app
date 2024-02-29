@@ -469,6 +469,11 @@ const renderCategoryPage = () => {
     pageTwoEl.style.backgroundColor = "#1b1c1e";
   }
 
+  const editCategoriesListWrapperEl = document.createElement('div');
+  editCategoriesListWrapperEl.classList.add('edit-categories-list-wrapper');
+
+  editCategoriesWrapperEl.insertAdjacentElement('beforeend', editCategoriesListWrapperEl);
+
 
   if(CATEGORIES && CATEGORIES.length > 0) {
     CATEGORIES.map(category => {
@@ -491,10 +496,31 @@ const renderCategoryPage = () => {
           </div>`
     
           categoryItemEl.addEventListener('dragstart', (event) => {
-            
-            
+            event.target.classList.add('dragging');
+          });
+
+          categoryItemEl.addEventListener('dragend', (event) => {
+            event.target.classList.remove('dragging');
           })
           
+          editCategoriesListWrapperEl.addEventListener('dragover', (event) => {
+            let y = event.clientY;
+
+            console.log("CLIENT Y" + y);
+
+            const draggingEl = document.querySelector('.dragging');
+            const siblings = [...document.querySelectorAll('.category-item:not(.dragging)')];
+
+            let nextSibling = siblings.find(sibling => {
+              return y <= sibling.offsetTop + sibling.offsetHeight / 2;
+            });
+          });
+
+          
+          editCategoriesListWrapperEl.addEventListener('drop', (event) => {});
+
+
+
          const categoryItemEditBtn = categoryItemEl.querySelector('#category-item-edit');
          const categoryItemDeleteBtn = categoryItemEl.querySelector("#category-item-delete");
         
@@ -577,7 +603,7 @@ const renderCategoryPage = () => {
           }, 300);
         })
 
-        editCategoriesWrapperEl.appendChild(categoryItemEl);
+        editCategoriesListWrapperEl.appendChild(categoryItemEl);
   
       // }
     })
@@ -1617,6 +1643,15 @@ sidenavAboutBtn.addEventListener('click', () => {
   overlayEl.classList.add('show');
 
   sidenavEl.classList.remove('show');
+});
+
+document.body.addEventListener('mousemove', (e) => {
+  let mousePositionEl = document.getElementById('mouse-position');
+  mousePositionEl.style = "position: absolute; bottom: 0; left: 50%;";
+  mousePositionEl.innerHTML = e.clientY;
+
+  document.body.insertAdjacentElement('beforeend',mousePositionEl);
+
 })
 
 checkDisplayMode();

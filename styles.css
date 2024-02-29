@@ -871,6 +871,10 @@ input {
   transition: transform 0.30s ease-in;
 }
 
+.category-item.dragging {
+  background-color: red;
+}
+
 .category-item.deleted {
   transform: translateX(100%);
 }
