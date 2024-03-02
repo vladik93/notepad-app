@@ -292,7 +292,7 @@ const renderNotes = (notesArr, categoryId = null, sortBy = undefined, snippetsAr
           noteEl.classList.add("selected");
 
           renderHeader();
-        }, 500);
+        }, 1000);
       });
 
       noteEl.addEventListener("pointerup", () => {
