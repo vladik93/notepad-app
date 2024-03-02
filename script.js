@@ -1236,7 +1236,6 @@ const renderHeader = () => {
         <div class="more-options-wrapper">
           <button id="more-options-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
           <div class="more-options" id="more-options">
-            <div class="more-option">Export notes to text files</div>
             <div class="more-option" id="more-option-categorize">Categorize</div>
             <div class="more-option" id="more-option-colorize">Colorize</div>
           </div>
