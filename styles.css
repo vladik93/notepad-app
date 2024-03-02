@@ -409,7 +409,7 @@ input {
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
   z-index: 200;
-  background: #fff;
+  background: var(--sub-bg-color);
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
