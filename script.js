@@ -1645,14 +1645,7 @@ sidenavAboutBtn.addEventListener('click', () => {
   sidenavEl.classList.remove('show');
 });
 
-document.body.addEventListener('mousemove', (e) => {
-  let mousePositionEl = document.getElementById('mouse-position');
-  mousePositionEl.style = "position: absolute; bottom: 0; left: 50%;";
-  mousePositionEl.innerHTML = e.clientY;
 
-  document.body.insertAdjacentElement('beforeend',mousePositionEl);
-
-})
 
 checkDisplayMode();
 
