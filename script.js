@@ -110,7 +110,8 @@ if(localStorage.getItem("DISPLAY_MODE") === null) {
 
 
 const adjustViewportHeight = () => {
-  console.log(window.innerHeight);
+    var vh = window.innerHeight * 0.01;
+    document.body.style.setProperty('--vh', `${vh}px`);
 }
 
 
