@@ -109,6 +109,13 @@ if(localStorage.getItem("DISPLAY_MODE") === null) {
 
 
 
+const adjustViewportHeight = () => {
+  console.log(window.innerHeight);
+}
+
+
+adjustViewportHeight();
+
 const renderPage = () => {
   switch(CURRENT_PAGE) {
     case "category-edit" : renderCategoryPage();
