@@ -1641,6 +1641,8 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
     <span>Dark Mode</span>`
     
   }
+
+  headerEl.style.backgroundColor = setNoteColor("#ece3e7")
     
 
 
