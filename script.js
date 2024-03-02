@@ -878,7 +878,7 @@ const renderHeader = () => {
 
       if(sessionStorage.getItem("CURRENT_NOTE")) {
         let CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
-        headerEl.style.backgroundColor = CURRENT_NOTE.color;
+        headerEl.style.backgroundColor = setNoteColor(CURRENT_NOTE.color);
       } else {
         headerEl.style.backgroundColor = "none";
       }
@@ -921,6 +921,8 @@ const renderHeader = () => {
           isNoteSaved = false;
           pageWrapperEl.classList.remove('slide'); 
           pageTwoEl.style.backgroundColor = "none";
+
+          headerEl.style.backgroundColor = setNoteColor("#ece3e7");
           
           renderHeader();
           renderNotes(NOTES, CURRENT_CATEGORY, SORT_BY);
@@ -1564,16 +1566,16 @@ const updateNotePageColor = (currentNote) => {
     // const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
     // const headerAddEditEl = document.querySelector('#header-add-edit');
 
-    if(CURRENT_NOTE.color !== "#ffe5e5") {  
-      pageTwoEl.style.backgroundColor = CURRENT_NOTE.color;
-      headerEl.style.backgroundColor = CURRENT_NOTE.color;
+    if(CURRENT_NOTE.color !== "#ece3e7") {  
+      pageTwoEl.style.backgroundColor = setNoteColor(CURRENT_NOTE.color);
+      headerEl.style.backgroundColor = setNoteColor(CURRENT_NOTE.color);
     } else {
-      pageTwoEl.style.background = "#ffe5e5";
-      headerEl.style.background = "#a68366";
+      pageTwoEl.style.background = setNoteColor("#ece3e7");
+      headerEl.style.background = setNoteColor("#ece3e7");
     }
   } else {
     pageTwoEl.style.backgroundColor = setNoteColor("#ece3e7");
-    headerEl.style.backgroundColor = "none";
+    headerEl.style.backgroundColor = setNoteColor("#ece3e7");
   }
 }
 
@@ -1637,8 +1639,10 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
     sidenavDisplayToggleBtn.innerHTML = `
     <i class="fa-solid fa-moon"></i>
     <span>Dark Mode</span>`
+    
   }
     
+
 
   const noteEls = document.querySelectorAll('.note');
 
@@ -1652,6 +1656,7 @@ sidenavDisplayToggleBtn.addEventListener('click', () => {
   sidenavEl.classList.remove("show");
 
   renderPage();
+  renderHeader();
 })
 
 sidenavAboutBtn.addEventListener('click', () => {
