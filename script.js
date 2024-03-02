@@ -108,15 +108,6 @@ if(localStorage.getItem("DISPLAY_MODE") === null) {
 }
 
 
-
-const adjustViewportHeight = () => {
-    var vh = window.innerHeight * 0.01;
-    document.body.style.setProperty('--vh', `${vh}px`);
-}
-
-
-adjustViewportHeight();
-
 const renderPage = () => {
   switch(CURRENT_PAGE) {
     case "category-edit" : renderCategoryPage();
@@ -921,7 +912,7 @@ const renderHeader = () => {
           pageTwoEl.style.backgroundColor = "none";
           
           renderHeader();
-          renderNotes(NOTES, CURRENT_CATEGORY);
+          renderNotes(NOTES, CURRENT_CATEGORY, SORT_BY);
         });
   } 
 
