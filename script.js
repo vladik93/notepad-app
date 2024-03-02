@@ -487,7 +487,7 @@ const renderCategoryPage = () => {
   
         categoryItemEl.innerHTML = `
           <div class="category-item-content">
-            <i class="fa-solid fa-grip-vertical"></i>
+          
               <span>${category.title}</span>
             </div>
           <div class="category-item-actions">
@@ -503,21 +503,21 @@ const renderCategoryPage = () => {
             event.target.classList.remove('dragging');
           })
           
-          editCategoriesListWrapperEl.addEventListener('dragover', (event) => {
-            let y = event.clientY;
+          // editCategoriesListWrapperEl.addEventListener('dragover', (event) => {
+          //   let y = event.clientY;
 
-            console.log("CLIENT Y" + y);
+          //   console.log("CLIENT Y" + y);
 
-            const draggingEl = document.querySelector('.dragging');
-            const siblings = [...document.querySelectorAll('.category-item:not(.dragging)')];
+          //   const draggingEl = document.querySelector('.dragging');
+          //   const siblings = [...document.querySelectorAll('.category-item:not(.dragging)')];
 
-            let nextSibling = siblings.find(sibling => {
-              return y <= sibling.offsetTop + sibling.offsetHeight / 2;
-            });
-          });
+          //   let nextSibling = siblings.find(sibling => {
+          //     return y <= sibling.offsetTop + sibling.offsetHeight / 2;
+          //   });
+          // });
 
           
-          editCategoriesListWrapperEl.addEventListener('drop', (event) => {});
+          // editCategoriesListWrapperEl.addEventListener('drop', (event) => {});
 
 
 
