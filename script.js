@@ -52,6 +52,17 @@ let SORT_BY = localStorage.getItem("SORT_BY") || null;
 
 const aboutModalEl = document.getElementById('about-modal');
 
+let mousePosition;
+
+document.body.addEventListener('mousemove', (e) => {
+  mousePosition = e.clientY;
+
+
+});
+
+
+
+
 
 let isSearching = false;
 let isCategoriesEdit = false;
@@ -427,18 +438,17 @@ const renderCategoryPage = () => {
   sessionStorage.setItem("CURRENT_PAGE", 'category-edit');
   CURRENT_PAGE = "category-edit";
   
-  const editCategoriesWrapperEl = document.createElement('div');
-  editCategoriesWrapperEl.classList.add('edit-categories-wrapper');
+  const categoryInputWrapperEl = document.createElement('div');
+  categoryInputWrapperEl.classList.add('category-input-wrapper');
 
-  editCategoriesWrapperEl.innerHTML += `
-    <div class="category-input-wrapper">
+  categoryInputWrapperEl.innerHTML += `
+ 
       <input class="add-edit-input category-input" id="category-edit-input" type="text" placeholder="Enter title..." maxlength="15" />
-      <button class="category-edit-button" id="category-edit-button">ADD</button>
-    </div>`
+      <button class="category-edit-button" id="category-edit-button">ADD</button>`
 
-  const categoryEditInputEl = editCategoriesWrapperEl.querySelector('#category-edit-input');
+  const categoryEditInputEl = categoryInputWrapperEl.querySelector('#category-edit-input');
 
-  const categoryEditBtn = editCategoriesWrapperEl.querySelector('#category-edit-button');
+  const categoryEditBtn = categoryInputWrapperEl.querySelector('#category-edit-button');
         
   categoryEditInputEl.addEventListener('input', (e) => {
     categoryEditInputValue = e.target.value;
@@ -469,10 +479,13 @@ const renderCategoryPage = () => {
     pageTwoEl.style.backgroundColor = "#1b1c1e";
   }
 
+  pageTwoEl.insertAdjacentElement('afterbegin', categoryInputWrapperEl);
+ 
+ 
   const editCategoriesListWrapperEl = document.createElement('div');
   editCategoriesListWrapperEl.classList.add('edit-categories-list-wrapper');
 
-  editCategoriesWrapperEl.insertAdjacentElement('beforeend', editCategoriesListWrapperEl);
+
 
 
   if(CATEGORIES && CATEGORIES.length > 0) {
@@ -504,16 +517,30 @@ const renderCategoryPage = () => {
           })
           
           editCategoriesListWrapperEl.addEventListener('dragover', (event) => {
-            let y = event.clientY;
-
-            console.log("CLIENT Y" + y);
-
             const draggingEl = document.querySelector('.dragging');
             const siblings = [...document.querySelectorAll('.category-item:not(.dragging)')];
 
+            console.log(siblings);
+
             let nextSibling = siblings.find(sibling => {
-              return y <= sibling.offsetTop + sibling.offsetHeight / 2;
+              return event.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
             });
+
+            
+            if(nextSibling) {
+              editCategoriesListWrapperEl.insertBefore( draggingEl, nextSibling);
+            } else {
+              siblings.map((sibling, index) => {
+                if(index === 1) {
+                  editCategoriesListWrapperEl.insertAdjacentElement( 'afterbegin', draggingEl);
+                } else if(index === siblings.length - 1) {
+                  editCategoriesListWrapperEl.insertAdjacentElement("afterend");
+                }
+              })
+            }
+            
+
+           
           });
 
           
@@ -604,6 +631,8 @@ const renderCategoryPage = () => {
         })
 
         editCategoriesListWrapperEl.appendChild(categoryItemEl);
+
+        pageTwoEl.insertAdjacentElement('beforeend', editCategoriesListWrapperEl);
   
       // }
     })
@@ -612,7 +641,7 @@ const renderCategoryPage = () => {
   renderHeader();
 
  
-  pageTwoEl.appendChild(editCategoriesWrapperEl);
+ 
 
   pageWrapperEl.classList.add('slide');
 
