@@ -690,7 +690,6 @@ input {
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
   background: var(--bg-color);
-  border: 1px solid var(--text-color);
   z-index: 200;
   transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
   opacity: 0;
@@ -917,10 +916,11 @@ input {
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  background: #fff;
+  background: var(--bg-color);
   z-index: 1000;
   padding: 0.8rem;
   opacity: 0;
+  border: 1px solid var(--text-color);
   visibility: hidden;
   transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
 }
@@ -936,6 +936,8 @@ input {
 }
 
 .edit-category-modal-input {
+  background: none;
+  color: var(--text-color);
   border: none;
   border-bottom:1px solid #666666;
   outline: none;

@@ -445,6 +445,8 @@ const renderCategoryPage = () => {
 
   categoryEditBtn.addEventListener('click', () => {
     if(categoryEditInputValue !== "") {
+      if(CATEGORIES.some(category => category.title === categoryEditInputValue)) return;
+
       let newCategory = {
         id: new Date().getTime(),
         title: categoryEditInputValue,
@@ -555,7 +557,10 @@ const renderCategoryPage = () => {
           const editCategoryConfirmBtn = editCategoryModalEl.querySelector('#edit-category-confirm');
           
           editCategoryConfirmBtn.addEventListener('click', () => {
+            console.log('confirm clicked');
             let foundCategory = CATEGORIES.find(category => category.title == editCategoryModalInputValue);
+
+            console.log(foundCategory);
   
             if(foundCategory) {
               const editCategoryModalMessageEl = document.getElementById('edit-category-modal-message');
