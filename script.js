@@ -693,6 +693,10 @@ const renderAddEditPage = () => {
       addEditTextareaValue = e.target.value;
     });
   
+    IS_NOTE_EDIT_MODE = false;
+    sessionStorage.removeItem("IS_NOTE_EDIT_MODE");
+    
+    renderHeader();
 }
 
 const addAlert = (text) => {
