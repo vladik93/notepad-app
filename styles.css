@@ -129,10 +129,11 @@ input {
 /* HEADER */
 
 .header {
-  background: var(--main-color);
+  background: none;
+  border-bottom: 1px solid var(--sub-text-color);
   display: flex;
   align-items: center;
-  color: #fff;
+  color: var(--text-color);
   gap: 2.4rem;
   position: relative;
   top: 0;
@@ -180,13 +181,13 @@ input {
 .header button {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 700;
   font-size: 1.2rem;
 }
 
 .header i {
-  color: #fff;
+  color: var(--text-color);
 }
 
 .header-category {
@@ -281,9 +282,10 @@ input {
 .sidenav-header {
   /* background-color: #756ab6; */
   /* background-color: var(--color-4); */
-  background: var(--main-color);
+  border-bottom: 1px solid var(--text-color);
+  background: none;
   padding: 0.8rem;
-  color: #fff;
+  color: var(--text-color);
   font-size: 1.4rem;
   transition: background-color 0.3s ease-in;
 }
@@ -389,12 +391,14 @@ input {
   color: #fff;
   /* background-color: #756ab6; */
   /* background-color: var(--color-4); */
-  background: var(--main-color);
+  background: var(--bg-color);
+  border: 1px solid var(--text-color);
   box-shadow: 3px 5px 10px rgba(51, 51, 51, 0.4);
 }
 
 .add-button i {
   font-size: 1.8rem;
+  color: var(--text-color)
 }
 
 
@@ -409,7 +413,8 @@ input {
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
   z-index: 200;
-  background: var(--sub-bg-color);
+  background: var(--bg-color);
+  border: 1px solid var(--text-color);
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
@@ -683,7 +688,8 @@ input {
   top: 50%;
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
-  background: var(--sub-bg-color);
+  background: var(--bg-color);
+  border: 1px solid var(--text-color);
   z-index: 200;
   transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
   opacity: 0;

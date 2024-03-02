@@ -255,7 +255,7 @@ const renderNotes = (notesArr, categoryId = null, sortBy = undefined, snippetsAr
       noteEl.addEventListener("click", () => {
         if (IS_NOTE_EDIT_MODE) {
           noteEl.classList.toggle("selected");
-          renderHeader();
+          
         } else {
           CURRENT_PAGE = "add-edit-note";
           sessionStorage.setItem("CURRENT_PAGE", 'add-edit-note');
@@ -660,7 +660,7 @@ const renderAddEditPage = () => {
       addEditTextarea.value = CURRENT_NOTE.text;
       headerEl.style.backgroundImage = "none";
       // headerEl.style.backgroundColor = CURRENT_NOTE.color;
-      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color !== "#ece3e7" ? setNoteColor(CURRENT_NOTE.color) : "none";
+      headerFilterEl.style.backgroundColor = CURRENT_NOTE.color !== "#ece3e7" ? setNoteColor(CURRENT_NOTE.color) : setNoteColor("#ece3e7");
       pageTwoEl.style.backgroundColor = setNoteColor(CURRENT_NOTE.color);
 
       
@@ -857,7 +857,7 @@ const renderHeader = () => {
     });
 
     
-  } 
+  }
 
   else if(CURRENT_PAGE === 'add-edit-note') {
     headerEl.classList.add("add-edit");
@@ -875,6 +875,13 @@ const renderHeader = () => {
         <button id="undo-button">UNDO</button>
       </div>
       `
+
+      if(sessionStorage.getItem("CURRENT_NOTE")) {
+        let CURRENT_NOTE = JSON.parse(sessionStorage.getItem("CURRENT_NOTE"));
+        headerEl.style.backgroundColor = CURRENT_NOTE.color;
+      } else {
+        headerEl.style.backgroundColor = "none";
+      }
 
       const saveNoteBtn = document.getElementById('save-button');
       const headerBackBtn = document.getElementById('header-back-button');
@@ -897,9 +904,13 @@ const renderHeader = () => {
           addEditInputValue = "";
           addEditTextareaValue = "";
 
+          
+
           if (sessionStorage.getItem("CURRENT_NOTE") !== null) {
             sessionStorage.removeItem("CURRENT_NOTE");
-            updateNotePageColor();
+            
+           
+            // updateNotePageColor();
           }
 
           if(sessionStorage.getItem("CURRENT_PAGE") !== null) {
@@ -1547,20 +1558,22 @@ const updateNotePageColor = (currentNote) => {
 
   if(sessionStorage.getItem('CURRENT_NOTE')) {
     const pageTwoEl = document.querySelector('#page-two');
-    filterEl.background.style.backgroundColor = currentNote.color;
+    // filterEl.background.style.backgroundColor = currentNote.color;
+    let CURRENT_NOTE = sessionStorage.getItem("CURRENT_NOTE");
     
     // const headerAddEditWrapperEl = document.querySelector('#header-add-edit-wrapper');
     // const headerAddEditEl = document.querySelector('#header-add-edit');
 
-    if(currentNote.color !== "#ffe5e5") {  
-      pageTwoEl.style.backgroundColor = currentNote.color;
-      headerEl.style.backgroundColor = currentNote.color;
+    if(CURRENT_NOTE.color !== "#ffe5e5") {  
+      pageTwoEl.style.backgroundColor = CURRENT_NOTE.color;
+      headerEl.style.backgroundColor = CURRENT_NOTE.color;
     } else {
       pageTwoEl.style.background = "#ffe5e5";
       headerEl.style.background = "#a68366";
     }
   } else {
     pageTwoEl.style.backgroundColor = setNoteColor("#ece3e7");
+    headerEl.style.backgroundColor = "none";
   }
 }
 
